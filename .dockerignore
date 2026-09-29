@@ -1,0 +1,6 @@
+.venv
+.git
+web/node_modules
+web/.next
+data
+*.pdf
