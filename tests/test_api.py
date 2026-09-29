@@ -186,3 +186,14 @@ def test_admin_sees_key_and_solver_runs(client):
 def test_mock_listing_filters(client):
     assert [m["id"] for m in client.get("/mocks", params={"status": "published"}).json()] == [f"{PAPER}_QUANT"]
     assert len(client.get("/admin/review-queue").json()) == 1
+
+
+def test_discarded_solver_verdicts_stop_counting(session, tmp_path, bank):
+    quant, reasoning, verifs = bank
+    load_all(session, write_data(tmp_path, quant + reasoning, verifs))
+    session.commit()
+    rest = [v for v in verifs if not (v["section"] == "QUANT" and v["q_no"] == 3)]  # pipeline re-solving Q3
+    report = load_all(session, write_data(tmp_path, quant + reasoning, rest))
+    session.commit()
+    assert report.counts["key statuses withdrawn"] == 1
+    assert session.get(Mock, f"{PAPER}_QUANT").status == "DRAFT"

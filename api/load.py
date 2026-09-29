@@ -199,7 +199,9 @@ def load_review_queue(s: Session, items: list[dict], r: Report) -> None:
     s.flush()
 
 
-def load_verifications(s: Session, records: list[dict], r: Report) -> None:
+def load_verifications(s: Session, records: list[dict], r: Report) -> set[int]:
+    """Returns the ids of the questions whose current version has a solver verdict in these records."""
+    covered = set()
     for rec in records:
         question = _question(s, rec["paper_id"], rec["section"], rec["q_no"])
         if question is None:
@@ -226,11 +228,23 @@ def load_verifications(s: Session, records: list[dict], r: Report) -> None:
         current = question.current_version
         on_current = any(v["question_version"] == current.content_hash for v in rec["verifications"])
         if on_current and current.official_answer == rec["official_answer"]:
+            covered.add(question.id)
             if current.key_status != rec["status"] and current.key_status != "KEY_CONFIRMED_REVIEW":
                 current.key_status = rec["status"]
                 r.add("key statuses set")
             if rec["status"] not in CONFIRMED:
                 _queue(s, rec["paper_id"], rec["section"], rec["q_no"], "solver", [rec["status"]], r)
+    s.flush()
+    return covered
+
+
+def withdraw_verdicts(s: Session, covered: set[int], r: Report) -> None:
+    """A solver verdict that is no longer in the pipeline's output (discarded for a re-solve) stops counting."""
+    for q in s.scalars(select(Question)):
+        v = q.current_version
+        if v and q.id not in covered and v.key_status not in ("UNVERIFIED", "KEY_CONFIRMED_REVIEW"):
+            v.key_status = "UNVERIFIED"
+            r.add("key statuses withdrawn")
     s.flush()
 
 
@@ -259,8 +273,10 @@ def load_all(s: Session, data_dir: Path) -> Report:
     queue = data_dir / "questions" / "review_queue.json"
     if queue.exists():
         load_review_queue(s, json.loads(queue.read_text()), r)
+    covered: set[int] = set()
     for path in sorted((data_dir / "solver" / "verifications").glob("*.jsonl")):
-        load_verifications(s, read_jsonl(path), r)
+        covered |= load_verifications(s, read_jsonl(path), r)
+    withdraw_verdicts(s, covered, r)
     publish_mocks(s, r)
     return r
 
