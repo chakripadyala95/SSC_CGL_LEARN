@@ -118,9 +118,11 @@ def run_check(code: str | None) -> tuple[bool | None, str]:
 
 def read_runs(root: Path, paper: str, section: str) -> dict[str, list[dict]]:
     """solver_id -> records; later lines for the same question replace earlier ones (re-runs)."""
-    runs: dict[str, list[dict]] = {}
-    for f in sorted((root / "data" / "solver" / "runs" / paper / section).glob("*.jsonl")):
-        recs = {}
+    runs: dict[str, dict[str, dict]] = defaultdict(dict)
+    # "<solver>.jsonl" plus re-run files "<solver>.<tag>.jsonl"; a re-run replaces that solver's earlier answer
+    for f in sorted((root / "data" / "solver" / "runs" / paper / section).glob("*.jsonl"),
+                    key=lambda f: (f.name.count("."), f.name)):
+        recs = runs[f.name.split(".")[0]]
         for line in f.read_text().splitlines():
             if line.strip():
                 try:
@@ -128,8 +130,7 @@ def read_runs(root: Path, paper: str, section: str) -> dict[str, list[dict]]:
                 except json.JSONDecodeError:
                     continue
                 recs[r.get("question_id")] = r
-        runs[f.stem] = list(recs.values())
-    return runs
+    return {solver: list(recs.values()) for solver, recs in runs.items()}
 
 
 def decide(key: str | None, section: str, verdicts: list[dict]) -> str:

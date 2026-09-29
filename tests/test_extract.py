@@ -108,3 +108,10 @@ def test_provisional_tags(section, stem, topic):
 def test_image_only_stem_is_not_guessed():
     rec = {"section": "QUANT", "stem_text": "", "options": [{"text": "15%"}], "has_visual": True}
     assert tag(rec)["topic"] is None
+
+
+def test_blind_stem_crop_stops_above_first_option():
+    # Q4 of 10.09.2024 09:00: option 1's figure starts above its "1." label; the stem crop must not reach it
+    recs, _ = extract_paper(ROOT, source("10.09.2024", "0900"), images=False)
+    q4 = next(r for r in recs if r["section"] == "QUANT" and r["q_no"] == 4)
+    assert q4["stem_crop_bbox"][-1]["bbox"][3] < 522

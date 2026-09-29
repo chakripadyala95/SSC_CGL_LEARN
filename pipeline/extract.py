@@ -190,8 +190,8 @@ def _assign_option_images(q: RawQuestion) -> None:
         level = s.page == first.line.page and s.bbox[3] > first.span_bbox[1] + 1
         if level and s.kind == "image":
             trailing.append(s)
-        elif level and s.bbox[1] >= first.span_bbox[1] - 1:
-            continue  # "Ans" label glyphs beside the options; keeps the blind stem crop free of options
+        elif (level and s.bbox[1] >= first.span_bbox[1] - 1) or (s.kind == "line" and s.text == "Ans"):
+            continue  # "Ans" label and its glyphs beside the options; keeps the blind stem crop free of options
         else:
             keep_stem.append(s)
     q.stem = keep_stem
@@ -390,6 +390,13 @@ def extract_paper(root: Path, src: dict, images: bool) -> tuple[list[dict], list
             reasons.append("empty stem with no image")
 
         stem_regions = region_by_page(q.stem) if q.stem else []
+        # the blind stem crop must stop above the first option row (its marker, label and figure)
+        row1 = [q.options[0].span_bbox[1]] + [i.bbox[1] for i in q.options[0].images] \
+            + ([q.options[0].marker.bbox[1]] if q.options[0].marker else [])
+        cut = min(row1) - 0.5
+        stem_regions = [(p, (bb[0], bb[1], bb[2], min(bb[3], cut))) if p == q.options[0].line.page else (p, bb)
+                        for p, bb in stem_regions]
+        stem_regions = [(p, bb) for p, bb in stem_regions if bb[3] > bb[1]]
         opt_items = [o.line for o in q.options] + [img for o in q.options for img in o.images] \
             + [o.marker for o in q.options if o.marker]
         full_regions = region_by_page(q.stem + opt_items)
@@ -424,6 +431,7 @@ def extract_paper(root: Path, src: dict, images: bool) -> tuple[list[dict], list
             "stem_text": stem_text,
             "stem_text_complete": bool(stem_text) and not stem_imgs,
             "stem_image": rel(stem_img_path) if stem_img_path else None,
+            "stem_crop_bbox": [{"page": p + 1, "bbox": [round(v, 1) for v in bb]} for p, bb in stem_regions],
             "options": options,
             "official_answer": official,
             "answer_text_layer": ans_text,
