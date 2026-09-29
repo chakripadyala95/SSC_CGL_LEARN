@@ -1,0 +1,238 @@
+[
+ {
+  "paper_id": "2024-09-10_0900",
+  "section": "QUANT",
+  "q_no": 4,
+  "question_id": "630680380394",
+  "status": "KEY_DISPUTED",
+  "official_answer": "A",
+  "solver_answers": {
+   "quant-a": "C",
+   "quant-b": "C"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-10_0900/Q04.png"
+ },
+ {
+  "paper_id": "2024-09-10_0900",
+  "section": "REASONING",
+  "q_no": 14,
+  "question_id": "630680163562",
+  "status": "KEY_DISPUTED",
+  "official_answer": "D",
+  "solver_answers": {
+   "reasoning-a": "A",
+   "reasoning-b-fig": "B",
+   "reasoning-c": "B"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-10_0900/R14.png"
+ },
+ {
+  "paper_id": "2024-09-12_1600",
+  "section": "QUANT",
+  "q_no": 11,
+  "question_id": "2024-09-12_1600_QUANT_11",
+  "status": "EXTRACTION_REVIEW",
+  "official_answer": "C",
+  "solver_answers": {
+   "quant-a": "C",
+   "quant-b": "C"
+  },
+  "extraction_review_reasons": [
+   "Question ID not found",
+   "option 4 marker icon missing"
+  ],
+  "question_crop": "data/questions/assets/2024-09-12_1600/Q11.png"
+ },
+ {
+  "paper_id": "2024-09-12_1600",
+  "section": "REASONING",
+  "q_no": 10,
+  "question_id": "630680295186",
+  "status": "KEY_DISPUTED",
+  "official_answer": "D",
+  "solver_answers": {
+   "reasoning-a": "D",
+   "reasoning-b-fig": "C",
+   "reasoning-c": "C"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-12_1600/R10.png"
+ },
+ {
+  "paper_id": "2024-09-13_1230",
+  "section": "QUANT",
+  "q_no": 13,
+  "question_id": "2024-09-13_1230_QUANT_13",
+  "status": "EXTRACTION_REVIEW",
+  "official_answer": "D",
+  "solver_answers": {
+   "quant-a": "D",
+   "quant-b": "D"
+  },
+  "extraction_review_reasons": [
+   "Question ID not found"
+  ],
+  "question_crop": "data/questions/assets/2024-09-13_1230/Q13.png"
+ },
+ {
+  "paper_id": "2024-09-17_1230",
+  "section": "REASONING",
+  "q_no": 1,
+  "question_id": "630680163564",
+  "status": "KEY_DISPUTED",
+  "official_answer": "A",
+  "solver_answers": {
+   "reasoning-a": "C",
+   "reasoning-b-fig": "C"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-17_1230/R01.png"
+ },
+ {
+  "paper_id": "2024-09-18_1230",
+  "section": "REASONING",
+  "q_no": 5,
+  "question_id": "630680295188",
+  "status": "KEY_DISPUTED",
+  "official_answer": "D",
+  "solver_answers": {
+   "reasoning-a": "C",
+   "reasoning-b-fig": "C"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-18_1230/R05.png"
+ },
+ {
+  "paper_id": "2024-09-18_1600",
+  "section": "REASONING",
+  "q_no": 4,
+  "question_id": "630680416650",
+  "status": "KEY_DISPUTED",
+  "official_answer": "B",
+  "solver_answers": {
+   "reasoning-a": "A",
+   "reasoning-b": "A"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-18_1600/R04.png"
+ },
+ {
+  "paper_id": "2024-09-23_0900",
+  "section": "QUANT",
+  "q_no": 4,
+  "question_id": "630680384351",
+  "status": "KEY_DISPUTED",
+  "official_answer": "C",
+  "solver_answers": {
+   "quant-a": "A",
+   "quant-b": "A"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-23_0900/Q04.png"
+ },
+ {
+  "paper_id": "2024-09-23_0900",
+  "section": "REASONING",
+  "q_no": 21,
+  "question_id": "630680163561",
+  "status": "KEY_DISPUTED",
+  "official_answer": "D",
+  "solver_answers": {
+   "reasoning-a": "A",
+   "reasoning-b-fig": "A"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-23_0900/R21.png"
+ },
+ {
+  "paper_id": "2024-09-24_0900",
+  "section": "QUANT",
+  "q_no": 20,
+  "question_id": "630680397291",
+  "status": "KEY_DISPUTED",
+  "official_answer": "D",
+  "solver_answers": {
+   "quant-a": "C",
+   "quant-b": "C"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-24_0900/Q20.png"
+ },
+ {
+  "paper_id": "2024-09-24_1600",
+  "section": "QUANT",
+  "q_no": 20,
+  "question_id": "2024-09-24_1600_QUANT_20",
+  "status": "KEY_DISPUTED",
+  "official_answer": "C",
+  "solver_answers": {
+   "quant-a": "B",
+   "quant-b": "B"
+  },
+  "extraction_review_reasons": [
+   "Question ID not found"
+  ],
+  "question_crop": "data/questions/assets/2024-09-24_1600/Q20.png"
+ },
+ {
+  "paper_id": "2024-09-25_0900",
+  "section": "REASONING",
+  "q_no": 3,
+  "question_id": "630680296652",
+  "status": "KEY_DISPUTED",
+  "official_answer": "B",
+  "solver_answers": {
+   "reasoning-a": "D",
+   "reasoning-b-fig": "B",
+   "reasoning-c": "D"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-25_0900/R03.png"
+ },
+ {
+  "paper_id": "2024-09-25_1230",
+  "section": "REASONING",
+  "q_no": 15,
+  "question_id": "630680196583",
+  "status": "KEY_DISPUTED",
+  "official_answer": "B",
+  "solver_answers": {
+   "reasoning-a": "A",
+   "reasoning-b": "A"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-25_1230/R15.png"
+ },
+ {
+  "paper_id": "2024-09-25_1600",
+  "section": "QUANT",
+  "q_no": 21,
+  "question_id": "630680413500",
+  "status": "KEY_DISPUTED",
+  "official_answer": "B",
+  "solver_answers": {
+   "quant-a": "C",
+   "quant-b": "C"
+  },
+  "extraction_review_reasons": [],
+  "question_crop": "data/questions/assets/2024-09-25_1600/Q21.png"
+ },
+ {
+  "paper_id": "2024-09-26_1600",
+  "section": "QUANT",
+  "q_no": 15,
+  "question_id": "630680402",
+  "status": "EXTRACTION_REVIEW",
+  "official_answer": "A",
+  "solver_answers": {
+   "quant-a": "A",
+   "quant-b": "A"
+  },
+  "extraction_review_reasons": [
+   "Question ID box clipped by an overflowing stem"
+  ],
+  "question_crop": "data/questions/assets/2024-09-26_1600/Q15.png"
+ }
+]

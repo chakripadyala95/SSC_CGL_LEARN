@@ -35,3 +35,22 @@ def test_run_check_sandbox():
     assert ok is False and "AssertionError" in note
     assert run_check(None) == (None, "no check code")
     assert run_check("while True: pass")[1] == "timeout"
+
+
+def test_report_rolls_up_and_queues_unconfirmed(tmp_path):
+    import json
+    from pipeline.solve import report
+    (tmp_path / "data" / "questions").mkdir(parents=True)
+    (tmp_path / "data" / "solver" / "verifications").mkdir(parents=True)
+    qs = [{"paper_id": "p", "ssc_question_id": str(i), "section": "QUANT", "q_no": i, "review_reasons": [],
+           "question_crop": f"Q{i}.png"} for i in (1, 2)]
+    (tmp_path / "data" / "questions" / "questions.jsonl").write_text("".join(json.dumps(q) + "\n" for q in qs))
+    rows = [{"paper_id": "p", "section": "QUANT", "q_no": 1, "question_id": "1", "official_answer": "A",
+             "status": "KEY_CONFIRMED_CODE", "solver_answers": {"quant-a": "A", "quant-b": "A"}},
+            {"paper_id": "p", "section": "QUANT", "q_no": 2, "question_id": "2", "official_answer": "A",
+             "status": "KEY_DISPUTED", "solver_answers": {"quant-a": "B", "quant-b": "B"}}]
+    (tmp_path / "data" / "solver" / "verifications" / "p.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    res = report(tmp_path)
+    assert res["agree"] == res["both"] == 2
+    assert [q["question_id"] for q in res["queue"]] == ["2"]
+    assert "| p | 1 | 0 | 1 |" in (tmp_path / "data" / "solver" / "SUMMARY.md").read_text()
