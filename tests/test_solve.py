@@ -53,4 +53,4 @@ def test_report_rolls_up_and_queues_unconfirmed(tmp_path):
     res = report(tmp_path)
     assert res["agree"] == res["both"] == 2
     assert [q["question_id"] for q in res["queue"]] == ["2"]
-    assert "| p | 1 | 0 | 1 |" in (tmp_path / "data" / "solver" / "SUMMARY.md").read_text()
+    assert "| p | QUANT | 2 | 1 | 0 | 1 |" in (tmp_path / "data" / "solver" / "SUMMARY.md").read_text()

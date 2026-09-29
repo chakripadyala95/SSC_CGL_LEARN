@@ -243,10 +243,11 @@ def report(root: Path) -> dict:
     rows = []
     for f in sorted((root / "data" / "solver" / "verifications").glob("*.jsonl")):
         rows += [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
-    cols = ["KEY_CONFIRMED_CODE", "KEY_CONFIRMED_DUAL", *REVIEW_STATUSES]
-    per_paper: dict[str, Counter] = defaultdict(Counter)
+    cols = ["parsed", "KEY_CONFIRMED_CODE", "KEY_CONFIRMED_DUAL", *REVIEW_STATUSES]
+    per_paper: dict[tuple[str, str], Counter] = defaultdict(Counter)
     for r in rows:
-        per_paper[r["paper_id"]][r["status"]] += 1
+        per_paper[(r["paper_id"], r["section"])][r["status"]] += 1
+        per_paper[(r["paper_id"], r["section"])]["parsed"] += 1
     total = sum(per_paper.values(), Counter())
 
     def first_two(r: dict) -> tuple[str | None, str | None]:
@@ -264,11 +265,12 @@ def report(root: Path) -> dict:
              f"to review: {sum(total[s] for s in REVIEW_STATUSES)}",
              f"- Solvers A and B agreed on {len(agree)}/{len(both)} questions; where they agreed, "
              f"the sheet's key matched {sum(a == r['official_answer'] for a, r in agree)}/{len(agree)}", "",
-             "| Paper | " + " | ".join(c.replace("KEY_", "").replace("_", " ").lower() for c in cols) + " |",
-             "|---" * (len(cols) + 1) + "|"]
-    for paper in sorted(per_paper):
-        lines.append(f"| {paper} | " + " | ".join(str(per_paper[paper][c]) for c in cols) + " |")
-    lines.append("| **total** | " + " | ".join(f"**{total[c]}**" for c in cols) + " |")
+             "| Paper | Section | " + " | ".join(c.replace("KEY_", "").replace("_", " ").lower() for c in cols) + " |",
+             "|---" * (len(cols) + 2) + "|"]
+    for paper, section in sorted(per_paper):
+        lines.append(f"| {paper} | {section} | "
+                     + " | ".join(str(per_paper[(paper, section)][c]) for c in cols) + " |")
+    lines.append("| **total** | | " + " | ".join(f"**{total[c]}**" for c in cols) + " |")
     queue = []
     for r in rows:
         if r["status"] not in REVIEW_STATUSES:
