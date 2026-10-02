@@ -1,0 +1,683 @@
+[
+ {
+  "id": "ratio-proportion.ratio-to-parts",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Ratio basics",
+  "name": "Dividing a quantity in a ratio",
+  "statement": "\\text{In } a:b,\\ \\text{parts}=\\frac{a}{a+b}T,\\ \\frac{b}{a+b}T",
+  "conditions": [
+   "$a, b > 0$",
+   "difference form needs $a \\neq b$"
+  ],
+  "derivation": [
+   "Write the parts as $ak$ and $bk$: same multiplier $k$ keeps the ratio $a:b$.",
+   "Total: $ak + bk = T$, so one part $k = \\frac{T}{a+b}$.",
+   "Parts: $ak = \\frac{a}{a+b}T$ and $bk = \\frac{b}{a+b}T$.",
+   "Given a difference $D$ instead: $|b-a|k = D$, so $k = \\frac{D}{|b-a|}$."
+  ],
+  "visual_proof": "A bar for the total cut into $a+b$ equal blocks; each person takes their number of blocks.",
+  "shortcut": "Find one part first: $k=\\frac{\\text{total}}{\\text{sum of terms}}$ or $\\frac{\\text{difference}}{\\text{difference of terms}}$, then multiply.",
+  "worked_example": {
+   "question_key": "2024-09-26_0900_Q05",
+   "answer": "B",
+   "steps": [
+    "Profit shared = $91\\%$ of $2{,}50{,}000 = 2{,}27{,}500$ (9% goes to charity).",
+    "Sum of terms $2+3+5 = 10$, so one part $= 22{,}750$.",
+    "C gets $5 \\times 22{,}750 = 1{,}13{,}750$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Sharing the full ₹2,50,000 without removing the 9% for charity: C gets ₹1,25,000, which is not an option.",
+   "Dividing by the larger term instead of the sum: $\\frac{T}{b}$ is not one part.",
+   "Using the sum of terms with a difference ($\\frac{210}{7}$ in a 2:5 split) instead of $5-2$: gives 60 instead of 140.",
+   "When coins of different values are in a ratio, sharing the money value in that ratio: the ratio is of counts, so weight each term by its coin value first."
+  ],
+  "related_ids": [
+   "ratio-proportion.simplify-ratio",
+   "ratio-proportion.combine-ratios",
+   "ratio-proportion.partnership"
+  ],
+  "diagram": {
+   "alt_text": "A bar for ₹2,27,500 split into 2, 3 and 5 equal blocks: A ₹45,500, B ₹68,250, C ₹1,13,750.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Profit after charity",
+      "parts": [
+       {
+        "value": 45500,
+        "label": "A: 2 parts = ₹45,500"
+       },
+       {
+        "value": 68250,
+        "label": "B: 3 parts = ₹68,250"
+       },
+       {
+        "value": 113750,
+        "label": "C: 5 parts = ₹1,13,750"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    a, b = random.randint(1, 50), random.randint(1, 50)\n    T = F(random.randint(1, 10**6), random.randint(1, 20))\n    pa, pb = F(a, a + b) * T, F(b, a + b) * T\n    k = T / (a + b)                      # value of one part\n    assert pa == a * k and pb == b * k\n    assert pa + pb == T and pa * b == pb * a\n    if a != b:                           # difference shortcut\n        D = abs(pb - pa)\n        assert D / abs(b - a) == k\n    n += 1\n# worked example: 91% of 2,50,000 shared 2:3:5\nP = F(91, 100) * 250000\nassert P * F(5, 10) == 113750\nprint(f\"CASES={n}\")\nfor a, b in [(1, -1), (0, 0)]:           # a + b = 0: no share possible\n    try:\n        F(a, a + b); raise AssertionError\n    except ZeroDivisionError:\n        pass\ntry:                                     # a = b: difference 0 cannot fix one part\n    F(30, 3 - 3); raise AssertionError\nexcept ZeroDivisionError:\n    pass\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.simplify-ratio",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Ratio basics",
+  "name": "Forming and simplifying a ratio",
+  "statement": "a:b=\\frac{a}{\\gcd(a,b)}:\\frac{b}{\\gcd(a,b)};\\ \\text{ratio of totals}=\\Sigma a_i:\\Sigma b_i",
+  "conditions": [],
+  "derivation": [
+   "A ratio $a:b$ is the fraction $\\frac ab$; dividing both terms by the same number keeps its value.",
+   "Dividing by $\\gcd(a,b)$ removes every common factor, so the result is in lowest terms.",
+   "For groups, add each side first, then form one ratio: $\\Sigma a_i : \\Sigma b_i$.",
+   "Fractions or decimals: multiply both terms by the LCM of denominators (or a power of 10) to get whole numbers, then reduce."
+  ],
+  "visual_proof": "Two bars built from the given values; both lengths divided into blocks of size gcd give the lowest-term counts.",
+  "shortcut": "Strip obvious common factors in stages (÷5, ÷5, …) instead of hunting the gcd at once; check the options for which one matches $a:b$ in order.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_Q20",
+   "answer": "C",
+   "steps": [
+    "B in 2019, 2020, 2022: $350+375+200 = 925$.",
+    "A in 2018, 2020, 2021: $150+300+250 = 700$.",
+    "$\\gcd(925, 700) = 25$: $925:700 = 37:28$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Writing the ratio in the reverse order (A to B): gives 28:37, option B.",
+   "Adding the separate ratios $\\frac{350}{150}+\\dots$ instead of the totals: ratio of totals is not a sum of ratios.",
+   "Stopping before lowest terms (185:140) and then not finding it in the options."
+  ],
+  "related_ids": [
+   "ratio-proportion.ratio-to-parts",
+   "ratio-proportion.combine-ratios",
+   "ratio-proportion.proportion-unitary"
+  ],
+  "diagram": {
+   "alt_text": "Two bars: Institute B in 2019, 2020, 2022 made of 350, 375 and 200 (total 925); Institute A in 2018, 2020, 2021 made of 150, 300 and 250 (total 700).",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "B (2019, 2020, 2022)",
+      "parts": [
+       {
+        "value": 350,
+        "label": "350"
+       },
+       {
+        "value": 375,
+        "label": "375"
+       },
+       {
+        "value": 200,
+        "label": "200"
+       }
+      ]
+     },
+     {
+      "label": "A (2018, 2020, 2021)",
+      "parts": [
+       {
+        "value": 150,
+        "label": "150"
+       },
+       {
+        "value": 300,
+        "label": "300"
+       },
+       {
+        "value": 250,
+        "label": "250"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom math import gcd\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    a, b = random.randint(1, 10**5), random.randint(1, 10**5)\n    g = gcd(a, b)\n    x, y = a // g, b // g\n    assert x * b == y * a and gcd(x, y) == 1          # same ratio, lowest terms\n    m = random.randint(2, 6)\n    A = [random.randint(1, 1000) for _ in range(m)]\n    B = [random.randint(1, 1000) for _ in range(m)]\n    assert F(sum(A), sum(B)) == sum(A) / F(1) / sum(B)  # ratio of totals\n    n += 1\n# ratio of totals is not the sum of the separate ratios\nassert F(1 + 1, 2 + 3) != F(1, 2) + F(1, 3)\n# worked example: B 350+375+200 vs A 150+300+250\ns1, s2 = 350 + 375 + 200, 150 + 300 + 250\ng = gcd(s1, s2)\nassert (s1, s2, g, s1 // g, s2 // g) == (925, 700, 25, 37, 28)\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.equal-ratios",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Ratio basics",
+  "name": "Equal ratios (addendo, componendo-dividendo)",
+  "statement": "\\frac ab=\\frac cd=k \\Rightarrow \\frac{a+c}{b+d}=k,\\ \\frac{a+b}{a-b}=\\frac{c+d}{c-d}",
+  "conditions": [
+   "$b + d \\neq 0$ (and the same for any weighted sum below)",
+   "componendo-dividendo needs $a \\neq b$, i.e. $k \\neq 1$"
+  ],
+  "derivation": [
+   "Write $a = bk$, $c = dk$.",
+   "Addendo: $\\frac{a+c}{b+d} = \\frac{k(b+d)}{b+d} = k$; with weights, $\\frac{pa+qc+re}{pb+qd+rf} = k$ the same way.",
+   "Componendo-dividendo: $\\frac{a+b}{a-b} = \\frac{b(k+1)}{b(k-1)} = \\frac{k+1}{k-1}$.",
+   "The right side depends only on $k$, so $\\frac{c+d}{c-d}$ gives the same value."
+  ],
+  "visual_proof": null,
+  "shortcut": "Same coefficients on top and bottom keep the common ratio: $\\frac{pa+qc+re}{pb+qd+rf}=\\frac ab$, no algebra needed.",
+  "worked_example": {
+   "question_key": "2024-09-26_1230_Q08",
+   "answer": "D",
+   "steps": [
+    "$a = 5t, b = 7t$; $c = 5u, d = 7u$; $e = 5v, f = 7v$.",
+    "Top $= 5(3t+5u+11v)$, bottom $= 7(3t+5u+11v)$.",
+    "Ratio $= 5:7$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Mixing coefficients (3 on $a$ but 5 on $b$): the ratio is then not $k$.",
+   "Adding the coefficients into the answer (3+5+11) and picking 11:7 or 7:11.",
+   "Using componendo-dividendo when $a=b$: both sides divide by zero.",
+   "Adding ratios with different $k$ ($\\frac12$ and $\\frac13$) and expecting $\\frac{2}{5}$ to equal either."
+  ],
+  "related_ids": [
+   "ratio-proportion.proportion-unitary",
+   "ratio-proportion.ratio-change",
+   "ratio-proportion.simplify-ratio"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nb, d, f, k, p, q, r = sp.symbols('b d f k p q r', nonzero=True)\na, c, e = k * b, k * d, k * f\nassert sp.simplify((a + c) / (b + d) - k) == 0\nassert sp.simplify((p * a + q * c + r * e) / (p * b + q * d + r * f) - k) == 0\nassert sp.simplify((a + b) / (a - b) - (c + d) / (c - d)) == 0\nassert sp.simplify((a + b) / (a - b) - (k + 1) / (k - 1)) == 0\n# worked example: a:b = c:d = e:f = 5:7, coefficients 3, 5, 11\nB, D, Fv = 7, 14, 21\nA, C, E = sp.Rational(5, 7) * B, sp.Rational(5, 7) * D, sp.Rational(5, 7) * Fv\nassert (3 * A + 5 * C + 11 * E) / (3 * B + 5 * D + 11 * Fv) == sp.Rational(5, 7)\n# boundaries\nkk, bb, dd = 2, 1, -1          # b + d = 0: addendo has no value\nassert (sp.S(kk * bb + kk * dd) / (bb + dd)) is sp.nan\nkk, bb = 1, 4                   # k = 1 (a = b): componendo-dividendo divides by zero\nassert sp.S(kk * bb + bb) / (kk * bb - bb) is sp.zoo\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.combine-ratios",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Compound ratio",
+  "name": "Combining a:b and b:c",
+  "statement": "a:b=p:q,\\ b:c=r:s \\Rightarrow a:b:c=pr:qr:qs",
+  "conditions": [],
+  "derivation": [
+   "The common term $b$ is $q$ in the first ratio and $r$ in the second.",
+   "Scale the first by $r$: $a:b = pr:qr$.",
+   "Scale the second by $q$: $b:c = qr:qs$.",
+   "$b$ is now $qr$ in both, so $a:b:c = pr:qr:qs$; reduce by the common factor."
+  ],
+  "visual_proof": "Two rows, A:B and B:C, with the B column brought to the same number; read A:B:C straight across.",
+  "shortcut": "N-shape: multiply the two outer numbers down, $a:b:c = p\\cdot r : q\\cdot r : q\\cdot s$; simplify each ratio first to keep numbers small.",
+  "worked_example": {
+   "question_key": "2024-09-13_0900_Q18",
+   "answer": "B",
+   "steps": [
+    "Simplify first: $A:B = 3:4$, $B:C = 1:2$.",
+    "Make B equal: $B:C = 4:8$.",
+    "$A:B:C = 3:4:8$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Writing $p:q:s$ (6:8:10) without matching the common term.",
+   "Matching $B$ but multiplying the wrong side, giving $C$ too small.",
+   "Not reducing at the end: 30:40:80 is right but appears as 3:4:8."
+  ],
+  "related_ids": [
+   "ratio-proportion.simplify-ratio",
+   "ratio-proportion.ratio-to-parts"
+  ],
+  "diagram": {
+   "alt_text": "Table: A:B = 6:8 and B:C = 5:10 rewritten so B is 40 in both, giving A:B:C = 30:40:80 = 3:4:8.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "",
+     "A",
+     "B",
+     "C"
+    ],
+    "rows": [
+     [
+      "A:B",
+      "6",
+      "8",
+      ""
+     ],
+     [
+      "B:C",
+      "",
+      "5",
+      "10"
+     ],
+     [
+      "A:B × 5",
+      "30",
+      "40",
+      ""
+     ],
+     [
+      "B:C × 8",
+      "",
+      "40",
+      "80"
+     ],
+     [
+      "A:B:C",
+      "3",
+      "4",
+      "8"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nfrom math import gcd\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    p, q, r, s = (random.randint(1, 60) for _ in range(4))\n    a, b, c = p * r, q * r, q * s\n    assert F(a, b) == F(p, q) and F(b, c) == F(r, s)\n    n += 1\ndef combine(p, q, r, s):\n    a, b, c = p * r, q * r, q * s\n    g = gcd(gcd(a, b), c)\n    return a // g, b // g, c // g\nassert combine(6, 8, 5, 10) == (3, 4, 8)\nassert combine(6, 8, 7, 10) == (21, 28, 40)\nassert combine(6, 8, 7, 12) == (21, 28, 48)\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:37+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.proportionals",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Proportionals",
+  "name": "Mean, third and fourth proportional",
+  "statement": "\\text{mean}=\\sqrt{ab};\\ \\text{third}=\\frac{b^2}a;\\ a:b=c:x \\Rightarrow x=\\frac{bc}a",
+  "conditions": [
+   "$a, b > 0$ for the mean proportional",
+   "$a \\neq 0$ for the third and fourth proportional"
+  ],
+  "derivation": [
+   "Mean proportional $m$: $a:m = m:b$, so $m^2 = ab$ and $m = \\sqrt{ab}$.",
+   "Third proportional $t$: $a:b = b:t$, so $at = b^2$ and $t = \\frac{b^2}{a}$.",
+   "Fourth proportional $x$: $a:b = c:x$, so $ax = bc$ and $x = \\frac{bc}{a}$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Mean proportional = $\\sqrt{a}\\cdot\\sqrt{b}$: take roots separately when both are squares ($\\sqrt{12.96}\\cdot\\sqrt{0.16} = 3.6\\times0.4$).",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q18",
+   "answer": "B",
+   "steps": [
+    "$m^2 = 2 \\times 32 = 64$.",
+    "$m = 8$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Taking the arithmetic mean $\\frac{a+b}{2}$ (gives 17) instead of $\\sqrt{ab}$.",
+   "Third proportional as $\\frac{a^2}{b}$: the repeated term is the middle one, $b$.",
+   "Fourth proportional with terms out of order: $a:b = c:x$ is not $a:c = b:x$ unless written that way."
+  ],
+  "related_ids": [
+   "ratio-proportion.proportion-unitary",
+   "ratio-proportion.equal-ratios"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b, c = sp.symbols('a b c', positive=True)\nm = sp.sqrt(a * b)\nassert sp.simplify(a / m - m / b) == 0           # a : m = m : b\nt = b**2 / a\nassert sp.simplify(a / b - b / t) == 0           # a : b = b : t\nx = b * c / a\nassert sp.simplify(a / b - c / x) == 0           # a : b = c : x\nassert sp.sqrt(2 * 32) == 8\nassert sp.sqrt(sp.Rational(1296, 100) * sp.Rational(16, 100)) == sp.Rational(144, 100)\n# boundaries\nassert sp.S(4)**2 / 0 == sp.zoo                  # a = 0: third proportional undefined\nassert not sp.sqrt(-2 * 32).is_real              # a b < 0: no real mean proportional\nassert sp.sqrt(0 * 32) == 0                      # a = 0 gives the degenerate mean 0\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:37+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.proportion-unitary",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Proportionals",
+  "name": "Proportion and the unitary method",
+  "statement": "a:b=c:d \\iff ad=bc;\\ \\text{value of 1 unit}=\\frac{\\text{total}}{\\text{units}}",
+  "conditions": [
+   "$b, d \\neq 0$"
+  ],
+  "derivation": [
+   "$a:b = c:d$ means $\\frac ab = \\frac cd$.",
+   "Multiply both sides by $bd$: $ad = bc$ (product of extremes = product of means).",
+   "Unitary method: if $u$ units are worth a total, one unit is worth $\\frac{\\text{total}}{u}$; multiply by the units wanted."
+  ],
+  "visual_proof": null,
+  "shortcut": "Missing term = (product of the two diagonal terms) ÷ the third term.",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_Q08",
+   "answer": "D",
+   "steps": [
+    "$A:C = B:D$ gives $25:30 = 40:D$.",
+    "$25D = 30 \\times 40 = 1200$.",
+    "$D = 48$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Adding the gap instead of scaling: $40 + (30 - 25) = 45$, option A.",
+   "Multiplying the wrong pair ($25 \\times 40 \\div 30 \\approx 33.3$).",
+   "In a pie chart, scaling by the angle of the wrong sector: always divide by the sector whose value is given."
+  ],
+  "related_ids": [
+   "ratio-proportion.proportionals",
+   "ratio-proportion.equal-ratios",
+   "percentage.percent-of-quantity"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    a, b, c = (random.randint(1, 1000) for _ in range(3))\n    d = F(b * c, a)                     # fourth term from ad = bc\n    assert F(a, b) == c / d             # a:b = c:d\n    assert a * d == b * c\n    d2 = d + random.randint(1, 50)\n    assert F(a, b) != c / d2 and a * d2 != b * c\n    total, units = F(random.randint(1, 10**5)), random.randint(1, 100)\n    one = total / units\n    assert one * units == total\n    n += 1\n# worked example: A:C = B:D with A=25, B=40, C=30\nassert F(40 * 30, 25) == 48\nprint(f\"CASES={n}\")\n# boundary b = 0 or d = 0: ad = bc can hold while a/b is undefined\na, b, c, d = 0, 0, 1, 5\nassert a * d == b * c\ntry:\n    F(a, b); raise AssertionError\nexcept ZeroDivisionError:\n    pass\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:37+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.ratio-change",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Ratio change",
+  "name": "Ratio after adding/removing",
+  "statement": "\\frac{a+x}{b+y}=\\frac pq\\ \\text{with } a=ka_0,\\ b=kb_0 \\Rightarrow k=\\frac{py-qx}{qa_0-pb_0}",
+  "conditions": [
+   "$qa_0 \\neq pb_0$: the new ratio must differ from the old one"
+  ],
+  "derivation": [
+   "Write the old amounts as $ka_0$ and $kb_0$.",
+   "Cross-multiply the new ratio: $q(ka_0 + x) = p(kb_0 + y)$.",
+   "Collect $k$: $k(qa_0 - pb_0) = py - qx$.",
+   "Divide: $k = \\frac{py - qx}{qa_0 - pb_0}$, then the amounts are $ka_0$, $kb_0$."
+  ],
+  "visual_proof": "Before and after bars; the unchanged side has the same length in both, so its ratio terms are made equal and the added amount is read off in units.",
+  "shortcut": "If one side does not change, make its terms equal in both ratios; the change in the other term is the added amount in units.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_Q12",
+   "answer": "C",
+   "steps": [
+    "Females unchanged: $2:3 = 4:6$ and new $5:6$.",
+    "Males go $4 \\to 5$ units: 1 unit $= 200$.",
+    "Females $= 6$ units $= 1200$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Matching units without making the unchanged side equal (2→5 is not 3 units here).",
+   "Answering the new total or the males (1000) when females are asked.",
+   "Adding the extra people to both sides of the ratio."
+  ],
+  "related_ids": [
+   "ratio-proportion.ratio-to-parts",
+   "mixture-alligation.add-to-mixture",
+   "ratio-proportion.equal-ratios"
+  ],
+  "diagram": {
+   "alt_text": "Two bars before and after: males 800 then 1,000 (4 then 5 units of 200), females 1,200 in both (6 units).",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Before (4 : 6)",
+      "parts": [
+       {
+        "value": 800,
+        "label": "Males 800"
+       },
+       {
+        "value": 1200,
+        "label": "Females 1,200"
+       }
+      ]
+     },
+     {
+      "label": "After (5 : 6)",
+      "parts": [
+       {
+        "value": 1000,
+        "label": "Males 1,000 (+200)"
+       },
+       {
+        "value": 1200,
+        "label": "Females 1,200"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    a0, b0 = random.randint(1, 20), random.randint(1, 20)\n    k = random.randint(1, 500)\n    x, y = random.randint(0, 500), random.randint(0, 500)\n    r = F(k * a0 + x, k * b0 + y)            # the new ratio p:q\n    p, q = r.numerator, r.denominator\n    if q * a0 == p * b0:\n        continue\n    assert F(p * y - q * x, q * a0 - p * b0) == k   # solve for k\n    if y == 0:                                # one side unchanged: equalise its terms\n        L = b0 * q                            # common value for the unchanged side\n        before, after = a0 * L // b0, p * L // q\n        assert after != before\n        unit = F(x, after - before)\n        assert unit * L / b0 == k             # one unit of the scaled ratio = k / (L / b0)\n    n += 1\n# worked example: M:F = 2:3, M + 200 -> 5:6\nassert F(5 * 0 - 6 * 200, 6 * 2 - 5 * 3) == 400 and 3 * 400 == 1200\nprint(f\"CASES={n}\")\n# boundary: new ratio equal to the old one (q a0 = p b0) leaves k undetermined\na0, b0, p, q = 2, 3, 4, 6\ntry:\n    F(p * 30 - q * 20, q * a0 - p * b0); raise AssertionError\nexcept ZeroDivisionError:\n    pass\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:37+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.variation",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Variation",
+  "name": "Direct, inverse and joint variation",
+  "statement": "y\\propto x \\Rightarrow y=kx;\\ y\\propto \\tfrac1x \\Rightarrow xy=k;\\ y\\propto \\tfrac{x}{z} \\Rightarrow y=k\\tfrac{x}{z}",
+  "conditions": [
+   "$x \\neq 0$ for inverse variation, $z \\neq 0$ for joint variation"
+  ],
+  "derivation": [
+   "Direct: $y$ grows in the same ratio as $x$, so $\\frac yx$ is constant, $y = kx$.",
+   "Inverse: $y$ shrinks as $x$ grows, so $xy$ is constant.",
+   "Joint: $y = k\\frac{x}{z}$; find $k$ from one given set, then substitute the other.",
+   "Powers carry over: $y \\propto x^2$ means $y = kx^2$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Skip $k$: direct $\\frac{y_1}{x_1}=\\frac{y_2}{x_2}$; inverse $x_1y_1=x_2y_2$; joint $\\frac{y_1z_1}{x_1}=\\frac{y_2z_2}{x_2}$.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_Q22",
+   "answer": "B",
+   "steps": [
+    "Inverse: $xy$ is constant, $2 \\times 6 = 12$.",
+    "$3y = 12$, so $y = 4$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Treating inverse as direct: $y = 6 \\times \\frac32 = 9$.",
+   "Forgetting the square in 'varies as the square of weight': weights 4:3:2:1 give values 16:9:4:1, not 4:3:2:1.",
+   "Using one set of values to find $k$ and the same set to answer."
+  ],
+  "related_ids": [
+   "ratio-proportion.proportion-unitary",
+   "time-work.mdh-formula",
+   "time-speed-distance.speed-time-inverse"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\ndef rq():\n    return F(random.randint(1, 10**4), random.randint(1, 50)) * random.choice([1, -1])\nfor _ in range(1500):\n    k, x1, x2, z1, z2 = rq(), rq(), rq(), rq(), rq()\n    y1, y2 = k * x1, k * x2                       # direct\n    assert y1 / x1 == y2 / x2 and y2 == y1 * x2 / x1\n    y1, y2 = k / x1, k / x2                       # inverse\n    assert x1 * y1 == x2 * y2 and y2 == y1 * x1 / x2\n    y1, y2 = k * x1 / z1, k * x2 / z2             # joint\n    assert y1 * z1 / x1 == y2 * z2 / x2\n    n += 1\nassert F(2 * 6, 3) == 4                           # worked example: x y = 12\nprint(f\"CASES={n}\")\nfor zero in (0,):                                 # x = 0 (inverse) or z = 0 (joint): undefined\n    try:\n        F(12, zero); raise AssertionError\n    except ZeroDivisionError:\n        pass\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:37+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.partnership",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Partnership",
+  "name": "Partnership profit sharing",
+  "statement": "\\text{profit share}\\propto \\text{capital}\\times\\text{time}",
+  "conditions": [],
+  "derivation": [
+   "Each rupee invested for one month earns the same profit.",
+   "A partner's rupee-months $= $ capital $\\times$ months.",
+   "Profit splits in the ratio of rupee-months: $C_1t_1 : C_2t_2 : \\dots$.",
+   "Same time for all: the ratio is just the capitals."
+  ],
+  "visual_proof": "A bar for the profit cut into blocks in the ratio of capital × time; each partner takes their blocks.",
+  "shortcut": "If $pA = qB = rC$, then $A:B:C = \\frac1p:\\frac1q:\\frac1r$; multiply by $\\text{LCM}(p,q,r)$.",
+  "worked_example": {
+   "question_key": "2024-09-24_0900_Q24",
+   "answer": "C",
+   "steps": [
+    "$2A = 4B = 6C$: $A:B:C = \\frac12:\\frac14:\\frac16 = 6:3:2$.",
+    "One part $= \\frac{44000}{11} = 4000$.",
+    "A gets $6 \\times 4000 = 24{,}000$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Taking $A:B:C = 2:4:6$ straight from $2A = 4B = 6C$: gives A ₹8,000 (inverted).",
+   "Ignoring time when partners invest for different months.",
+   "Paying a working partner's salary out of the shared profit after the split instead of before."
+  ],
+  "related_ids": [
+   "ratio-proportion.ratio-to-parts",
+   "ratio-proportion.combine-ratios"
+  ],
+  "diagram": {
+   "alt_text": "A bar for ₹44,000 split 6:3:2: A ₹24,000, B ₹12,000, C ₹8,000.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Profit ₹44,000",
+      "parts": [
+       {
+        "value": 24000,
+        "label": "A: 6 parts = ₹24,000"
+       },
+       {
+        "value": 12000,
+        "label": "B: 3 parts = ₹12,000"
+       },
+       {
+        "value": 8000,
+        "label": "C: 2 parts = ₹8,000"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nfrom math import lcm\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    m = random.randint(2, 4)\n    cap = [random.randint(1, 10**5) for _ in range(m)]\n    t = [random.randint(1, 24) for _ in range(m)]\n    P = F(random.randint(1, 10**6))\n    w = [c * tt for c, tt in zip(cap, t)]\n    share = [P * wi / sum(w) for wi in w]\n    assert sum(share) == P\n    for i in range(m):                           # share per rupee-month is the same for all\n        assert share[i] / w[i] == share[0] / w[0]\n    mult = [random.randint(1, 12) for _ in range(m)]  # p A = q B = r C\n    L = lcm(*mult)\n    base = [L // q for q in mult]                # A:B:C = 1/p : 1/q : 1/r\n    vals = [F(base[i]) for i in range(m)]\n    assert len({vals[i] * mult[i] for i in range(m)}) == 1\n    n += 1\n# worked example: 2A = 4B = 6C -> 6:3:2, A gets 6/11 of 44000\nassert [12 // 2, 12 // 4, 12 // 6] == [6, 3, 2] and F(44000 * 6, 11) == 24000\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:37+00:00"
+   }
+  }
+ },
+ {
+  "id": "ratio-proportion.income-expenditure-ratio",
+  "topic": "Ratio & Proportion",
+  "subtopic": "Income & expenditure ratio",
+  "name": "Income and expenditure in ratios",
+  "statement": "I_1:I_2=a:b,\\ E_1:E_2=c:d \\Rightarrow S_i=I_i-E_i;\\ \\text{set } I_1=ax, I_2=bx, E_1=cy, E_2=dy",
+  "conditions": [],
+  "derivation": [
+   "Incomes and expenses have different multipliers: $I = ax, bx$ and $E = cy, dy$.",
+   "Savings: $S_1 = ax - cy$, $S_2 = bx - dy$.",
+   "One extra fact (a saving, or a savings ratio $e:f$) gives a link between $x$ and $y$.",
+   "Savings ratio $e:f$: $f(ax - cy) = e(bx - dy)$, so $\\frac xy = \\frac{fc - ed}{fa - eb}$."
+  ],
+  "visual_proof": "Each person's income bar split into expense and saving; the expense parts follow one ratio, the income bars another.",
+  "shortcut": "Pick numbers: choose $x$ so the given fact is a whole number (here $k = 3$ makes $y = 1$), then read savings off.",
+  "worked_example": {
+   "question_key": "2024-09-26_1600_Q12",
+   "answer": "C",
+   "steps": [
+    "Incomes $2k, 9k, 3k$; expenses $3m, 9m, 5m$.",
+    "A saves half: $2k - 3m = k$, so $k = 3m$; take $m = 1$, $k = 3$.",
+    "Savings: $6-3 = 3$, $27-9 = 18$, $9-5 = 4$: $3:18:4$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Using one multiplier for incomes and expenses ($I = 2k$, $E = 3k$): gives negative savings.",
+   "Subtracting the ratio terms ($2-3, 9-9, 3-5$) directly.",
+   "Finding savings correctly but writing them in a different order than asked."
+  ],
+  "related_ids": [
+   "percentage.income-expenditure-savings",
+   "ratio-proportion.ratio-to-parts",
+   "ratio-proportion.combine-ratios"
+  ],
+  "diagram": {
+   "alt_text": "Three bars for A, B, C with incomes 6, 27, 9; expense parts 3, 9, 5; saving parts 3, 18, 4.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "A (income 6)",
+      "parts": [
+       {
+        "value": 3,
+        "label": "Expense 3"
+       },
+       {
+        "value": 3,
+        "label": "Saving 3"
+       }
+      ]
+     },
+     {
+      "label": "B (income 27)",
+      "parts": [
+       {
+        "value": 9,
+        "label": "Expense 9"
+       },
+       {
+        "value": 18,
+        "label": "Saving 18"
+       }
+      ]
+     },
+     {
+      "label": "C (income 9)",
+      "parts": [
+       {
+        "value": 5,
+        "label": "Expense 5"
+       },
+       {
+        "value": 4,
+        "label": "Saving 4"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    a, b, c, d = (random.randint(1, 30) for _ in range(4))\n    x, y = random.randint(1, 1000), random.randint(1, 1000)\n    S1, S2 = a * x - c * y, b * x - d * y\n    if S2 == 0:\n        continue\n    e, f = F(S1, S2).numerator, F(S1, S2).denominator\n    if f * a == e * b:\n        continue\n    assert F(f * c - e * d, f * a - e * b) == F(x, y)   # x:y from the savings ratio e:f\n    n += 1\n# worked example: incomes 2:9:3, expenses 3:9:5, A saves half his income\nk = 6\nm = F(k, 3)                       # A: 2k - 3m = k\nS = [2 * k - 3 * m, 9 * k - 9 * m, 3 * k - 5 * m]\nassert [s / S[0] * 3 for s in S] == [3, 18, 4]\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:37+00:00"
+   }
+  }
+ }
+]

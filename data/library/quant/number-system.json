@@ -1,0 +1,420 @@
+[
+ {
+  "id": "number-system.divisibility-rules",
+  "topic": "Number System",
+  "subtopic": "Divisibility",
+  "name": "Divisibility rules (2, 3, 4, 5, 8, 9)",
+  "statement": "2/5/10: last digit;\\ 4: last two digits;\\ 8: last three digits;\\ 3/9: digit sum;\\ \\text{largest } n\\text{-digit multiple of } d=(10^n-1)-((10^n-1)\\bmod d)",
+  "conditions": [],
+  "derivation": [
+   "Write $N = 10q + u$ ($u$ = units digit). $10$ is a multiple of 2, 5 and 10, so only $u$ decides those.",
+   "Write $N = 100q + t$ ($t$ = last two digits). $4 \\mid 100$, so only $t$ decides divisibility by 4.",
+   "Write $N = 1000q + h$ ($h$ = last three digits). $8 \\mid 1000$, so only $h$ decides divisibility by 8.",
+   "$10 \\equiv 1 \\pmod 9$, so $10^k \\equiv 1$ and $N = \\sum d_k10^k \\equiv \\sum d_k \\pmod 9$; the same holds mod 3 because $3 \\mid 9$.",
+   "The largest $n$-digit number is $10^n-1$; dropping its remainder by $d$ leaves the largest multiple of $d$ not above it."
+  ],
+  "visual_proof": null,
+  "shortcut": "Digit sum gives the remainder too: $N \\bmod 9 = (\\text{digit sum}) \\bmod 9$, and the same for 3.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_Q23",
+   "answer": "A",
+   "steps": [
+    "Digit sum of 28735429: $2+8+7+3+5+4+2+9 = 40$.",
+    "$N \\equiv 40 \\pmod 9$ and $40 = 4\\times9 + 4$.",
+    "Remainder = 4 (A)."
+   ]
+  },
+  "common_traps": [
+   "Using the digit sum for 4 or 8: 4 and 8 need the last two / three digits, not the digit sum.",
+   "Taking 'digit sum divisible by 3' as enough for 6 or 12: 6 also needs an even number (see [[f:number-system.divisibility-composite]]).",
+   "Reading the digit sum 40 as the remainder by 9; reduce it again: 40 mod 9 = 4."
+  ],
+  "related_ids": [
+   "number-system.divisibility-by-11",
+   "number-system.divisibility-composite",
+   "number-system.remainder-theorem"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nrandom.seed(0)\n\ndef digit_sum(N):\n    return sum(map(int, str(N)))\n\nn = 0\nfor _ in range(2000):\n    N = random.randint(1, 10**12)\n    s = str(N)\n    last = int(s[-1])\n    assert (N % 2 == 0) == (last % 2 == 0)\n    assert (N % 5 == 0) == (last in (0, 5))\n    assert (N % 10 == 0) == (last == 0)\n    assert (N % 4 == 0) == (N % 100 % 4 == 0)\n    assert (N % 8 == 0) == (N % 1000 % 8 == 0)\n    assert (N % 3 == 0) == (digit_sum(N) % 3 == 0)\n    assert (N % 9 == 0) == (digit_sum(N) % 9 == 0)\n    assert N % 9 == digit_sum(N) % 9          # digit sum also gives the remainder by 9\n    assert N % 3 == digit_sum(N) % 3\n    k = random.randint(1, 4)\n    d = random.randint(1, 10**k)\n    top = 10**k - 1\n    largest = top - top % d\n    assert largest % d == 0 and largest <= top and largest + d > top\n    assert largest == max(m for m in range(max(0, top - d), top + 1) if m % d == 0)\n    n += 1\n# worked example: remainder of 28735429 by 9\nassert digit_sum(28735429) == 40 and 40 % 9 == 4 == 28735429 % 9\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.divisibility-by-11",
+  "topic": "Number System",
+  "subtopic": "Divisibility",
+  "name": "Divisibility by 11",
+  "statement": "11\\mid N \\iff (\\text{sum of odd-place digits}) - (\\text{sum of even-place digits}) \\equiv 0 \\pmod{11}",
+  "conditions": [],
+  "derivation": [
+   "$10 \\equiv -1 \\pmod{11}$, so $10^k \\equiv (-1)^k$.",
+   "$N = \\sum d_k10^k \\equiv d_0 - d_1 + d_2 - \\dots \\pmod{11}$, places counted from the units digit.",
+   "So $11 \\mid N$ exactly when (odd-place sum) $-$ (even-place sum) is $0, \\pm11, \\pm22, \\dots$"
+  ],
+  "visual_proof": null,
+  "shortcut": "Counted from the units digit, the alternating sum is also $N \\bmod 11$ (add 11 if it is negative).",
+  "worked_example": {
+   "question_key": "2024-09-17_1600_Q10",
+   "answer": "A",
+   "steps": [
+    "6954P from the units digit: odd places $P, 5, 6$; even places $4, 9$.",
+    "Difference $= (P+5+6)-(4+9) = P-2$.",
+    "Need $P-2 = 0$ (a digit cannot reach $\\pm11$), so $P = 2$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Forcing the difference to be 0 only: 11, 22 or a negative multiple also work, so check $\\pm 11$.",
+   "Mixing places mid-number (skipping a 0 digit) gives a wrong difference; every digit takes a place.",
+   "Using the alternating sum as a remainder counted from the left: for an even number of digits the sign flips."
+  ],
+  "related_ids": [
+   "number-system.divisibility-rules",
+   "number-system.remainder-theorem"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nrandom.seed(0)\n\ndef alt_sum(N):\n    ds = list(map(int, str(N)))[::-1]          # units digit is place 1 (odd)\n    return sum(ds[0::2]) - sum(ds[1::2])\n\nn = 0\nfor _ in range(3000):\n    N = random.randint(1, 10**15)\n    assert (N % 11 == 0) == (alt_sum(N) % 11 == 0)\n    assert N % 11 == alt_sum(N) % 11           # counted from the right it also gives the remainder\n    n += 1\n# worked example 6954P: P - 4 + 5 - 9 + 6 = P - 2\nok = [P for P in range(10) if int(f\"6954{P}\") % 11 == 0]\nassert ok == [2]\nassert alt_sum(69542) == 0\nfor P in (6, 8, 7):\n    assert int(f\"6954{P}\") % 11 != 0\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.divisibility-composite",
+  "topic": "Number System",
+  "subtopic": "Divisibility",
+  "name": "Divisibility by composite numbers",
+  "statement": "\\text{If } n=ab,\\ \\gcd(a,b)=1:\\ n\\mid N \\iff a\\mid N \\text{ and } b\\mid N\\ (6=2\\cdot3,\\ 36=4\\cdot9,\\ 40=8\\cdot5)",
+  "conditions": [
+   "\\gcd(a,b)=1"
+  ],
+  "derivation": [
+   "If $ab \\mid N$ then $a \\mid N$ and $b \\mid N$, always.",
+   "Conversely, $a \\mid N$ gives $N = ak$; $b \\mid ak$ with $\\gcd(a,b)=1$ forces $b \\mid k$.",
+   "So $N = abm$, which is a multiple of $ab$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Split $n$ into coprime prime-power parts and apply [[f:number-system.divisibility-rules]] to each: $72 = 8\\times9$, $88 = 8\\times11$.",
+  "worked_example": {
+   "question_key": "2024-09-17_0900_Q20",
+   "answer": "B",
+   "steps": [
+    "$6 = 2\\times3$, coprime: test 2 and 3 separately.",
+    "249k876 ends in 6, so it is even for every $k$.",
+    "Digit sum $= 36 + k$; divisible by 3 for $k = 0, 3, 6, 9$.",
+    "Least $k = 0$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Splitting into non-coprime factors: $24 = 4\\times6$ is wrong ($12$ passes both but not 24); use $8\\times3$.",
+   "Checking only the digit sum for 6 and forgetting the even test.",
+   "Answering the largest valid digit (9) when the least is asked."
+  ],
+  "related_ids": [
+   "number-system.divisibility-rules",
+   "number-system.divisibility-by-11",
+   "number-system.lcm-hcf"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom math import gcd\nrandom.seed(0)\n\nn = 0\nfor _ in range(3000):\n    a, b = random.randint(2, 60), random.randint(2, 60)\n    if gcd(a, b) != 1:\n        continue\n    N = random.randint(1, 10**9)\n    if random.random() < 0.5:\n        N = N - N % (a * b)\n    assert (N % (a * b) == 0) == (N % a == 0 and N % b == 0)\n    n += 1\nassert n >= 1000\n# boundary: gcd(a, b) > 1 breaks it, e.g. 8 = 2 * 4 and N = 4\nassert 4 % 2 == 0 and 4 % 4 == 0 and 4 % 8 != 0\n# worked example: 249k876 divisible by 6\nks = [k for k in range(10) if int(f\"249{k}876\") % 6 == 0]\nassert ks == [0, 3, 6, 9] and min(ks) == 0\nfor k in (5, 7, 1):\n    assert k not in ks\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.an-bn-divisibility",
+  "topic": "Number System",
+  "subtopic": "Divisibility",
+  "name": "Divisibility of a^n - b^n",
+  "statement": "(a-b)\\mid a^n-b^n \\ \\forall n;\\ (a+b)\\mid a^n-b^n \\text{ for even } n;\\ (a+b)\\mid a^n+b^n \\text{ for odd } n",
+  "conditions": [
+   "n \\text{ a positive integer; the 'even' and 'odd' parts need that parity}"
+  ],
+  "derivation": [
+   "$a^n-b^n = (a-b)(a^{n-1}+a^{n-2}b+\\dots+b^{n-1})$, so $a-b$ always divides.",
+   "For odd $n$ replace $b$ by $-b$: $a^n+b^n = (a+b)(a^{n-1}-a^{n-2}b+\\dots+b^{n-1})$.",
+   "For even $n = 2k$: $a^n-b^n = (a^k-b^k)(a^k+b^k)$, and $a^2-b^2 = (a-b)(a+b)$ shows $(a+b)$ divides $(a^2)^j-(b^2)^j$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$x^n - 1$ is divisible by $x - 1$; for even $n$ also by $x + 1$ and by $x^2 - 1$.",
+  "worked_example": {
+   "question_key": "2024-09-25_1230_Q16",
+   "answer": "D",
+   "steps": [
+    "$m$ even, $m = 2k$: $8^m - 1 = 64^k - 1$.",
+    "$(64 - 1) \\mid 64^k - 1$, so $63$ divides it for every even $m$.",
+    "Check $m = 2$: $63$ is not divisible by 8, 65 or 42.",
+    "Answer: 63 (D)."
+   ]
+  },
+  "common_traps": [
+   "Using $a+b$ with odd $n$ on $a^n - b^n$: $2^3-1 = 7$ is not divisible by 3.",
+   "Choosing 65 ($= 64+1$): $a+b$ divides $a^n+b^n$ for odd $n$, not $a^n-1$.",
+   "Choosing 8 because the base is 8: $8^m-1$ is odd."
+  ],
+  "related_ids": [
+   "number-system.remainder-cyclicity",
+   "algebra.difference-of-squares",
+   "algebra.sum-difference-of-cubes"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nimport sympy as sp\nrandom.seed(0)\na, b = sp.symbols('a b')\nfor k in range(1, 9):\n    assert sp.rem(sp.expand(a**k - b**k), a - b, a) == 0\n    if k % 2 == 0:\n        assert sp.rem(sp.expand(a**k - b**k), a + b, a) == 0\n    else:\n        assert sp.rem(sp.expand(a**k + b**k), a + b, a) == 0\nn = 0\nfor _ in range(2000):\n    x, y = random.randint(-50, 50), random.randint(-50, 50)\n    k = random.randint(1, 15)\n    if x != y:\n        assert (x**k - y**k) % (x - y) == 0\n    if x + y != 0:\n        if k % 2 == 0:\n            assert (x**k - y**k) % (x + y) == 0\n        else:\n            assert (x**k + y**k) % (x + y) == 0\n    n += 1\n# boundary: parity of n matters; 2^3 - 1 = 7 is not divisible by 2 + 1 = 3, 2^2 + 1 = 5 is not either\nassert (2**3 - 1) % 3 != 0 and (2**2 + 1) % 3 != 0\n# worked example: m even, 8^m - 1 = 64^k - 1, so 63 divides; 8, 65, 42 do not always\nfor m in range(2, 40, 2):\n    assert (8**m - 1) % 63 == 0\nassert (8**2 - 1) % 8 and (8**2 - 1) % 65 and (8**2 - 1) % 42\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.remainder-cyclicity",
+  "topic": "Number System",
+  "subtopic": "Remainders",
+  "name": "Remainder cycles of powers",
+  "statement": "a^n \\bmod m \\text{ repeats with a cycle; reduce } n \\text{ modulo the cycle length}",
+  "conditions": [
+   "\\gcd(a,m)=1 \\text{ for a pure cycle from } n=0;\\ \\text{otherwise the cycle starts after a few terms}"
+  ],
+  "derivation": [
+   "$a^n \\bmod m$ takes at most $m$ values, so some value repeats.",
+   "Each term fixes the next ($r \\to ar \\bmod m$), so after the first repeat the values loop.",
+   "If the loop has length $L$ and starts at $n=0$: $a^n \\equiv a^{n \\bmod L}$.",
+   "Special case $a \\equiv -1 \\pmod m$: cycle $1, m-1$ of length 2, so $a^{\\text{even}} \\equiv 1$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Write $a = km \\pm 1$: then $a^n \\equiv (\\pm1)^n$. Last digits repeat every 4: use $n \\bmod 4$ (0 means 4).",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q15",
+   "answer": "B",
+   "steps": [
+    "$19^{200} \\div 20$: $19 = 20 - 1 \\equiv -1 \\pmod{20}$.",
+    "$19^{200} \\equiv (-1)^{200} = 1$.",
+    "Remainder 1 (B)."
+   ]
+  },
+  "common_traps": [
+   "Answering $-1$: a remainder is never negative; $-1$ means $m - 1$, and here the power is even anyway.",
+   "Using $n \\bmod L = 0$ as $a^0 = 1$ for last digits: take the 4th term of the cycle instead (e.g. $2^4$ ends in 6).",
+   "Assuming a pure cycle when $\\gcd(a,m) > 1$: $2^n \\bmod 8$ is $1, 2, 4, 0, 0, \\dots$"
+  ],
+  "related_ids": [
+   "number-system.remainder-theorem",
+   "number-system.an-bn-divisibility"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom math import gcd\nrandom.seed(0)\n\ndef cycle(a, m):\n    \"\"\"(start, length): a^n mod m for n >= start repeats with this length.\"\"\"\n    seen, n, r = {}, 0, 1 % m\n    while r not in seen:\n        seen[r] = n\n        r = r * a % m\n        n += 1\n    return seen[r], n - seen[r]\n\nn = 0\nfor _ in range(2000):\n    a, m = random.randint(1, 500), random.randint(2, 200)\n    s, L = cycle(a, m)\n    N = random.randint(0, 10**6)\n    expect = pow(a, N, m)\n    reduced = N if N < s else s + (N - s) % L\n    assert pow(a, reduced, m) == expect\n    if gcd(a, m) == 1:\n        assert s == 0                          # pure cycle from n = 0\n        assert pow(a, N % L, m) == expect\n    # last digit: cycle length divides 4 once n >= 1\n    if N >= 1:\n        assert pow(a, (N - 1) % 4 + 1, 10) == pow(a, N, 10)\n    n += 1\n# boundary: gcd(a, m) > 1 gives a lead-in: 2^n mod 8 = 1, 2, 4, 0, 0, ...\nassert cycle(2, 8) == (3, 1) and pow(2, 0, 8) != pow(2, 5, 8)\n# a = -1 (mod m): (-1)^even = 1\nassert pow(19, 200, 20) == 1 and pow(19, 201, 20) == 19\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.remainder-theorem",
+  "topic": "Number System",
+  "subtopic": "Remainders",
+  "name": "Remainder rules (substitution, divisor factor)",
+  "statement": "(a\\cdot b)\\bmod m=(a\\bmod m)(b\\bmod m)\\bmod m;\\ N\\equiv r \\pmod D,\\ d\\mid D \\Rightarrow N\\equiv r \\pmod d",
+  "conditions": [
+   "d \\mid D \\text{ for the second rule}"
+  ],
+  "derivation": [
+   "Write $a = pm + r_a$, $b = qm + r_b$.",
+   "$ab = m(\\dots) + r_ar_b$, so $ab$ and $r_ar_b$ leave the same remainder; $+$ and $-$ work the same way.",
+   "$N = Dq + r$ and $d \\mid D$ make $Dq$ a multiple of $d$, so $N \\equiv r \\pmod d$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Replace every number by its remainder (or by a small negative one, e.g. $17 \\equiv -1 \\pmod{18}$), work, then reduce once.",
+  "worked_example": {
+   "question_key": "2024-09-24_1230_Q03",
+   "answer": "B",
+   "steps": [
+    "$N = 55q + 28$ and $11 \\mid 55$.",
+    "$N \\equiv 28 \\pmod{11}$.",
+    "$28 = 2\\times11 + 6$: remainder 6 (B)."
+   ]
+  },
+  "common_traps": [
+   "Using the rule when $d \\nmid D$: $83 \\equiv 28 \\pmod{55}$ but $83 \\bmod 10 = 3$, not 8.",
+   "Stopping at 28 for divisor 11: the result must be reduced below the divisor.",
+   "Leaving a negative result: $-22 \\bmod 18$ is 14, not $-4$."
+  ],
+  "related_ids": [
+   "number-system.remainder-cyclicity",
+   "number-system.divisibility-rules",
+   "algebra.remainder-theorem"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nrandom.seed(0)\nn = 0\nfor _ in range(2000):\n    m = random.randint(1, 500)\n    a, b = random.randint(-10**9, 10**9), random.randint(-10**9, 10**9)\n    assert (a * b) % m == (a % m) * (b % m) % m\n    assert (a + b) % m == ((a % m) + (b % m)) % m\n    assert (a - b) % m == ((a % m) - (b % m)) % m\n    d = random.randint(1, 60)\n    D = d * random.randint(1, 60)\n    N = random.randint(0, 10**9)\n    assert N % d == (N % D) % d\n    n += 1\n# boundary: d must divide D. 83 = 55 + 28, but 83 mod 10 = 3 while 28 mod 10 = 8\nassert 83 % 55 == 28 and 83 % 10 != 28 % 10\n# worked example: N = 55q + 28, so N mod 11 = 28 mod 11 = 6 for every q\nassert all((55 * q + 28) % 11 == 6 for q in range(1000))\nassert 6 not in (5, 7, 8)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.compare-fractions",
+  "topic": "Number System",
+  "subtopic": "Fractions",
+  "name": "Comparing fractions",
+  "statement": "\\frac ab > \\frac cd \\iff ad > bc\\ (b,d>0)",
+  "conditions": [
+   "b, d > 0"
+  ],
+  "derivation": [
+   "Multiply both sides of $\\frac ab > \\frac cd$ by $bd$.",
+   "$bd > 0$, so the inequality keeps its direction: $ad > bc$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Same numerator: smaller denominator wins. Same gap to 1 ($\\frac{b-g}{b}$): larger denominator wins, e.g. $\\frac{79}{90} > \\frac{33}{44}$.",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q10",
+   "answer": "A",
+   "steps": [
+    "$\\frac{2}{3}$, $\\frac{6}{53}$, $\\frac{79}{90}$, $\\frac{33}{44}$: only $\\frac{2}{3}$, $\\frac{79}{90}$, $\\frac{33}{44}$ exceed $\\frac12$.",
+    "$\\frac{79}{90}$ vs $\\frac{33}{44}$: $79\\times44 = 3476 > 90\\times33 = 2970$.",
+    "$\\frac{79}{90}$ vs $\\frac{2}{3}$: $79\\times3 = 237 > 90\\times2 = 180$.",
+    "Largest: $\\frac{79}{90}$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Cross-multiplying into the wrong side: compare $a\\times d$ with $b\\times c$, numerator of each with the other's denominator.",
+   "Calling the fraction with the larger numerator or denominator larger (6/53 has a bigger denominator but is tiny).",
+   "Cross-multiplying with a negative denominator without flipping the sign."
+  ],
+  "related_ids": [
+   "simplification.fraction-decimal-operations"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(3000):\n    a, c = random.randint(-200, 200), random.randint(-200, 200)\n    b, d = random.randint(1, 200), random.randint(1, 200)\n    assert (F(a, b) > F(c, d)) == (a * d > b * c)\n    # same numerator (positive): smaller denominator is larger\n    p = random.randint(1, 100)\n    if b != d:\n        assert (F(p, b) > F(p, d)) == (b < d)\n    # same gap below 1: g/b vs g/d, larger denominator is closer to 1\n    g = random.randint(1, 50)\n    b2, d2 = g + random.randint(1, 100), g + random.randint(1, 100)\n    if b2 != d2:\n        assert (F(b2 - g, b2) > F(d2 - g, d2)) == (b2 > d2)\n    n += 1\n# boundary: a negative denominator flips the test. 1/(-2) < 1/3 but 1*3 > (-2)*1\nassert F(1, -2) < F(1, 3) and 1 * 3 > -2 * 1\n# worked example: 2/3, 6/53, 79/90, 33/44 -> 79/90\nfr = {\"A\": F(79, 90), \"B\": F(2, 3), \"C\": F(33, 44), \"D\": F(6, 53)}\nassert max(fr, key=fr.get) == \"A\"\nassert 79 * 44 > 90 * 33 and 79 * 3 > 90 * 2 and 79 * 53 > 90 * 6\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.natural-number-sums",
+  "topic": "Number System",
+  "subtopic": "Series sums",
+  "name": "Sums of first n naturals, squares, cubes",
+  "statement": "\\Sigma k=\\frac{n(n+1)}2;\\ \\Sigma k^2=\\frac{n(n+1)(2n+1)}6;\\ \\Sigma k^3=\\left(\\frac{n(n+1)}2\\right)^2",
+  "conditions": [],
+  "derivation": [
+   "Write $1+2+\\dots+n$ forwards and backwards; each column adds to $n+1$, so twice the sum is $n(n+1)$.",
+   "Sum $(k+1)^3 - k^3 = 3k^2 + 3k + 1$ for $k = 1..n$: the left side telescopes to $(n+1)^3 - 1$.",
+   "Solve for $\\Sigma k^2$: $(n+1)^3 - 1 - 3\\frac{n(n+1)}{2} - n = 3\\Sigma k^2$, giving $\\frac{n(n+1)(2n+1)}{6}$.",
+   "The same telescoping with $(k+1)^4 - k^4$ gives $\\Sigma k^3 = \\left(\\frac{n(n+1)}{2}\\right)^2$."
+  ],
+  "visual_proof": "Two staircases of 1..n blocks fit together into an n by (n+1) rectangle, so one staircase is half of it.",
+  "shortcut": "Average of $1..n$ is $\\frac{n+1}{2}$; average of the first $n$ squares is $\\frac{(n+1)(2n+1)}{6}$.",
+  "worked_example": {
+   "question_key": "2024-09-17_0900_Q05",
+   "answer": "D",
+   "steps": [
+    "Average of squares $= \\frac{\\Sigma k^2}{n} = \\frac{(n+1)(2n+1)}{6}$.",
+    "$n = 47$: $\\frac{48\\times95}{6} = 8\\times95 = 760$.",
+    "Answer: 760 (D)."
+   ]
+  },
+  "common_traps": [
+   "Using $2n-1$ instead of $2n+1$: gives $48\\times93/6 = 744$.",
+   "Dividing the sum of squares by $n+1$ instead of $n$ for the average.",
+   "Squaring the sum of naturals for squares: $(\\Sigma k)^2$ is the sum of cubes, not squares."
+  ],
+  "related_ids": [
+   "average.arithmetic-mean",
+   "algebra.arithmetic-progression"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nk, n = sp.symbols('k n', integer=True, positive=True)\nassert sp.simplify(sp.summation(k, (k, 1, n)) - n*(n+1)/2) == 0\nassert sp.simplify(sp.summation(k**2, (k, 1, n)) - n*(n+1)*(2*n+1)/6) == 0\nassert sp.simplify(sp.summation(k**3, (k, 1, n)) - (n*(n+1)/2)**2) == 0\n# mean of the first n squares = (n+1)(2n+1)/6\nassert sp.simplify(sp.summation(k**2, (k, 1, n))/n - (n+1)*(2*n+1)/6) == 0\nfor N in range(1, 300):\n    assert sum(range(1, N+1)) == N*(N+1)//2\n    assert sum(i*i for i in range(1, N+1)) == N*(N+1)*(2*N+1)//6\n    assert sum(i**3 for i in range(1, N+1)) == (N*(N+1)//2)**2\n# worked example: mean of squares of 1..47 = 48*95/6 = 760\nassert sp.Rational(48*95, 6) == 760 == sp.Rational(sum(i*i for i in range(1, 48)), 47)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ },
+ {
+  "id": "number-system.lcm-hcf",
+  "topic": "Number System",
+  "subtopic": "LCM & HCF",
+  "name": "LCM and HCF",
+  "statement": "\\mathrm{LCM}(a,b)\\times\\mathrm{HCF}(a,b)=ab;\\ \\text{events repeating every } t_1,t_2 \\text{ coincide every } \\mathrm{LCM}(t_1,t_2)",
+  "conditions": [
+   "\\text{the product rule holds for exactly two numbers}"
+  ],
+  "derivation": [
+   "Let $h = \\mathrm{HCF}(a,b)$, $a = hx$, $b = hy$ with $\\gcd(x,y) = 1$.",
+   "The smallest common multiple is $hxy$, so $\\mathrm{LCM} = hxy$.",
+   "$\\mathrm{LCM}\\times\\mathrm{HCF} = hxy\\cdot h = (hx)(hy) = ab$.",
+   "Two events are both on schedule at times that are multiples of $t_1$ and $t_2$; the first is $\\mathrm{LCM}(t_1,t_2)$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$\\mathrm{LCM} = \\frac{ab}{\\mathrm{HCF}}$; for lap times, LCM of the lap times gives the first meeting at the start.",
+  "worked_example": {
+   "question_key": "2024-09-17_1600_Q05",
+   "answer": "D",
+   "steps": [
+    "Both are at the start together after $\\mathrm{LCM}(180, 420)$ s.",
+    "$\\mathrm{HCF} = 60$, so $\\mathrm{LCM} = \\frac{180\\times420}{60} = 1260$ s.",
+    "$1260 \\div 60 = 21$ minutes (D)."
+   ]
+  },
+  "common_traps": [
+   "Applying LCM $\\times$ HCF = product to three numbers: for 2, 4, 6 it gives 24, not 48.",
+   "Using HCF (60 s = 1 min) where the events must coincide; that needs LCM.",
+   "Using the track length 210 m: meeting at the start depends only on the lap times."
+  ],
+  "related_ids": [
+   "time-speed-distance.circular-track",
+   "number-system.divisibility-composite"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom math import gcd\nrandom.seed(0)\n\ndef lcm(a, b):\n    m = max(a, b)\n    while m % a or m % b:\n        m += max(a, b)\n    return m\n\nn = 0\nfor _ in range(1500):\n    a, b = random.randint(1, 600), random.randint(1, 600)\n    L, H = lcm(a, b), gcd(a, b)\n    assert L * H == a * b\n    assert L == a * b // H\n    # coinciding events: first common time after 0 is the LCM\n    assert min(t for t in range(1, a * b + 1) if t % a == 0 and t % b == 0) == L\n    n += 1\n# boundary: the product rule is for two numbers only. 2, 4, 6: LCM 12, HCF 2, 12*2 != 48\nassert lcm(lcm(2, 4), 6) * gcd(gcd(2, 4), 6) == 24 != 2 * 4 * 6\n# worked example: LCM(180, 420) s = 1260 s = 21 min\nassert lcm(180, 420) == 1260 and 1260 // 60 == 21 and gcd(180, 420) == 60\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:31+00:00"
+   }
+  }
+ }
+]

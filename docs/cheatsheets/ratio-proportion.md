@@ -1,0 +1,22 @@
+# Ratio & Proportion: cheat sheet
+
+- [Dividing a quantity in a ratio](/formulas/ratio-proportion#ratio-to-parts): $\text{In } a:b,\ \text{parts}=\frac{a}{a+b}T,\ \frac{b}{a+b}T$
+  - Shortcut: Find one part first: $k=\frac{\text{total}}{\text{sum of terms}}$ or $\frac{\text{difference}}{\text{difference of terms}}$, then multiply.
+- [Forming and simplifying a ratio](/formulas/ratio-proportion#simplify-ratio): $a:b=\frac{a}{\gcd(a,b)}:\frac{b}{\gcd(a,b)};\ \text{ratio of totals}=\Sigma a_i:\Sigma b_i$
+  - Shortcut: Strip obvious common factors in stages (÷5, ÷5, …) instead of hunting the gcd at once; check the options for which one matches $a:b$ in order.
+- [Equal ratios (addendo, componendo-dividendo)](/formulas/ratio-proportion#equal-ratios): $\frac ab=\frac cd=k \Rightarrow \frac{a+c}{b+d}=k,\ \frac{a+b}{a-b}=\frac{c+d}{c-d}$
+  - Shortcut: Same coefficients on top and bottom keep the common ratio: $\frac{pa+qc+re}{pb+qd+rf}=\frac ab$, no algebra needed.
+- [Combining a:b and b:c](/formulas/ratio-proportion#combine-ratios): $a:b=p:q,\ b:c=r:s \Rightarrow a:b:c=pr:qr:qs$
+  - Shortcut: N-shape: multiply the two outer numbers down, $a:b:c = p\cdot r : q\cdot r : q\cdot s$; simplify each ratio first to keep numbers small.
+- [Mean, third and fourth proportional](/formulas/ratio-proportion#proportionals): $\text{mean}=\sqrt{ab};\ \text{third}=\frac{b^2}a;\ a:b=c:x \Rightarrow x=\frac{bc}a$
+  - Shortcut: Mean proportional = $\sqrt{a}\cdot\sqrt{b}$: take roots separately when both are squares ($\sqrt{12.96}\cdot\sqrt{0.16} = 3.6\times0.4$).
+- [Proportion and the unitary method](/formulas/ratio-proportion#proportion-unitary): $a:b=c:d \iff ad=bc;\ \text{value of 1 unit}=\frac{\text{total}}{\text{units}}$
+  - Shortcut: Missing term = (product of the two diagonal terms) ÷ the third term.
+- [Ratio after adding/removing](/formulas/ratio-proportion#ratio-change): $\frac{a+x}{b+y}=\frac pq\ \text{with } a=ka_0,\ b=kb_0 \Rightarrow k=\frac{py-qx}{qa_0-pb_0}$
+  - Shortcut: If one side does not change, make its terms equal in both ratios; the change in the other term is the added amount in units.
+- [Direct, inverse and joint variation](/formulas/ratio-proportion#variation): $y\propto x \Rightarrow y=kx;\ y\propto \tfrac1x \Rightarrow xy=k;\ y\propto \tfrac{x}{z} \Rightarrow y=k\tfrac{x}{z}$
+  - Shortcut: Skip $k$: direct $\frac{y_1}{x_1}=\frac{y_2}{x_2}$; inverse $x_1y_1=x_2y_2$; joint $\frac{y_1z_1}{x_1}=\frac{y_2z_2}{x_2}$.
+- [Partnership profit sharing](/formulas/ratio-proportion#partnership): $\text{profit share}\propto \text{capital}\times\text{time}$
+  - Shortcut: If $pA = qB = rC$, then $A:B:C = \frac1p:\frac1q:\frac1r$; multiply by $\text{LCM}(p,q,r)$.
+- [Income and expenditure in ratios](/formulas/ratio-proportion#income-expenditure-ratio): $I_1:I_2=a:b,\ E_1:E_2=c:d \Rightarrow S_i=I_i-E_i;\ \text{set } I_1=ax, I_2=bx, E_1=cy, E_2=dy$
+  - Shortcut: Pick numbers: choose $x$ so the given fact is a whole number (here $k = 3$ makes $y = 1$), then read savings off.

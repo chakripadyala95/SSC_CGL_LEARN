@@ -95,3 +95,13 @@ and `/admin/questions/{id}` (key, both extraction reads, solver runs), `/admin/r
 (`<topic-slug>.<slug>`, never changed once published). `python -m pipeline.taxonomy check` validates them and
 `python -m pipeline.taxonomy render` writes `TAXONOMY.md`. `data/taxonomy/discovery/` keeps the first labelling
 pass that the counts come from; these are draft tags, not the Phase 3c tags.
+
+## Phase 3b: Formula and method library
+
+`data/library/<section>/<topic-slug>.json` has one entry per approved ID: statement, conditions, derivation,
+shortcut, a worked example from a real paper question, traps, related IDs, a diagram spec and verification
+code. `python -m pipeline.library check` validates entries (approved IDs, `[[f:…]]` tokens, worked-example
+answers against `data/solver/final_answers.jsonl`, diagrams with alt text). `verify` runs each entry's code in an
+isolated interpreter (SymPy identities, shortcuts on 1,000+ random inputs, boundary tests, reasoning methods on
+their worked example) and stores the result on the entry; `manual` entries go to review. `render` writes the
+printable cheat sheets to `docs/cheatsheets/`.

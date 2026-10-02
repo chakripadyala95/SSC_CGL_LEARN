@@ -1,0 +1,970 @@
+[
+ {
+  "id": "algebra.linear-one-variable",
+  "topic": "Algebra",
+  "subtopic": "Linear equations",
+  "name": "Linear equation in one variable",
+  "statement": "ax+b=c \\Rightarrow x=\\frac{c-b}{a}",
+  "conditions": [
+   "a \\neq 0"
+  ],
+  "derivation": [
+   "Subtract $b$ from both sides: $ax = c-b$.",
+   "Divide both sides by $a$ (allowed because $a\\neq0$): $x=\\frac{c-b}{a}$.",
+   "Word problems: name one unknown $x$, write every other quantity in terms of $x$, then form one equation."
+  ],
+  "visual_proof": null,
+  "shortcut": "With options given, substitute each option into the equation and keep the one that balances.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_Q17",
+   "answer": "D",
+   "steps": [
+    "$AB=x$, $BC=2x-2$, $AC=x+10$.",
+    "Perimeter: $x+(2x-2)+(x+10)=40 \\Rightarrow 4x+8=40$.",
+    "$x=\\frac{40-8}{4}=8$; sides $8, 14, 18$.",
+    "Smallest side $=8$ cm (D)."
+   ]
+  },
+  "common_traps": [
+   "Moving $b$ across without changing its sign: $x=\\frac{c+b}{a}$ (here $x=12$, option A).",
+   "Answering the unknown $x$ when another quantity is asked, e.g. the largest side 18 instead of the smallest.",
+   "Writing '2 less than twice $x$' as $2-2x$ instead of $2x-2$."
+  ],
+  "related_ids": [
+   "algebra.linear-equations-system",
+   "algebra.age-linear-relations"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nimport sympy as sp\nrandom.seed(0)\ndef rq():\n    return F(random.randint(-500, 500), random.randint(1, 12))\nn = 0\nwhile n < 1500:\n    a, b, c = rq(), rq(), rq()\n    if a == 0:\n        continue\n    x = (c - b) / a\n    assert a * x + b == c\n    n += 1\n# worked example: AB = x, BC = 2x - 2, AC = x + 10, perimeter 40\nx = sp.symbols('x')\nsol = sp.solve(sp.Eq(x + (2*x - 2) + (x + 10), 40), x)\nassert sol == [8]\nsides = [8, 2*8 - 2, 8 + 10]\nassert min(sides) == 8 and sorted(sides) == [8, 14, 18]\nprint(f\"CASES={n}\")\n# boundary a = 0: no unique solution (none if b != c, every x if b == c)\nassert sp.solve(sp.Eq(0*x + 3, 5), x) == []\nassert sp.solve(sp.Eq(0*x + 5, 5), x) == [] and sp.simplify(0*x + 5 - 5) == 0\nassert sp.solveset(sp.Eq(0*x + 5, 5), x, sp.S.Reals) == sp.S.Reals\nassert sp.solveset(sp.Eq(0*x + 3, 5), x, sp.S.Reals) == sp.S.EmptySet\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:05+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.linear-equations-system",
+  "topic": "Algebra",
+  "subtopic": "Linear equations",
+  "name": "Simultaneous linear equations",
+  "statement": "\\text{eliminate or substitute; } x=\\frac{c_1b_2-c_2b_1}{a_1b_2-a_2b_1};\\ \\text{cyclic 3-variable systems: add all equations first}",
+  "conditions": [
+   "a_1b_2-a_2b_1 \\neq 0 \\text{ (for the formula; equations written as } a_1x+b_1y=c_1,\\ a_2x+b_2y=c_2)"
+  ],
+  "derivation": [
+   "Multiply the first equation by $b_2$ and the second by $b_1$: the $y$ terms become $b_1b_2y$ in both.",
+   "Subtract: $(a_1b_2-a_2b_1)x = c_1b_2-c_2b_1$.",
+   "Divide by $a_1b_2-a_2b_1\\neq0$: $x=\\frac{c_1b_2-c_2b_1}{a_1b_2-a_2b_1}$; by symmetry $y=\\frac{a_1c_2-a_2c_1}{a_1b_2-a_2b_1}$.",
+   "Cyclic system $x+y=p,\\ y+z=q,\\ z+x=r$: add all three, $x+y+z=\\frac{p+q+r}{2}$, then subtract each equation."
+  ],
+  "visual_proof": null,
+  "shortcut": "Count + value pair (coins, cups, tickets): assume all are the cheaper item, then (actual total − assumed total) ÷ (price difference) = number of dearer items.",
+  "worked_example": {
+   "question_key": "2024-09-13_0900_Q10",
+   "answer": "D",
+   "steps": [
+    "Coffee $c$, tea $t$: $c+t=7$ and $40c+30t=240$.",
+    "Substitute $c=7-t$: $280-40t+30t=240$.",
+    "$10t=40 \\Rightarrow t=4$ cups of tea (D)."
+   ]
+  },
+  "common_traps": [
+   "Subtracting equations without first matching a coefficient, so neither variable cancels.",
+   "Finding $c=3$ and marking it, when cups of tea ($t=4$) are asked.",
+   "Sign slip in the cross-multiplication formula: the denominator is $a_1b_2-a_2b_1$, the same for $x$ and $y$."
+  ],
+  "related_ids": [
+   "algebra.linear-one-variable",
+   "algebra.linear-system-consistency"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nimport sympy as sp\nrandom.seed(0)\ndef rq():\n    return F(random.randint(-60, 60), random.randint(1, 6))\nn = 0\nwhile n < 1200:\n    a1, b1, c1, a2, b2, c2 = (rq() for _ in range(6))\n    D = a1 * b2 - a2 * b1\n    if D == 0:\n        continue\n    x = (c1 * b2 - c2 * b1) / D\n    y = (a1 * c2 - a2 * c1) / D\n    assert a1 * x + b1 * y == c1 and a2 * x + b2 * y == c2\n    n += 1\n# cyclic systems: x+y=p, y+z=q, z+x=r -> x+y+z=(p+q+r)/2\nm = 0\nwhile m < 1000:\n    p, q, r = rq(), rq(), rq()\n    s = (p + q + r) / 2\n    x, y, z = s - q, s - r, s - p\n    assert x + y == p and y + z == q and z + x == r\n    m += 1\n# worked example: c + t = 7, 40c + 30t = 240\nc, t = sp.symbols('c t')\nsol = sp.solve([c + t - 7, 40*c + 30*t - 240], [c, t])\nassert sol == {c: 3, t: 4}\nassert [o for o in (5, 6, 3, 4) if o == sol[t]] == [4]\nprint(f\"CASES={min(n, m)}\")\n# boundary a1 b2 - a2 b1 = 0: no unique solution\nX, Y = sp.symbols('X Y')\nassert sp.linsolve([X + 2*Y - 3, 2*X + 4*Y - 7], X, Y) == sp.S.EmptySet\ninf = sp.linsolve([X + 2*Y - 3, 2*X + 4*Y - 6], X, Y)\nassert len(inf) == 1 and next(iter(inf))[0].free_symbols  # a whole line of solutions\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:05+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.linear-system-consistency",
+  "topic": "Algebra",
+  "subtopic": "Linear equations",
+  "name": "Unique / no / infinite solutions",
+  "statement": "\\frac{a_1}{a_2}\\neq\\frac{b_1}{b_2}: \\text{unique};\\ \\frac{a_1}{a_2}=\\frac{b_1}{b_2}\\neq\\frac{c_1}{c_2}: \\text{none};\\ \\text{all equal}: \\text{infinite}",
+  "conditions": [
+   "a_2, b_2, c_2 \\neq 0 \\text{ for the ratio form; otherwise compare cross products } a_1b_2 \\text{ vs } a_2b_1"
+  ],
+  "derivation": [
+   "Each equation is a straight line; a solution is a point on both lines.",
+   "$\\frac{a_1}{a_2}\\neq\\frac{b_1}{b_2}$: the slopes $-\\frac{a_1}{b_1}$ and $-\\frac{a_2}{b_2}$ differ, so the lines cross once.",
+   "$\\frac{a_1}{a_2}=\\frac{b_1}{b_2}$ makes the slopes equal: the lines are parallel.",
+   "Parallel with $\\frac{c_1}{c_2}$ different: separate lines, no common point. All three ratios equal: one equation is a multiple of the other, the same line, infinitely many solutions."
+  ],
+  "visual_proof": "Two lines either cross at one point, run parallel and never meet, or lie on top of each other.",
+  "shortcut": "'Parallel' or 'no solution' → set $\\frac{a_1}{a_2}=\\frac{b_1}{b_2}$; 'infinite' or 'coincident' → also set it equal to $\\frac{c_1}{c_2}$.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q04",
+   "answer": "C",
+   "steps": [
+    "Infinite solutions: $\\frac{2}{8}=\\frac{1}{b}=\\frac{a}{12}$.",
+    "$\\frac{1}{b}=\\frac14 \\Rightarrow b=4$; $\\frac{a}{12}=\\frac14 \\Rightarrow a=3$.",
+    "$a+b=7$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Using $\\frac{a_1}{a_2}=\\frac{b_1}{b_2}$ alone for 'infinite': that only makes the lines parallel.",
+   "Mixing forms: $c$ ratios need both equations written the same way ($=c$ or $+c=0$); with one of each the sign of $c$ flips.",
+   "Keeping both roots of $(k-2)^2=36$ when the question restricts $k>0$."
+  ],
+  "related_ids": [
+   "algebra.linear-equations-system"
+  ],
+  "diagram": {
+   "alt_text": "Three lines on one grid: 2x + y = 3 and 8x + 4y = 12 are the same line (infinite solutions); 2x + y = 5 runs parallel to it (no solution); y = x crosses it once (unique solution).",
+   "spec": {
+    "type": "chart",
+    "kind": "line",
+    "series": [
+     {
+      "label": "2x+y=3 and 8x+4y=12 (same line)",
+      "points": [
+       [
+        0,
+        3
+       ],
+       [
+        3,
+        -3
+       ]
+      ]
+     },
+     {
+      "label": "2x+y=5 (parallel: none)",
+      "points": [
+       [
+        0,
+        5
+       ],
+       [
+        3,
+        -1
+       ]
+      ]
+     },
+     {
+      "label": "y=x (crosses: unique)",
+      "points": [
+       [
+        0,
+        0
+       ],
+       [
+        3,
+        3
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nimport sympy as sp\nrandom.seed(0)\nX, Y = sp.symbols('X Y')\ndef by_rule(a1, b1, c1, a2, b2, c2):\n    # ratio rule in cross-multiplied form (safe when a coefficient is 0)\n    if a1 * b2 != a2 * b1:\n        return 'unique'\n    if a1 * c2 == a2 * c1 and b1 * c2 == b2 * c1:\n        return 'infinite'\n    return 'none'\ndef by_solving(a1, b1, c1, a2, b2, c2):\n    s = sp.linsolve([a1*X + b1*Y - c1, a2*X + b2*Y - c2], X, Y)\n    if s == sp.S.EmptySet:\n        return 'none'\n    pt = next(iter(s))\n    return 'infinite' if any(e.free_symbols for e in pt) else 'unique'\ndef r():\n    return random.choice([i for i in range(-9, 10) if i])\nn = 0\nseen = set()\nfor i in range(1200):\n    a1, b1, c1 = r(), r(), r()\n    kind = i % 3\n    if kind == 0:\n        a2, b2, c2 = r(), r(), r()\n    else:\n        k = r()\n        a2, b2 = k * a1, k * b1\n        c2 = k * c1 if kind == 1 else k * c1 + r()\n    got = by_rule(a1, b1, c1, a2, b2, c2)\n    assert got == by_solving(a1, b1, c1, a2, b2, c2)\n    seen.add(got)\n    n += 1\nassert seen == {'unique', 'none', 'infinite'}\n# worked example: 2x + y = a, 8x + by = 12 infinite -> 2/8 = 1/b = a/12\nb = sp.Rational(8, 2)\na = sp.Rational(2, 8) * 12\nassert (a, b) == (3, 4) and by_rule(2, 1, 3, 8, 4, 12) == 'infinite'\nassert [o for o in (16, 9, 7, 18) if o == a + b] == [7]\nprint(f\"CASES={n}\")\n# boundary: a coefficient of the second equation is 0 -> ratios undefined, cross products still decide\nfor eqs in [(1, 0, 2, 3, 0, 6), (1, 0, 2, 3, 0, 5), (0, 2, 4, 1, 3, 5), (2, 3, 0, 4, 6, 0)]:\n    assert by_rule(*eqs) == by_solving(*eqs)\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:06+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.square-of-sum-difference",
+  "topic": "Algebra",
+  "subtopic": "Algebraic identities",
+  "name": "Square of a sum / difference",
+  "statement": "(a\\pm b)^2=a^2\\pm2ab+b^2;\\ (a+b)^2-(a-b)^2=4ab;\\ (a+b+c)^2=\\Sigma a^2+2\\Sigma ab",
+  "conditions": [],
+  "derivation": [
+   "$(a+b)^2=(a+b)(a+b)=a^2+ab+ba+b^2=a^2+2ab+b^2$.",
+   "Replace $b$ by $-b$: $(a-b)^2=a^2-2ab+b^2$.",
+   "Subtract the two: $(a+b)^2-(a-b)^2=4ab$; add them: $(a+b)^2+(a-b)^2=2(a^2+b^2)$.",
+   "Three terms: $(a+b+c)^2$ has every square once and every product $ab, bc, ca$ twice: $a^2+b^2+c^2+2(ab+bc+ca)$."
+  ],
+  "visual_proof": "A square of side $a+b$ splits into an $a\\times a$ square, a $b\\times b$ square and two $a\\times b$ rectangles.",
+  "shortcut": "Spot the pattern $x^2+y^2+z^2+2xy+2yz+2zx$ in a numeric expression and write it as $(x+y+z)^2$.",
+  "worked_example": {
+   "question_key": "2024-09-13_1600_Q04",
+   "answer": "B",
+   "steps": [
+    "Numerator is $a^2+b^2+c^2+2ab+2bc+2ca$ with $a=1.5,\\ b=2.5,\\ c=3.5$.",
+    "So numerator $=(1.5+2.5+3.5)^2=7.5^2$.",
+    "$\\frac{7.5^2}{7.5}=7.5$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Writing $(a+b)^2=a^2+b^2$ (drops $2ab$).",
+   "Using $(a-b)^2=a^2-b^2$: that is a different expression, see [[f:algebra.difference-of-squares]].",
+   "Forgetting the 2 on the products: $(a+b+c)^2$ has $2ab+2bc+2ca$, not $ab+bc+ca$."
+  ],
+  "related_ids": [
+   "algebra.difference-of-squares",
+   "algebra.cube-of-sum",
+   "algebra.reciprocal-square"
+  ],
+  "diagram": {
+   "alt_text": "A square of side a + b cut into four pieces: a-squared top left, b-squared bottom right, and two a-times-b rectangles.",
+   "spec": {
+    "type": "area-model",
+    "rows": [
+     "a",
+     "b"
+    ],
+    "cols": [
+     "a",
+     "b"
+    ],
+    "cells": [
+     [
+      "a^2",
+      "ab"
+     ],
+     [
+      "ab",
+      "b^2"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b, c = sp.symbols('a b c')\nassert sp.expand((a + b)**2 - (a**2 + 2*a*b + b**2)) == 0\nassert sp.expand((a - b)**2 - (a**2 - 2*a*b + b**2)) == 0\nassert sp.simplify((a + b)**2 - (a - b)**2 - 4*a*b) == 0\nassert sp.simplify((a + b)**2 + (a - b)**2 - 2*(a**2 + b**2)) == 0\nlhs = (a + b + c)**2\nrhs = a**2 + b**2 + c**2 + 2*(a*b + b*c + c*a)\nassert sp.simplify(lhs - rhs) == 0\n# worked example\nx, y, z = sp.Rational(3, 2), sp.Rational(5, 2), sp.Rational(7, 2)\nnum = x*x + y*y + z*z + 2*x*y + 2*y*z + 2*x*z\nassert num / (x + y + z) == x + y + z == sp.Rational(15, 2)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:07+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.difference-of-squares",
+  "topic": "Algebra",
+  "subtopic": "Algebraic identities",
+  "name": "Difference of squares",
+  "statement": "a^2-b^2=(a+b)(a-b);\\ x^4+x^2+1=(x^2+1)^2-x^2=(x^2+x+1)(x^2-x+1)",
+  "conditions": [],
+  "derivation": [
+   "Expand $(a+b)(a-b)=a^2-ab+ab-b^2$.",
+   "The middle terms cancel: $a^2-b^2$.",
+   "For $x^4+x^2+1$: add and subtract $x^2$, giving $x^4+2x^2+1-x^2=(x^2+1)^2-x^2$.",
+   "Apply the first line with $a=x^2+1,\\ b=x$: $(x^2+x+1)(x^2-x+1)$."
+  ],
+  "visual_proof": "Cut a $b\\times b$ corner from an $a\\times a$ square; the L-shaped rest rearranges into an $(a+b)\\times(a-b)$ rectangle.",
+  "shortcut": "$\\frac{x^4+x^2+1}{x^2+x+1}=x^2-x+1$; and $(p+q)(p-q)$ with long $p$: square $p$ as a block, then subtract $q^2$.",
+  "worked_example": {
+   "question_key": "2024-09-19_1600_Q13",
+   "answer": "C",
+   "steps": [
+    "With $x=25$: $1250=2x^2$, so numerator $=x^4+2x^2+1-x^2=x^4+x^2+1$.",
+    "$x^4+x^2+1=(x^2+x+1)(x^2-x+1)$ and the denominator is $x^2+x+1$.",
+    "Value $=x^2-x+1=625-25+1=601$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Writing $a^2+b^2=(a+b)(a-b)$: a sum of squares does not factor over the reals.",
+   "Getting the sign of the middle term wrong in $x^2-x+1$, giving $651$ instead of $601$.",
+   "Factoring $a^2-b^2$ as $(a-b)^2$."
+  ],
+  "related_ids": [
+   "algebra.square-of-sum-difference",
+   "algebra.sum-difference-of-cubes",
+   "algebra.quadratic-factorisation"
+  ],
+  "diagram": {
+   "alt_text": "Area model of (a + b)(a - b): a 2-by-2 grid with cells a-squared, minus ab, plus ab, minus b-squared; the two ab cells cancel leaving a-squared minus b-squared.",
+   "spec": {
+    "type": "area-model",
+    "rows": [
+     "a",
+     "b"
+    ],
+    "cols": [
+     "a",
+     "-b"
+    ],
+    "cells": [
+     [
+      "a^2",
+      "-ab"
+     ],
+     [
+      "ab",
+      "-b^2"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b, x = sp.symbols('a b x')\nassert sp.simplify(a**2 - b**2 - (a + b)*(a - b)) == 0\nassert sp.expand(x**4 + x**2 + 1 - ((x**2 + 1)**2 - x**2)) == 0\nassert sp.expand(x**4 + x**2 + 1 - (x**2 + x + 1)*(x**2 - x + 1)) == 0\n# worked example: (25^4 + 1250 + 1 - 25^2) / (25^2 + 25 + 1)\nval = sp.Rational(25**4 + 1250 + 1 - 25**2, 25**2 + 25 + 1)\nassert val == 25**2 - 25 + 1 == 601\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:07+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.cube-of-sum",
+  "topic": "Algebra",
+  "subtopic": "Algebraic identities",
+  "name": "Cube of a sum / difference",
+  "statement": "(a\\pm b)^3=a^3\\pm b^3\\pm3ab(a\\pm b)",
+  "conditions": [],
+  "derivation": [
+   "$(a+b)^3=(a+b)(a^2+2ab+b^2)$.",
+   "Multiply out: $a^3+3a^2b+3ab^2+b^3$.",
+   "Group the middle terms: $3a^2b+3ab^2=3ab(a+b)$, so $(a+b)^3=a^3+b^3+3ab(a+b)$.",
+   "Replace $b$ by $-b$: $(a-b)^3=a^3-b^3-3ab(a-b)$."
+  ],
+  "visual_proof": "A cube of side $a+b$ splits into an $a^3$ cube, a $b^3$ cube, three $a\\times a\\times b$ slabs and three $a\\times b\\times b$ rods.",
+  "shortcut": "Given $a+b=s$ and $a^3+b^3=T$: $ab=\\frac{s^3-T}{3s}$.",
+  "worked_example": {
+   "question_key": "2024-09-18_1600_Q10",
+   "answer": "B",
+   "steps": [
+    "Take $p=3a,\\ q=2b$: $p+q=27$, $p^3+q^3=1458$.",
+    "$27^3=1458+3pq\\cdot27 \\Rightarrow 19683-1458=81pq \\Rightarrow pq=225$.",
+    "$pq=6ab=225 \\Rightarrow ab=37.5$, so $2ab=75$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Writing $(a+b)^3=a^3+b^3$ (drops $3ab(a+b)$).",
+   "Using $3ab$ instead of $3ab(a+b)$, which here gives $2ab=2025$ instead of 75.",
+   "Forgetting the coefficients: $(3a)(2b)=6ab$, not $ab$; answering $pq$ or $ab$ instead of $2ab$."
+  ],
+  "related_ids": [
+   "algebra.sum-difference-of-cubes",
+   "algebra.reciprocal-cube",
+   "algebra.square-of-sum-difference"
+  ],
+  "diagram": {
+   "alt_text": "A cube with edges labelled a + b, cut into a small a-cube, a b-cube, three a-by-a-by-b slabs and three a-by-b-by-b rods.",
+   "spec": {
+    "type": "solid",
+    "shape": "cube",
+    "dims": {
+     "side": "a+b"
+    },
+    "labels": [
+     "a^3",
+     "b^3",
+     "3a^2b",
+     "3ab^2"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b = sp.symbols('a b')\nassert sp.expand((a + b)**3 - (a**3 + b**3 + 3*a*b*(a + b))) == 0\nassert sp.expand((a - b)**3 - (a**3 - b**3 - 3*a*b*(a - b))) == 0\nassert sp.expand((a + b)**3 - (a**3 + 3*a**2*b + 3*a*b**2 + b**3)) == 0\n# worked example: 3a + 2b = 27, 27a^3 + 8b^3 = 1458 -> 2ab\ns, cubes = 27, 1458\nab = sp.Rational(s**3 - cubes, 18 * s)\nassert ab == sp.Rational(75, 2) and 2 * ab == 75\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:08+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.sum-difference-of-cubes",
+  "topic": "Algebra",
+  "subtopic": "Algebraic identities",
+  "name": "Sum / difference of cubes",
+  "statement": "a^3\\pm b^3=(a\\pm b)(a^2\\mp ab+b^2)",
+  "conditions": [],
+  "derivation": [
+   "Expand $(a-b)(a^2+ab+b^2)=a^3+a^2b+ab^2-a^2b-ab^2-b^3$.",
+   "All middle terms cancel: $a^3-b^3$.",
+   "Replace $b$ by $-b$: $a^3+b^3=(a+b)(a^2-ab+b^2)$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$\\frac{a^3-b^3}{a^2+ab+b^2}=a-b$ and $\\frac{a^3+b^3}{a^2-ab+b^2}=a+b$: read the answer straight off.",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q02",
+   "answer": "B",
+   "steps": [
+    "Numerator $7.3^3-4.7^3=(7.3-4.7)(7.3^2+7.3\\times4.7+4.7^2)$.",
+    "The bracket is exactly the denominator, so it cancels.",
+    "Value $=7.3-4.7=2.6$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Using $+ab$ in the bracket for $a^3+b^3$: the bracket sign is opposite to the sign between the cubes.",
+   "Answering $a+b=12$ for a difference of cubes.",
+   "Expecting the bracket $a^2\\pm ab+b^2$ to factor further; over the reals it does not."
+  ],
+  "related_ids": [
+   "algebra.cube-of-sum",
+   "algebra.a3-b3-c3-3abc",
+   "algebra.difference-of-squares"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b = sp.symbols('a b')\nassert sp.expand(a**3 + b**3 - (a + b)*(a**2 - a*b + b**2)) == 0\nassert sp.expand(a**3 - b**3 - (a - b)*(a**2 + a*b + b**2)) == 0\nassert sp.expand(a**3 + b**3 - ((a + b)**3 - 3*a*b*(a + b))) == 0\n# worked example\np, q = sp.Rational(73, 10), sp.Rational(47, 10)\nassert (p**3 - q**3) / (p**2 + p*q + q**2) == p - q == sp.Rational(13, 5)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:08+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.a3-b3-c3-3abc",
+  "topic": "Algebra",
+  "subtopic": "Algebraic identities",
+  "name": "a^3+b^3+c^3-3abc",
+  "statement": "a^3+b^3+c^3-3abc=(a+b+c)(a^2+b^2+c^2-ab-bc-ca);\\ a+b+c=0 \\Rightarrow a^3+b^3+c^3=3abc",
+  "conditions": [],
+  "derivation": [
+   "Multiply out $(a+b+c)(a^2+b^2+c^2-ab-bc-ca)$; every mixed term like $a^2b$ cancels.",
+   "What remains is $a^3+b^3+c^3-3abc$.",
+   "If $a+b+c=0$ the right side is $0$, so $a^3+b^3+c^3=3abc$.",
+   "The bracket also equals $\\frac12[(a-b)^2+(b-c)^2+(c-a)^2]$."
+  ],
+  "visual_proof": null,
+  "shortcut": "With sum $S$ and sum of squares $Q$: $ab+bc+ca=\\frac{S^2-Q}{2}$ and $a^3+b^3+c^3-3abc=S\\left(Q-\\frac{S^2-Q}{2}\\right)$.",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_Q22",
+   "answer": "D",
+   "steps": [
+    "$S=18,\\ Q=36$: $ab+bc+ca=\\frac{324-36}{2}=144$.",
+    "$a^3+b^3+c^3-3abc=S(Q-144)=18\\times(36-144)$.",
+    "$=18\\times(-108)=-1944$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Using $+ab+bc+ca$ in the bracket: the sign is minus.",
+   "Dropping the minus sign of $Q-(ab+bc+ca)$, giving $+1944$ instead of $-1944$.",
+   "Applying $a^3+b^3+c^3=3abc$ when $a+b+c\\neq0$."
+  ],
+  "related_ids": [
+   "algebra.sum-difference-of-cubes",
+   "algebra.sum-of-squares-zero",
+   "algebra.square-of-sum-difference"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b, c = sp.symbols('a b c')\nlhs = a**3 + b**3 + c**3 - 3*a*b*c\nrhs = (a + b + c)*(a**2 + b**2 + c**2 - a*b - b*c - c*a)\nassert sp.expand(lhs - rhs) == 0\nhalf = sp.Rational(1, 2)*((a - b)**2 + (b - c)**2 + (c - a)**2)\nassert sp.expand(half - (a**2 + b**2 + c**2 - a*b - b*c - c*a)) == 0\n# a + b + c = 0 -> a^3 + b^3 + c^3 = 3abc\nassert sp.expand(lhs.subs(c, -a - b)) == 0\n# worked example: sum 18, sum of squares 36\nS, Q = 18, 36\nP = sp.Rational(S**2 - Q, 2)\nassert P == 144 and S * (Q - P) == -1944\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:08+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.sum-of-squares-zero",
+  "topic": "Algebra",
+  "subtopic": "Algebraic identities",
+  "name": "Sum of squares equals zero",
+  "statement": "a^2+b^2+c^2=0 \\Rightarrow a=b=c=0;\\ a^2+b^2+c^2-ab-bc-ca=0 \\Rightarrow a=b=c",
+  "conditions": [
+   "a, b, c \\text{ real}"
+  ],
+  "derivation": [
+   "A real square is never negative.",
+   "Non-negative terms add to $0$ only if each one is $0$: $a=b=c=0$.",
+   "$a^2+b^2+c^2-ab-bc-ca=\\frac12[(a-b)^2+(b-c)^2+(c-a)^2]$.",
+   "So it is $0$ only when $a-b=b-c=c-a=0$, i.e. $a=b=c$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Move everything to one side and complete squares: $(x-p)^2+(y-q)^2+\\dots=0$ gives $x=p,\\ y=q,\\dots$ at once.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q12",
+   "answer": "B",
+   "steps": [
+    "$a^2+b^2+c^2-2a-2c+2=0$.",
+    "Complete squares: $(a-1)^2+b^2+(c-1)^2=0$.",
+    "So $a=1,\\ b=0,\\ c=1$ and $a^3+b^3+c^3=2$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Splitting the constant $2$ wrongly, so the squares do not close (e.g. $(a-1)^2+(c-1)^2$ needs both $+1$s).",
+   "Concluding $a=b=c=0$ from $a^2+b^2+c^2-ab-bc-ca=0$; it only gives $a=b=c$.",
+   "Applying the rule to complex numbers: $1^2+i^2=0$ although neither is $0$."
+  ],
+  "related_ids": [
+   "algebra.a3-b3-c3-3abc",
+   "algebra.square-of-sum-difference"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import random\nimport sympy as sp\na, b, c = sp.symbols('a b c', real=True)\n# a^2+b^2+c^2-ab-bc-ca is half a sum of squares, so it is 0 only when a = b = c\nhalf = sp.Rational(1, 2)*((a - b)**2 + (b - c)**2 + (c - a)**2)\nassert sp.expand(half - (a**2 + b**2 + c**2 - a*b - b*c - c*a)) == 0\n# a sum of real squares is 0 only when every term is 0\nassert (a**2).is_nonnegative and (b**2).is_nonnegative and (c**2).is_nonnegative\nassert ((a - b)**2).is_nonnegative and ((b - c)**2).is_nonnegative\nrandom.seed(0)\nfor _ in range(1000):\n    x, y, z = (random.randint(-20, 20) for _ in range(3))\n    assert (x*x + y*y + z*z == 0) == (x == y == z == 0)\n    assert (x*x + y*y + z*z - x*y - y*z - z*x == 0) == (x == y == z)\n# worked example: a^2 + b^2 + c^2 = 2(a + c - 1)\nexpr = a**2 + b**2 + c**2 - 2*(a + c - 1)\nassert sp.expand(expr - ((a - 1)**2 + b**2 + (c - 1)**2)) == 0\nassert (1**3 + 0**3 + 1**3) == 2\n# boundary: the numbers must be real; with i the rule fails\ni = sp.I\nassert sp.expand(1**2 + i**2 + 0**2) == 0  # 1, i, 0 are not all zero\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:09+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.reciprocal-square",
+  "topic": "Algebra",
+  "subtopic": "Reciprocal identities",
+  "name": "x + 1/x squared",
+  "statement": "x^2+\\frac1{x^2}=\\left(x+\\frac1x\\right)^2-2=\\left(x-\\frac1x\\right)^2+2;\\ x+\\frac1x=2 \\Rightarrow x=1",
+  "conditions": [
+   "x \\neq 0",
+   "x+\\frac1x=2 \\Rightarrow x=1 \\text{ for real } x"
+  ],
+  "derivation": [
+   "$\\left(x+\\frac1x\\right)^2=x^2+2\\cdot x\\cdot\\frac1x+\\frac1{x^2}=x^2+2+\\frac1{x^2}$.",
+   "Subtract 2: $x^2+\\frac1{x^2}=\\left(x+\\frac1x\\right)^2-2$.",
+   "Same with minus: $\\left(x-\\frac1x\\right)^2=x^2-2+\\frac1{x^2}$, so $x^2+\\frac1{x^2}=\\left(x-\\frac1x\\right)^2+2$.",
+   "$x+\\frac1x=2 \\Rightarrow x^2-2x+1=0 \\Rightarrow (x-1)^2=0 \\Rightarrow x=1$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$k=x+\\frac1x$: $x^2+\\frac1{x^2}=k^2-2$, $x^4+\\frac1{x^4}=(k^2-2)^2-2$; and $\\left(x-\\frac1x\\right)^2=k^2-4$.",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_Q18",
+   "answer": "C",
+   "steps": [
+    "$a+\\frac1a=12$.",
+    "$a^2+\\frac1{a^2}=12^2-2=142$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Adding 2 instead of subtracting: $146$ (option A).",
+   "Squaring without the cross term: $144$ (option D).",
+   "For $x-\\frac1x$ from $x^2+\\frac1{x^2}=N$: the root is $\\sqrt{N-2}$, and its sign depends on whether $x>1$."
+  ],
+  "related_ids": [
+   "algebra.reciprocal-cube",
+   "algebra.square-of-sum-difference"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nx = sp.symbols('x', nonzero=True)\nassert sp.simplify(x**2 + 1/x**2 - ((x + 1/x)**2 - 2)) == 0\nassert sp.simplify(x**2 + 1/x**2 - ((x - 1/x)**2 + 2)) == 0\nassert sp.simplify((x + 1/x)**2 - (x - 1/x)**2 - 4) == 0\n# x + 1/x = 2 -> (x - 1)^2 = 0 -> x = 1\nassert sp.solve(sp.Eq(x + 1/x, 2), x) == [1]\n# worked example: a + 1/a = 12\nassert 12**2 - 2 == 142\n# boundary: x = 0 has no reciprocal\nassert (1/sp.Integer(0)) is sp.zoo\n# x + 1/x = 2 sits exactly on the edge of x + 1/x >= 2 for x > 0\nassert sp.minimum(x + 1/x, x, sp.Interval.open(0, sp.oo)) == 2\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:09+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.reciprocal-cube",
+  "topic": "Algebra",
+  "subtopic": "Reciprocal identities",
+  "name": "x + 1/x cubed",
+  "statement": "x^3+\\frac1{x^3}=k^3-3k \\text{ where } k=x+\\frac1x;\\ x^3-\\frac1{x^3}=m^3+3m,\\ m=x-\\frac1x",
+  "conditions": [
+   "x \\neq 0"
+  ],
+  "derivation": [
+   "Apply $(a+b)^3=a^3+b^3+3ab(a+b)$ with $a=x,\\ b=\\frac1x$; here $ab=1$.",
+   "$k^3=x^3+\\frac1{x^3}+3k$, so $x^3+\\frac1{x^3}=k^3-3k$.",
+   "With $b=-\\frac1x$: $m^3=x^3-\\frac1{x^3}-3m$, so $x^3-\\frac1{x^3}=m^3+3m$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$x+\\frac1x=k \\Rightarrow x^3+\\frac1{x^3}=k^3-3k$; for $x^6+\\frac1{x^6}$ use $p=x^2+\\frac1{x^2}$: $p^3-3p$.",
+  "worked_example": {
+   "question_key": "2024-09-17_0900_Q06",
+   "answer": "C",
+   "steps": [
+    "$\\left(x-\\frac1x\\right)^2=83-2=81$; $x>1$ so $m=x-\\frac1x=9$.",
+    "$x^3-\\frac1{x^3}=m^3+3m=729+27$.",
+    "$=756$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Sign swap: $m^3-3m$ for the difference gives $702$; the plus goes with $x-\\frac1x$.",
+   "Using $\\sqrt{83+2}$ for $x-\\frac1x$; that root belongs to $x+\\frac1x$.",
+   "Cubing $x^2+\\frac1{x^2}=83$ directly; the cube identity needs $x-\\frac1x$ (or $x+\\frac1x$), not the squares."
+  ],
+  "related_ids": [
+   "algebra.reciprocal-square",
+   "algebra.cube-of-sum"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nx = sp.symbols('x', nonzero=True)\nk = x + 1/x\nm = x - 1/x\nassert sp.simplify(x**3 + 1/x**3 - (k**3 - 3*k)) == 0\nassert sp.simplify(x**3 - 1/x**3 - (m**3 + 3*m)) == 0\n# worked example: x > 1, x^2 + 1/x^2 = 83 -> x - 1/x = 9 -> 756\nmm = sp.sqrt(83 - 2)\nassert mm == 9 and mm**3 + 3*mm == 756\nX = sp.solve(sp.Eq(x**2 + 1/x**2, 83), x)\nX = [r for r in X if r.is_real and r > 1]\nassert len(X) == 1 and sp.simplify(X[0]**3 - 1/X[0]**3) == 756\n# boundary: x = 0 has no reciprocal\nassert (1/sp.Integer(0)) is sp.zoo\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:10+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.quadratic-factorisation",
+  "topic": "Algebra",
+  "subtopic": "Factorisation & polynomials",
+  "name": "Factorising a quadratic",
+  "statement": "ax^2+bx+c=a(x-\\alpha)(x-\\beta),\\ \\alpha+\\beta=-\\tfrac ba,\\ \\alpha\\beta=\\tfrac ca",
+  "conditions": [
+   "a \\neq 0"
+  ],
+  "derivation": [
+   "If $\\alpha,\\beta$ are the roots, $a(x-\\alpha)(x-\\beta)=ax^2-a(\\alpha+\\beta)x+a\\alpha\\beta$.",
+   "Match with $ax^2+bx+c$: $-a(\\alpha+\\beta)=b$ and $a\\alpha\\beta=c$.",
+   "So $\\alpha+\\beta=-\\frac ba$ and $\\alpha\\beta=\\frac ca$.",
+   "Splitting the middle term: find $p,q$ with $p+q=b$, $pq=ac$; then $ax^2+px+qx+c$ factors by grouping."
+  ],
+  "visual_proof": null,
+  "shortcut": "Monic $x^2+bx+c$: two numbers with product $c$ and sum $b$ give $(x+p)(x+q)$; when options list roots, test sum $=-\\frac ba$ and product $=\\frac ca$.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q23",
+   "answer": "D",
+   "steps": [
+    "Numerator $88\\div8\\times k-9=11k-9$; denominator $36-35+k^2=1+k^2$.",
+    "$11k-9=1+k^2 \\Rightarrow k^2-11k+10=0$.",
+    "Product 10, sum 11: $(k-1)(k-10)=0$.",
+    "$k=1$ or $10$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Sign of the sum: roots add to $-\\frac ba$, not $\\frac ba$.",
+   "Doing $88\\div(8\\times k)$ instead of left-to-right $88\\div8\\times k$.",
+   "Dividing both sides by a variable and losing a root."
+  ],
+  "related_ids": [
+   "algebra.difference-of-squares",
+   "algebra.remainder-theorem",
+   "algebra.linear-one-variable"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b, c, x = sp.symbols('a b c x')\nal, be = sp.symbols('alpha beta')\n# roots from the quadratic formula satisfy the sum and product rules\nd = sp.sqrt(b**2 - 4*a*c)\nr1, r2 = (-b + d)/(2*a), (-b - d)/(2*a)\nassert sp.simplify(r1 + r2 + b/a) == 0\nassert sp.simplify(r1 * r2 - c/a) == 0\nassert sp.simplify(a*(x - r1)*(x - r2) - (a*x**2 + b*x + c)) == 0\n# worked example: 11k - 9 = 1 + k^2 -> k^2 - 11k + 10 = (k - 1)(k - 10)\nk = sp.symbols('k')\nassert sp.Rational(88, 8) == 11 and 6**2 - 7*5 == 1\nassert sp.factor(k**2 - 11*k + 10) == (k - 10)*(k - 1)\nassert sorted(sp.solve(sp.Eq((sp.Rational(88, 8)*k - 9)/(1 + k**2), 1), k)) == [1, 10]\n# boundary a = 0: not a quadratic, at most one root\nassert sp.solve(sp.Eq(0*x**2 + 3*x - 6, 0), x) == [2]\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:10+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.remainder-theorem",
+  "topic": "Algebra",
+  "subtopic": "Factorisation & polynomials",
+  "name": "Remainder theorem",
+  "statement": "p(x)\\div(x-a) \\text{ leaves remainder } p(a)",
+  "conditions": [],
+  "derivation": [
+   "Division gives $p(x)=(x-a)\\,q(x)+r$ with $r$ a constant (the divisor has degree 1).",
+   "Put $x=a$: the first term vanishes, so $r=p(a)$.",
+   "Divisor $kx-h$: put $x=\\frac hk$. If $p(a)=0$, $x-a$ is a factor."
+  ],
+  "visual_proof": null,
+  "shortcut": "Divisor $x+2$ → substitute $x=-2$; to make $p(x)$ divisible, subtract $p(a)$ from it.",
+  "worked_example": {
+   "question_key": "2024-09-17_1600_Q12",
+   "answer": "D",
+   "steps": [
+    "Divisor $m-2$, so remainder $=f(2)$.",
+    "$f(2)=32+5\\times16-6+7$.",
+    "$=113$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Substituting $x=2$ for divisor $x+2$; the root of $x+2$ is $-2$.",
+   "Dropping a term or its power: $5m^4$ at $m=2$ is $80$, not $40$.",
+   "For $kx-h$, substituting $x=h$ instead of $\\frac hk$."
+  ],
+  "related_ids": [
+   "algebra.quadratic-factorisation",
+   "number-system.remainder-theorem"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef long_divide(p, dv):\n    \"\"\"p, dv: coefficient lists, highest power first. Returns (quotient, remainder).\"\"\"\n    p = p[:]\n    q = []\n    while len(p) >= len(dv):\n        f = p[0] / dv[0]\n        q.append(f)\n        for i in range(len(dv)):\n            p[i] -= f * dv[i]\n        p.pop(0)\n    return q, p\ndef ev(p, t):\n    v = F(0)\n    for co in p:\n        v = v * t + co\n    return v\nn = 0\nfor _ in range(1500):\n    deg = random.randint(1, 7)\n    p = [F(random.randint(-30, 30)) for _ in range(deg + 1)]\n    if p[0] == 0:\n        p[0] = F(1)\n    a = F(random.randint(-12, 12), random.randint(1, 4))\n    _, rem = long_divide(p, [F(1), -a])\n    assert len(rem) == 1 and rem[0] == ev(p, a)\n    # divisor (k x - h): remainder is p(h/k)\n    k, h = F(random.choice([1, 2, 3, -2, 5])), F(random.randint(-9, 9))\n    _, rem2 = long_divide(p, [k, -h])\n    assert rem2[0] == ev(p, h / k)\n    n += 1\n# worked example: f(m) = m^5 + 5m^4 - 3m + 7 divided by (m - 2)\nf = [F(1), F(5), F(0), F(0), F(-3), F(7)]\nassert ev(f, 2) == 113 == long_divide(f, [F(1), F(-2)])[1][0]\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:11+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.arithmetic-progression",
+  "topic": "Algebra",
+  "subtopic": "Progressions & means",
+  "name": "Arithmetic progression",
+  "statement": "a_n=a+(n-1)d;\\ S_n=\\frac n2[2a+(n-1)d]=\\frac n2(a+l)",
+  "conditions": [],
+  "derivation": [
+   "Each step adds $d$: term $n$ has $n-1$ steps, so $a_n=a+(n-1)d$.",
+   "Write $S_n$ forwards and backwards and add: each pair sums to $a+l$.",
+   "There are $n$ pairs, so $2S_n=n(a+l)$, $S_n=\\frac n2(a+l)$.",
+   "Put $l=a+(n-1)d$: $S_n=\\frac n2[2a+(n-1)d]$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$S_n=n\\times$ (middle term); a quadratic in $n$ can give two roots: keep the one where every term stays valid.",
+  "worked_example": {
+   "question_key": "2024-09-23_1600_Q24",
+   "answer": "D",
+   "steps": [
+    "$a=100,\\ d=-5$: $\\frac n2[200-5(n-1)]=975$.",
+    "$n^2-41n+390=0 \\Rightarrow n=15$ or $26$.",
+    "$n=26$ makes the last instalment $100-25\\times5=-25$, impossible.",
+    "$15$ months (D)."
+   ]
+  },
+  "common_traps": [
+   "Using $a+nd$ for the $n$th term (one step too many).",
+   "Keeping both roots of the quadratic: 26 months (option A) needs negative instalments.",
+   "Forgetting the $\\frac n2$ and answering with $n$ halved."
+  ],
+  "related_ids": [
+   "average.ap-mean-middle-term",
+   "number-system.natural-number-sums",
+   "algebra.quadratic-factorisation"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nimport sympy as sp\nrandom.seed(0)\nn_cases = 0\nfor _ in range(1500):\n    a = F(random.randint(-200, 200), random.randint(1, 5))\n    d = F(random.randint(-50, 50), random.randint(1, 5))\n    n = random.randint(1, 60)\n    terms = [a + i * d for i in range(n)]\n    assert terms[-1] == a + (n - 1) * d\n    S = sum(terms, F(0))\n    assert S == F(n, 2) * (2 * a + (n - 1) * d) == F(n, 2) * (a + terms[-1])\n    n_cases += 1\n# worked example: a = 100, d = -5, S_n = 975\nk = sp.symbols('k', positive=True, integer=True)\nroots = sorted(sp.solve(sp.Eq(k / 2 * (200 + (k - 1) * (-5)), 975), k))\nassert roots == [15, 26]\nassert 100 + (15 - 1) * (-5) == 30 and 100 + (26 - 1) * (-5) == -25  # 26 needs negative instalments\nprint(f\"CASES={n_cases}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:11+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.am-gm-hm-inequality",
+  "topic": "Algebra",
+  "subtopic": "Progressions & means",
+  "name": "AM >= GM >= HM",
+  "statement": "\\frac{a+b}2\\ge\\sqrt{ab}\\ge\\frac{2ab}{a+b};\\ (a_1+\\dots+a_n)\\left(\\tfrac1{a_1}+\\dots+\\tfrac1{a_n}\\right)\\ge n^2",
+  "conditions": [
+   "a, b > 0 \\ (\\text{all } a_i > 0)",
+   "\\text{equality only when all the numbers are equal}"
+  ],
+  "derivation": [
+   "$(\\sqrt a-\\sqrt b)^2\\ge0 \\Rightarrow a+b\\ge2\\sqrt{ab}$, so $\\frac{a+b}2\\ge\\sqrt{ab}$.",
+   "Apply this to $\\frac1a,\\frac1b$: $\\frac{1}{2}\\left(\\frac1a+\\frac1b\\right)\\ge\\frac1{\\sqrt{ab}}$; flip both sides: $\\sqrt{ab}\\ge\\frac{2ab}{a+b}$.",
+   "Also $\\text{GM}^2=\\text{AM}\\times\\text{HM}$ for two numbers.",
+   "For $n$ numbers, AM $\\ge$ HM reads $\\frac{\\Sigma a_i}{n}\\ge\\frac{n}{\\Sigma 1/a_i}$, i.e. $(\\Sigma a_i)(\\Sigma\\frac1{a_i})\\ge n^2$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Fixed sum $S$ of $n$ positives: $\\Sigma\\frac1{a_i}\\ge\\frac{n^2}{S}$, minimum when all equal $\\frac Sn$; fixed product: sum is least when all equal.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_Q05",
+   "answer": "D",
+   "steps": [
+    "$(x+y+z)\\left(\\frac1x+\\frac1y+\\frac1z\\right)\\ge3^2=9$.",
+    "$x+y+z=1$, so $\\frac1x+\\frac1y+\\frac1z\\ge9$.",
+    "Equality at $x=y=z=\\frac13$: least value $9$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Using the inequality with negative numbers: $a=-1,\\ b=-4$ gives AM $=-2.5<$ GM $=2$.",
+   "Claiming a minimum that cannot be reached: check that equality (all equal) is allowed by the data.",
+   "Answering $3$ from $\\frac{n}{S}$ instead of $\\frac{n^2}{S}$."
+  ],
+  "related_ids": [
+   "average.arithmetic-mean",
+   "algebra.square-of-sum-difference"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math\nimport random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    a = random.uniform(1e-3, 1e3)\n    b = random.uniform(1e-3, 1e3)\n    am, gm, hm = (a + b) / 2, math.sqrt(a * b), 2 * a * b / (a + b)\n    assert am >= gm - 1e-9 * am and gm >= hm - 1e-9 * gm\n    assert math.isclose(gm * gm, am * hm, rel_tol=1e-9)\n    k = random.randint(2, 8)\n    xs = [F(random.randint(1, 1000), random.randint(1, 50)) for _ in range(k)]\n    assert sum(xs) * sum(1 / t for t in xs) >= k * k\n    n += 1\n# worked example: x + y + z = 1, x, y, z > 0 -> 1/x + 1/y + 1/z >= 9, equality at 1/3 each\nt = F(1, 3)\nassert 3 * (1 / t) == 9\nfor _ in range(1000):\n    u, v = sorted(random.random() for _ in range(2))\n    x, y, z = u, v - u, 1 - v\n    if min(x, y, z) > 0:\n        assert 1 / x + 1 / y + 1 / z >= 9 - 1e-9\nprint(f\"CASES={n}\")\n# boundary: equality exactly when a = b\nfor a in (F(1), F(7, 3), F(50)):\n    assert (a + a) / 2 == a and 2 * a * a / (a + a) == a\n# a, b > 0 is needed: with negatives AM < GM\na, b = -1, -4\nassert (a + b) / 2 < math.sqrt(a * b)\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:12+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.age-ratio-time-shift",
+  "topic": "Algebra",
+  "subtopic": "Age problems",
+  "name": "Age ratios at two points in time",
+  "statement": "\\frac{a-t}{b-t}=\\frac pq \\text{ with } a=kx,\\ b=lx;\\ \\text{the age difference never changes}",
+  "conditions": [
+   "kq \\neq lp \\text{ (present ratio } k:l \\text{ differs from the earlier ratio } p:q)"
+  ],
+  "derivation": [
+   "Present ages $A=kx,\\ B=lx$.",
+   "$t$ years ago: $\\frac{kx-t}{lx-t}=\\frac pq \\Rightarrow q(kx-t)=p(lx-t)$.",
+   "Collect $x$: $(kq-lp)x=t(q-p)$, so $x=\\frac{t(q-p)}{kq-lp}$.",
+   "For $t$ years later use $-t$. Both ages move by the same $t$, so $A-B$ never changes."
+  ],
+  "visual_proof": "Two bars for the ages now and two for $t$ years ago: each bar shrinks by the same $t$, so the gap between them stays fixed.",
+  "shortcut": "$x=\\frac{t(q-p)}{kq-lp}$; or match differences: scale both ratios so $l-k$ equals $q-p$, then one ratio unit $=\\frac{t}{\\text{unit change}}$.",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q22",
+   "answer": "C",
+   "steps": [
+    "$k:l=3:4$ now, $p:q=2:3$ five years ago.",
+    "$x=\\frac{5(3-2)}{3\\cdot3-4\\cdot2}=\\frac{5}{1}=5$.",
+    "$A=3x=15$ years (C); check $\\frac{10}{15}=\\frac23$."
+   ]
+  },
+  "common_traps": [
+   "Subtracting $t$ from only one age.",
+   "Applying the ratio to the age difference: the ratio changes, the difference does not.",
+   "Answering the multiplier $x$ ($5$) or B's age ($20$) instead of A's age."
+  ],
+  "related_ids": [
+   "algebra.age-linear-relations",
+   "ratio-proportion.ratio-change",
+   "algebra.linear-one-variable"
+  ],
+  "diagram": {
+   "alt_text": "Bar model: A now 15 and B now 20; five years ago A 10 and B 15. The gap of 5 years is the same in both pairs.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "A now",
+      "parts": [
+       {
+        "value": 15,
+        "label": "15 (3x)"
+       }
+      ]
+     },
+     {
+      "label": "B now",
+      "parts": [
+       {
+        "value": 20,
+        "label": "20 (4x)"
+       }
+      ]
+     },
+     {
+      "label": "A 5 years ago",
+      "parts": [
+       {
+        "value": 10,
+        "label": "10"
+       }
+      ]
+     },
+     {
+      "label": "B 5 years ago",
+      "parts": [
+       {
+        "value": 15,
+        "label": "15"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nimport sympy as sp\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    k, l, p, q = (random.randint(1, 15) for _ in range(4))\n    t = random.randint(-30, 30)  # t > 0: years ago; t < 0: years later\n    if k * q == l * p or t == 0:\n        continue\n    x = F(t * (q - p), k * q - l * p)\n    A, B = k * x, l * x\n    if B - t == 0:\n        continue\n    assert (A - t) / (B - t) == F(p, q)\n    assert (A - t) - (B - t) == A - B  # the gap never changes\n    n += 1\n# worked example: 3 : 4 now, 2 : 3 five years ago\nx = F(5 * (3 - 2), 3 * 3 - 4 * 2)\nassert x == 5 and 3 * x == 15 and F(15 - 5, 20 - 5) == F(2, 3)\nprint(f\"CASES={n}\")\n# boundary kq = lp: the two ratios are equal and the change in ratio is impossible for t != 0\nX = sp.symbols('X')\nassert sp.solve(sp.Eq((2*X - 5) * 6, (3*X - 5) * 4), X) == []  # 2:3 now and 4:6 earlier\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:12+00:00"
+   }
+  }
+ },
+ {
+  "id": "algebra.age-linear-relations",
+  "topic": "Algebra",
+  "subtopic": "Age problems",
+  "name": "Age multiples and linear relations",
+  "statement": "\\text{If } A=mB \\text{ now and } A+t=n(B+t),\\ \\text{then } B=\\frac{(n-1)t}{m-n}",
+  "conditions": [
+   "m \\neq n"
+  ],
+  "derivation": [
+   "Now: $A=mB$.",
+   "After $t$ years: $mB+t=n(B+t)=nB+nt$.",
+   "Collect $B$: $(m-n)B=(n-1)t$, so $B=\\frac{(n-1)t}{m-n}$; then $A=mB$.",
+   "If the first statement is about the past, treat that past year as 'now' and $t$ as the full gap to the second statement."
+  ],
+  "visual_proof": "A timeline with the two statements as marks; $t$ is the gap between them and every person's age moves by the same $t$.",
+  "shortcut": "$B=\\frac{(n-1)t}{m-n}$ at the first time point; for several people, write every age in one unknown and form one equation.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_Q06",
+   "answer": "D",
+   "steps": [
+    "Seven years ago $P=4D$; eleven years later ($t=11$) $P=2.5D$: $m=4,\\ n=2.5$.",
+    "Daughter then $=\\frac{(2.5-1)\\times11}{4-2.5}=11$.",
+    "Now $D=18$, $P=4\\times11+7=51$.",
+    "Sum $=69$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Taking $t=4$ (from now) instead of the full gap $7+4=11$ between the two statements.",
+   "Forgetting to add 7 back: $11+44=55$ is the sum seven years ago.",
+   "Multiplying only one side by the time shift: $A+t=n\\cdot B+t$."
+  ],
+  "related_ids": [
+   "algebra.age-ratio-time-shift",
+   "algebra.linear-equations-system"
+  ],
+  "diagram": {
+   "alt_text": "Timeline from 7 years ago to 4 years from now: at -7 Prachi is 4 times her daughter, at +4 she is 2.5 times; the gap between the two marks is t = 11 years.",
+   "spec": {
+    "type": "number-line",
+    "min": -7,
+    "max": 4,
+    "marks": [
+     -7,
+     0,
+     4
+    ],
+    "segments": [
+     {
+      "from": -7,
+      "to": 0,
+      "label": "7 years: P = 4D at start"
+     },
+     {
+      "from": 0,
+      "to": 4,
+      "label": "4 years: P = 2.5D at end"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nimport sympy as sp\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    m = F(random.randint(1, 40), random.randint(1, 4))\n    k = F(random.randint(1, 40), random.randint(1, 4))\n    t = F(random.randint(-30, 30))\n    if m == k or t == 0:\n        continue\n    B = (k - 1) * t / (m - k)\n    A = m * B\n    assert A + t == k * (B + t)\n    n += 1\n# worked example: 7 years ago P = 4D; 4 years from now P = 2.5D -> take \"7 years ago\" as now, t = 11\nB = F(F(5, 2) - 1) * 11 / (4 - F(5, 2))\nassert B == 11\nD, P = B + 7, 4 * B + 7\nassert (D, P) == (18, 51) and P - 7 == 4 * (D - 7) and P + 4 == F(5, 2) * (D + 4)\nassert [o for o in (77, 49, 72, 69) if o == D + P] == [69]\nprint(f\"CASES={n}\")\n# boundary m = n: mB + t = m(B + t) forces t(m - 1) = 0, no solution for t != 0 unless m = 1\nb = sp.symbols('b')\nassert sp.solve(sp.Eq(3*b + 5, 3*(b + 5)), b) == []\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:12+00:00"
+   }
+  }
+ }
+]

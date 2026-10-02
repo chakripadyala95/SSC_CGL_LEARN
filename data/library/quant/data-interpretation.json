@@ -1,0 +1,620 @@
+[
+ {
+  "id": "data-interpretation.read-and-total",
+  "topic": "Data Interpretation",
+  "subtopic": "Table",
+  "name": "Read values and totals",
+  "statement": "\\text{Read the needed cells/bars, add row or column totals, compare or rank}",
+  "conditions": [],
+  "derivation": [
+   "Underline the exact rows, columns and years the question names; ignore the rest of the table.",
+   "When a quantity is a difference of two columns (absent $=$ total $-$ present), add each column first and subtract once: $\\sum(T_i-P_i)=\\sum T_i-\\sum P_i$.",
+   "Write the derived row or column total beside the table, one number per year or item.",
+   "Answer the comparison asked (highest, second highest, ratio) from that one list."
+  ],
+  "visual_proof": "The table with an extra derived column (absentees = Total − Present, summed over the centres) written beside each year; the ranking is read straight down that column.",
+  "shortcut": "Difference of totals = total of differences: add the Total column and the Present column for a year, then subtract once.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q16",
+   "answer": "B",
+   "steps": [
+    "Absentees per year $=(T_P+T_Q+T_R)-(P_P+P_Q+P_R)$.",
+    "2016: $156-137=19$; 2017: $170-140=30$; 2018: $194-160=34$.",
+    "2019: $234-203=31$; 2020: $225-195=30$.",
+    "Order: 34 (2018), 31 (2019), 30, 30, 19, so second highest is 2019 (B)."
+   ]
+  },
+  "common_traps": [
+   "Ranking by the Total or Present column instead of absentees: second highest becomes 2020 (C).",
+   "Answering the highest (2018, option A) when the second highest is asked.",
+   "Reading one centre's columns only instead of summing P, Q and R."
+  ],
+  "related_ids": [
+   "data-interpretation.average-from-chart",
+   "data-interpretation.ratio-from-chart",
+   "data-interpretation.percentage-from-chart"
+  ],
+  "diagram": {
+   "alt_text": "Table of total and present candidates summed over centres P, Q and R for 2016 to 2020, with an absentees column: 19, 30, 34, 31, 30; 2019 is second highest.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Year",
+     "Total (P+Q+R)",
+     "Present (P+Q+R)",
+     "Absent"
+    ],
+    "rows": [
+     [
+      "2016",
+      "156",
+      "137",
+      "19"
+     ],
+     [
+      "2017",
+      "170",
+      "140",
+      "30"
+     ],
+     [
+      "2018",
+      "194",
+      "160",
+      "34"
+     ],
+     [
+      "2019",
+      "234",
+      "203",
+      "31"
+     ],
+     [
+      "2020",
+      "225",
+      "195",
+      "30"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    rows, cols = random.randint(2, 6), random.randint(2, 4)\n    tot = [[random.randint(10, 200) for _ in range(cols)] for _ in range(rows)]\n    pres = [[random.randint(0, t) for t in r] for r in tot]\n    by_cell = [sum(t - p for t, p in zip(rt, rp)) for rt, rp in zip(tot, pres)]\n    by_cols = [sum(rt) - sum(rp) for rt, rp in zip(tot, pres)]\n    assert by_cell == by_cols                      # sum of differences = difference of sums\n    n += 1\n# worked example 2024-09-09_0900_Q16: (Total, Present) for P, Q, R\ndata = {2016: [(45, 42), (56, 45), (55, 50)], 2017: [(50, 45), (75, 55), (45, 40)],\n        2018: [(64, 60), (65, 45), (65, 55)], 2019: [(80, 69), (84, 72), (70, 62)],\n        2020: [(55, 44), (80, 66), (90, 85)]}\nabsent = {y: sum(t for t, _ in v) - sum(p for _, p in v) for y, v in data.items()}\nassert absent == {2016: 19, 2017: 30, 2018: 34, 2019: 31, 2020: 30}\nrank = sorted(absent, key=absent.get, reverse=True)\nassert rank[1] == 2019 and absent[2019] not in (absent[2018], absent[2020], absent[2017])\nopts = {\"A\": 2018, \"B\": 2019, \"C\": 2020, \"D\": 2017}\nassert [k for k, y in opts.items() if y == rank[1]] == [\"B\"]\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ },
+ {
+  "id": "data-interpretation.average-from-chart",
+  "topic": "Data Interpretation",
+  "subtopic": "Table",
+  "name": "Averages from a chart",
+  "statement": "\\text{average}=\\frac{\\text{sum of selected values}}{\\text{count}};\\ \\text{compare averages via totals when counts are equal}",
+  "conditions": [],
+  "derivation": [
+   "Average $=\\frac{\\text{sum}}{\\text{count}}$ (see [[f:average.arithmetic-mean]]).",
+   "If every group has the same count $n$, dividing all totals by $n$ keeps their order, so rank the totals directly.",
+   "To add faster, pick a base $b$ near the values: average $=b+\\frac{\\sum(x_i-b)}{n}$.",
+   "With unequal counts, compute each average separately before comparing or combining."
+  ],
+  "visual_proof": "A table of four companies over four years with a deviation-from-240 row under each column: +5, +7, −15, 0; the largest deviation total marks the largest average.",
+  "shortcut": "Equal counts: compare totals (or sums of deviations from a round base) instead of averages.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_Q11",
+   "answer": "C",
+   "steps": [
+    "Each company has 4 years, so compare totals.",
+    "Deviations from 240: C1 $3+8-8+2=5$, C2 $4-1+0+4=7$, C3 $4-4-5-10=-15$, C4 $0-10+8+2=0$.",
+    "Totals: C1 965, C2 967, C3 945, C4 960.",
+    "C2 has the maximum average (C)."
+   ]
+  },
+  "common_traps": [
+   "Picking the company with the single biggest year (C1's 248 or C4's 248) instead of the biggest total: gives C1 or C4.",
+   "Comparing averages over different counts by totals: wrong when one group has more items.",
+   "Averaging two averages directly when the groups have different counts; use the combined total over the combined count."
+  ],
+  "related_ids": [
+   "average.arithmetic-mean",
+   "average.weighted-average",
+   "data-interpretation.read-and-total"
+  ],
+  "diagram": {
+   "alt_text": "Table of T-shirt production (thousands) for C1 to C4 in 2019 to 2022 with totals 965, 967, 945, 960 and deviation sums from 240 of +5, +7, −15, 0.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Year",
+     "C1",
+     "C2",
+     "C3",
+     "C4"
+    ],
+    "rows": [
+     [
+      "2019",
+      "243",
+      "244",
+      "244",
+      "240"
+     ],
+     [
+      "2020",
+      "248",
+      "239",
+      "236",
+      "230"
+     ],
+     [
+      "2021",
+      "232",
+      "240",
+      "235",
+      "248"
+     ],
+     [
+      "2022",
+      "242",
+      "244",
+      "230",
+      "242"
+     ],
+     [
+      "Total",
+      "965",
+      "967",
+      "945",
+      "960"
+     ],
+     [
+      "Σ(x−240)",
+      "+5",
+      "+7",
+      "−15",
+      "0"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    k = random.randint(2, 6)\n    groups = [[random.randint(100, 999) for _ in range(k)] for _ in range(random.randint(2, 5))]\n    avgs = [F(sum(g), k) for g in groups]\n    tots = [sum(g) for g in groups]\n    assert sorted(range(len(groups)), key=lambda i: avgs[i]) == sorted(range(len(groups)), key=lambda i: tots[i])\n    base = random.randint(0, 999)\n    for g, a in zip(groups, avgs):\n        assert a == base + F(sum(x - base for x in g), k)   # assumed-mean shortcut\n    n += 1\n# worked example 2024-09-09_1600_Q11\ncols = {\"C1\": [243, 248, 232, 242], \"C2\": [244, 239, 240, 244], \"C3\": [244, 236, 235, 230], \"C4\": [240, 230, 248, 242]}\ntot = {c: sum(v) for c, v in cols.items()}\nassert tot == {\"C1\": 965, \"C2\": 967, \"C3\": 945, \"C4\": 960}\ndev = {c: sum(x - 240 for x in v) for c, v in cols.items()}\nassert dev == {\"C1\": 5, \"C2\": 7, \"C3\": -15, \"C4\": 0}\nbest = max(tot, key=tot.get)\nassert best == \"C2\" and sorted(tot.values())[-2] < tot[\"C2\"]\nopts = {\"A\": \"C4\", \"B\": \"C1\", \"C\": \"C2\", \"D\": \"C3\"}\nassert [k for k, c in opts.items() if c == best] == [\"C\"]\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ },
+ {
+  "id": "data-interpretation.percentage-from-chart",
+  "topic": "Data Interpretation",
+  "subtopic": "Table",
+  "name": "Percentages and percent change from a chart",
+  "statement": "\\text{share}\\%=\\frac{\\text{value}}{\\text{total}}\\times100;\\ \\%\\Delta=\\frac{V_2-V_1}{V_1}\\times100",
+  "conditions": [
+   "$\\text{total} > 0$ for a share",
+   "$V_1 \\neq 0$ for a percent change ($V_1$ is the base)"
+  ],
+  "derivation": [
+   "A share is a part over its whole: $\\frac{\\text{value}}{\\text{total}}\\times100$ (see [[f:percentage.percent-of-quantity]]).",
+   "Change is measured against the starting value: $\\%\\Delta=\\frac{V_2-V_1}{V_1}\\times100$ (see [[f:percentage.percent-change]]).",
+   "Equivalently $\\%\\Delta=\\left(\\frac{V_2}{V_1}-1\\right)\\times100$, quick when $V_2/V_1$ is a clean fraction.",
+   "For 'who scored $x\\%$', turn $x\\%$ into a target total first ($x\\%$ of maximum), then match totals."
+  ],
+  "visual_proof": "One student's row of five marks out of 100 added to 395 beside the target 79% of 500 = 395.",
+  "shortcut": "Convert the percent to a target value once ($79\\%$ of $500=395$), then scan the totals instead of dividing each one.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q08",
+   "answer": "B",
+   "steps": [
+    "Maximum $=5\\times100=500$, so $79\\%$ means $0.79\\times500=395$ marks.",
+    "Tarun: $65+80+75+85+90=395$.",
+    "Rohit 407, Mohit 419, Sumit 406: none is 395.",
+    "Tarun (B)."
+   ]
+  },
+  "common_traps": [
+   "Using the new value as the base for % change: gives a smaller % rise than the true one.",
+   "Averaging the five subject percentages without checking every subject is out of the same maximum.",
+   "Dividing by the wrong total (one subject's maximum 100 instead of 500)."
+  ],
+  "related_ids": [
+   "percentage.percent-of-quantity",
+   "percentage.percent-change",
+   "percentage.more-than-less-than",
+   "data-interpretation.average-from-chart"
+  ],
+  "diagram": {
+   "alt_text": "Bar model of 500 maximum marks split into Tarun's 395 (79%) and the 105 marks he missed (21%).",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Maximum 500",
+      "parts": [
+       {
+        "value": 395,
+        "label": "79%: 395"
+       },
+       {
+        "value": 105,
+        "label": "21%: 105"
+       }
+      ]
+     },
+     {
+      "label": "Tarun",
+      "parts": [
+       {
+        "value": 65,
+        "label": "65"
+       },
+       {
+        "value": 80,
+        "label": "80"
+       },
+       {
+        "value": 75,
+        "label": "75"
+       },
+       {
+        "value": 85,
+        "label": "85"
+       },
+       {
+        "value": 90,
+        "label": "90"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    vals = [random.randint(1, 1000) for _ in range(random.randint(2, 6))]\n    total = sum(vals)\n    shares = [F(v, total) * 100 for v in vals]\n    assert sum(shares) == 100\n    v1, v2 = random.randint(1, 1000), random.randint(0, 2000)\n    pct = F(v2 - v1, v1) * 100\n    assert pct == (F(v2, v1) - 1) * 100            # shortcut: ratio minus 1\n    assert v1 * (1 + pct / 100) == v2              # recovers V2\n    p = random.randint(1, 100)\n    assert (F(p, 100) * total == sum(vals)) == (p == 100)\n    n += 1\n# boundary: V1 = 0 has no percent change; total = 0 has no share\nfor bad in [(0, 5), (0, 0)]:\n    try:\n        F(bad[1] - bad[0], bad[0]) * 100\n        raise AssertionError\n    except ZeroDivisionError:\n        pass\ntry:\n    F(3, 0)\n    raise AssertionError\nexcept ZeroDivisionError:\n    pass\nassert F(5 - 1, 1) * 100 == 400                    # tiny V1 gives huge %: base matters\n# worked example 2024-09-09_0900_Q08: 79% of 5 x 100 marks\nmarks = {\"Tarun\": [65, 80, 75, 85, 90], \"Rohit\": [69, 76, 80, 88, 94], \"Mohit\": [73, 84, 77, 90, 95],\n         \"Shobhit\": [76, 85, 76, 86, 78], \"Sumit\": [90, 88, 78, 82, 68]}\ntarget = F(79, 100) * 500\nassert target == 395\nhit = [s for s, m in marks.items() if sum(m) == target]\nassert hit == [\"Tarun\"]\nassert {s: F(sum(m), 500) * 100 for s, m in marks.items()}[\"Tarun\"] == 79\nopts = {\"A\": \"Rohit\", \"B\": \"Tarun\", \"C\": \"Mohit\", \"D\": \"Sumit\"}\nassert [k for k, s in opts.items() if s in hit] == [\"B\"]\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ },
+ {
+  "id": "data-interpretation.ratio-from-chart",
+  "topic": "Data Interpretation",
+  "subtopic": "Bar graph",
+  "name": "Ratios from a chart",
+  "statement": "\\text{ratio}=\\frac{\\Sigma\\text{ selected } A}{\\Sigma\\text{ selected } B} \\text{ simplified}",
+  "conditions": [],
+  "derivation": [
+   "Read each named bar; write the two groups as separate sums.",
+   "Ratio $=\\Sigma A:\\Sigma B$; never add or cancel across the colon before summing each side.",
+   "Bars on a common scale (all multiples of 25, 50, ...) can be divided by that scale first: $\\sum ka_i:\\sum kb_i=\\sum a_i:\\sum b_i$.",
+   "Cancel the HCF to lowest terms (see [[f:ratio-proportion.simplify-ratio]])."
+  ],
+  "visual_proof": "A grouped bar chart of Institutes A and B, 2018 to 2022; the three B bars named and the three A bars named are summed into 925 and 700.",
+  "shortcut": "Divide every bar by the common step first (here 25): $(14+15+8):(6+12+10)=37:28$.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_Q20",
+   "answer": "C",
+   "steps": [
+    "B in 2019, 2020, 2022: $350+375+200=925$.",
+    "A in 2018, 2020, 2021: $150+300+250=700$.",
+    "$925:700$, HCF 25, gives $37:28$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Writing the ratio the wrong way round (A : B): gives 28 : 37, option B.",
+   "Reading B's 2018 bar (210) or A's 2022 bar (225) for the wrong year.",
+   "Simplifying each pair year by year and adding the ratios instead of adding the values."
+  ],
+  "related_ids": [
+   "ratio-proportion.simplify-ratio",
+   "data-interpretation.read-and-total",
+   "data-interpretation.percentage-from-chart"
+  ],
+  "diagram": {
+   "alt_text": "Grouped bar chart of students enrolled in Institutes A and B from 2018 to 2022: A 150, 275, 300, 250, 225; B 210, 350, 375, 300, 200.",
+   "spec": {
+    "type": "chart",
+    "kind": "bar",
+    "series": [
+     {
+      "label": "A",
+      "points": [
+       [
+        2018,
+        150
+       ],
+       [
+        2019,
+        275
+       ],
+       [
+        2020,
+        300
+       ],
+       [
+        2021,
+        250
+       ],
+       [
+        2022,
+        225
+       ]
+      ]
+     },
+     {
+      "label": "B",
+      "points": [
+       [
+        2018,
+        210
+       ],
+       [
+        2019,
+        350
+       ],
+       [
+        2020,
+        375
+       ],
+       [
+        2021,
+        300
+       ],
+       [
+        2022,
+        200
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom math import gcd\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    k = random.choice([5, 10, 25, 50])\n    a = [k * random.randint(1, 80) for _ in range(random.randint(1, 4))]\n    b = [k * random.randint(1, 80) for _ in range(random.randint(1, 4))]\n    sa, sb = sum(a), sum(b)\n    g = gcd(sa, sb)\n    # shortcut: divide every bar by the common scale k first, then add\n    sa_k, sb_k = sum(x // k for x in a), sum(x // k for x in b)\n    g2 = gcd(sa_k, sb_k)\n    assert (sa // g, sb // g) == (sa_k // g2, sb_k // g2)\n    assert F(sa, sb) == F(sa // g, sb // g)\n    n += 1\n# worked example 2024-09-09_1230_Q20\nA = {2018: 150, 2019: 275, 2020: 300, 2021: 250, 2022: 225}\nB = {2018: 210, 2019: 350, 2020: 375, 2021: 300, 2022: 200}\nnum = B[2019] + B[2020] + B[2022]\nden = A[2018] + A[2020] + A[2021]\nassert (num, den) == (925, 700)\ng = gcd(num, den)\nr = (num // g, den // g)\nassert r == (37, 28)\nopts = {\"A\": (11, 28), \"B\": (28, 37), \"C\": (37, 28), \"D\": (28, 11)}\nassert [k for k, v in opts.items() if v == r] == [\"C\"]\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ },
+ {
+  "id": "data-interpretation.derived-quantity",
+  "topic": "Data Interpretation",
+  "subtopic": "Table",
+  "name": "Derived quantities from given relations",
+  "statement": "\\text{Combine table values with a stated relation (e.g. income}=\\text{expenditure}\\times(1+p)) \\text{ to find the unknown}",
+  "conditions": [],
+  "derivation": [
+   "Copy the relation the question gives, e.g. income $=E+E\\times\\frac{p}{100}$.",
+   "Factor out the table value: income $=E\\left(1+\\frac{p}{100}\\right)$, one multiplication.",
+   "Run it backwards when the unknown is the table value: $E=\\frac{\\text{income}}{1+p/100}$.",
+   "When two unknowns are linked (one is twice the other), write one variable, form one equation and solve."
+  ],
+  "visual_proof": "A bar model: expenditure 50 plus a profit piece of 55% of 50 = 27.5, together making income 77.5.",
+  "shortcut": "Income $=E\\times(1+p/100)$: one multiplier, e.g. $55\\%$ profit means $\\times1.55$.",
+  "worked_example": {
+   "question_key": "2024-09-19_1600_Q09",
+   "answer": "A",
+   "steps": [
+    "Company C, 2003: $E=50$ crore, profit $55\\%$.",
+    "Income $=50\\times1.55=77.5$ crore (A)."
+   ]
+  },
+  "common_traps": [
+   "Reading Company B's or A's column for 2003 (15 or 30) instead of C's.",
+   "Taking profit alone ($27.5$) as the income.",
+   "Treating profit% as a share of income: $50/0.45\\approx111.1$, which matches no option."
+  ],
+  "related_ids": [
+   "profit-loss.profit-percent",
+   "percentage.income-expenditure-savings",
+   "data-interpretation.read-and-total"
+  ],
+  "diagram": {
+   "alt_text": "Bar model: Company C 2003 expenditure 50 crore plus profit 27.5 crore (55% of 50) equals income 77.5 crore.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Expenditure",
+      "parts": [
+       {
+        "value": 50,
+        "label": "50"
+       }
+      ]
+     },
+     {
+      "label": "Income",
+      "parts": [
+       {
+        "value": 50,
+        "label": "50"
+       },
+       {
+        "value": 27.5,
+        "label": "55%: 27.5"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    e = F(random.randint(1, 10000), random.choice([1, 2, 4, 10]))\n    p = F(random.randint(-99, 300))\n    income = e + e * p / 100\n    assert income == e * (1 + p / 100)             # one multiplier\n    assert income / (1 + p / 100) == e             # reverse: expenditure from income\n    assert (income - e) / e * 100 == p             # profit% recovered\n    n += 1\n# worked example 2024-09-19_1600_Q09: Company C, 2003\nexp_c, prof_c = 50, F(55)\ninc = exp_c * (1 + prof_c / 100)\nassert inc == F(155, 2)\nopts = {\"A\": F(775, 10), \"B\": F(757, 10), \"C\": F(698, 10), \"D\": F(105)}\nassert [k for k, v in opts.items() if v == inc] == [\"A\"]\n# second case 2024-09-19_1600_Q16: 0.7x + 0.8(2x) = 552\nx = F(552) / (F(7, 10) + F(8, 10) * 2)\nassert x == 240 and 2 * x == 480\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ },
+ {
+  "id": "data-interpretation.pie-central-angle",
+  "topic": "Data Interpretation",
+  "subtopic": "Pie chart",
+  "name": "Pie chart central angles",
+  "statement": "\\theta=\\frac{\\%}{100}\\times360^\\circ;\\ \\text{value}=\\frac{\\theta}{360^\\circ}\\times\\text{total}",
+  "conditions": [],
+  "derivation": [
+   "The whole pie is $100\\%$ and $360^\\circ$, so $1\\%=3.6^\\circ$.",
+   "A sector of $p\\%$ has angle $\\theta=3.6p^\\circ$.",
+   "A sector of $\\theta^\\circ$ holds $\\frac{\\theta}{360}$ of the total.",
+   "Comparisons between sectors (ratio, % more or less) need only the angles or percents; the total cancels."
+  ],
+  "visual_proof": "A pie split into 20%, 40%, 30% and 10% sectors; the 20% and 30% sectors together cover half the circle, 180°.",
+  "shortcut": "$1\\%=3.6^\\circ$; $25\\%=90^\\circ$, $50\\%=180^\\circ$. Ignore the total when only angles or comparisons are asked.",
+  "worked_example": {
+   "question_key": "2024-09-13_0900_Q20",
+   "answer": "B",
+   "steps": [
+    "Apples $20\\%$ + Oranges $30\\%=50\\%$.",
+    "$\\theta=50\\times3.6^\\circ=180^\\circ$ (B). The 1200 fruits are not needed."
+   ]
+  },
+  "common_traps": [
+   "Converting 1200 fruits into counts first and dividing wrongly: wastes time and invites slips.",
+   "Taking apples alone ($72^\\circ$) or oranges alone ($108^\\circ$).",
+   "Using $1\\%=3.6$ backwards ($50/3.6$) when the chart is already in percent."
+  ],
+  "related_ids": [
+   "data-interpretation.pie-percent-value",
+   "mensuration.sector-area",
+   "percentage.percent-of-quantity"
+  ],
+  "diagram": {
+   "alt_text": "Strip of 360 degrees split into Apples 72°, Bananas 144°, Oranges 108° and Sweet lime 36°; Apples plus Oranges make 180°.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "360°",
+      "parts": [
+       {
+        "value": 72,
+        "label": "Apples 20% = 72°"
+       },
+       {
+        "value": 144,
+        "label": "Bananas 40% = 144°"
+       },
+       {
+        "value": 108,
+        "label": "Oranges 30% = 108°"
+       },
+       {
+        "value": 36,
+        "label": "Sweet lime 10% = 36°"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    parts = [random.randint(1, 50) for _ in range(random.randint(2, 7))]\n    s = sum(parts)\n    pct = [F(p, s) * 100 for p in parts]\n    ang = [q / 100 * 360 for q in pct]\n    assert sum(ang) == 360\n    for q, a in zip(pct, ang):\n        assert a == q * F(18, 5)                   # 1% = 3.6 degrees\n    total = random.randint(1, 10**6)\n    vals = [a / 360 * total for a in ang]\n    assert sum(vals) == total\n    i, j = random.sample(range(len(parts)), 2)\n    # comparisons need no total: ratio of values = ratio of angles\n    assert vals[i] / vals[j] == ang[i] / ang[j]\n    assert (vals[i] - vals[j]) / vals[j] == (ang[i] - ang[j]) / ang[j]\n    n += 1\n# worked example 2024-09-13_0900_Q20: apples 20%, oranges 30%; total 1200 not needed\ntheta = F(20 + 30, 100) * 360\nassert theta == 180\nopts = {\"A\": 90, \"B\": 180, \"C\": 220, \"D\": 160}\nassert [k for k, v in opts.items() if v == theta] == [\"B\"]\n# second case 2024-09-18_1230_Q11 (degrees only)\nbtr, csh = 45 + 65 + 25, 100 + 60 + 30\nassert round(float(F(csh - btr, csh) * 100), 2) == 28.95\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ },
+ {
+  "id": "data-interpretation.pie-percent-value",
+  "topic": "Data Interpretation",
+  "subtopic": "Pie chart",
+  "name": "Pie chart percent to value",
+  "statement": "\\text{value}=\\frac{\\%}{100}\\times\\text{total};\\ \\text{difference of sectors}=\\frac{\\%_1-\\%_2}{100}\\times\\text{total}",
+  "conditions": [],
+  "derivation": [
+   "A sector of $p\\%$ holds $\\frac{p}{100}\\times$ total.",
+   "The gap between two sectors is $\\frac{p_1}{100}T-\\frac{p_2}{100}T=\\frac{p_1-p_2}{100}T$: subtract percents first.",
+   "A part of a sector ($q\\%$ of a $p\\%$ sector) is $\\frac{pq}{10^4}T$.",
+   "The rest of a sector is $(100-q)\\%$ of it."
+  ],
+  "visual_proof": "A bar for 20,000 employees with department D's 30% piece (6000) split into 30% female (1800) and 70% male (4200).",
+  "shortcut": "Multiply the percents: $30\\%\\times70\\%$ of $20000=21\\%$ of $20000=4200$.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_Q06",
+   "answer": "D",
+   "steps": [
+    "Department D $=30\\%$ of $20000=6000$.",
+    "Females $30\\%$, so males $70\\%$ of $6000=4200$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Answering the department size (6000) instead of the males.",
+   "Finding females (1800) and stopping.",
+   "Taking 70% of the whole company: 14000."
+  ],
+  "related_ids": [
+   "data-interpretation.pie-central-angle",
+   "percentage.percent-of-quantity",
+   "data-interpretation.percentage-from-chart"
+  ],
+  "diagram": {
+   "alt_text": "Bar model: 20,000 employees with department D as 30% = 6000; D split into 1800 females (30%) and 4200 males (70%).",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "All 20000",
+      "parts": [
+       {
+        "value": 6000,
+        "label": "D 30%: 6000"
+       },
+       {
+        "value": 14000,
+        "label": "Others 70%: 14000"
+       }
+      ]
+     },
+     {
+      "label": "Dept D",
+      "parts": [
+       {
+        "value": 1800,
+        "label": "F 30%: 1800"
+       },
+       {
+        "value": 4200,
+        "label": "M 70%: 4200"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    total = random.randint(1, 10**6)\n    p1, p2 = random.randint(0, 100), random.randint(0, 100)\n    v1, v2 = F(p1, 100) * total, F(p2, 100) * total\n    assert v1 - v2 == F(p1 - p2, 100) * total      # difference straight from percents\n    q = random.randint(0, 100)\n    # q% of a sector: multiply the two percents\n    assert F(q, 100) * v1 == F(p1 * q, 10**4) * total\n    assert F(100 - q, 100) * v1 == v1 - F(q, 100) * v1\n    n += 1\n# worked example 2024-09-12_1230_Q06: D = 30% of 20000; 30% of D female\ntotal, d = 20000, 30\ndept = F(d, 100) * total\nassert dept == 6000\nmale = F(70, 100) * dept\nassert male == 4200 == F(d * 70, 10**4) * total\nopts = {\"A\": 4500, \"B\": 4000, \"C\": 5000, \"D\": 4200}\nassert [k for k, v in opts.items() if v == male] == [\"D\"]\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ }
+]

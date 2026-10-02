@@ -1,0 +1,272 @@
+[
+ {
+  "id": "alphabet.sorted-position-compare",
+  "topic": "Alphabet/Word order",
+  "subtopic": "Letter sorting in word",
+  "name": "Sort and compare positions",
+  "statement": "\\text{unchanged} = \\#\\{i : w_i = \\text{sorted}(w)_i\\},\\ \\text{changed} = n - \\text{unchanged}",
+  "conditions": [],
+  "derivation": [
+   "Write the word.",
+   "Under it, write its letters in alphabetical order (repeated letters stay repeated).",
+   "Compare column by column; count columns with the same letter.",
+   "Answer that count for 'unchanged', or $n$ minus it for 'changed'."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R07",
+   "answer": "B",
+   "steps": [
+    "NIGHTMARES sorted: AEGHIMNRST.",
+    "Columns 3, 4, 6, 8 match: G, H, M, R.",
+    "4 letters unchanged, answer (B)."
+   ]
+  },
+  "common_traps": [
+   "Answering 'unchanged' when the question asks 'change' (SYSTEM: 1 unchanged, 5 change).",
+   "Dropping a repeated letter while sorting, which shifts every later column.",
+   "Counting letters that appear in both rows rather than letters in the same column."
+  ],
+  "related_ids": [
+   "alphabet.letters-between",
+   "alphabet.dictionary-order"
+  ],
+  "diagram": {
+   "alt_text": "Table comparing NIGHTMARES with its sorted form AEGHIMNRST column by column; G, H, M and R stay in place.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Pos",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10"
+    ],
+    "rows": [
+     [
+      "Word",
+      "N",
+      "I",
+      "G",
+      "H",
+      "T",
+      "M",
+      "A",
+      "R",
+      "E",
+      "S"
+     ],
+     [
+      "Sorted",
+      "A",
+      "E",
+      "G",
+      "H",
+      "I",
+      "M",
+      "N",
+      "R",
+      "S",
+      "T"
+     ],
+     [
+      "Same?",
+      "",
+      "",
+      "yes",
+      "yes",
+      "",
+      "yes",
+      "",
+      "yes",
+      "",
+      ""
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "NUM = {\"Zero\": 0, \"One\": 1, \"Two\": 2, \"Three\": 3, \"Four\": 4, \"Five\": 5, \"Six\": 6}\n\ndef unchanged(w):\n    return sum(a == b for a, b in zip(w, sorted(w)))\n\ndef pick(w, options, ask=\"unchanged\"):\n    n = unchanged(w) if ask == \"unchanged\" else len(w) - unchanged(w)\n    return [lab for lab, v in options.items() if NUM[v] == n]\n\n# worked example 2024-09-09_0900_R07: NIGHTMARES\nassert \"\".join(sorted(\"NIGHTMARES\")) == \"AEGHIMNRST\"\nassert [w for w, s in zip(\"NIGHTMARES\", sorted(\"NIGHTMARES\")) if w == s] == list(\"GHMR\")\nassert pick(\"NIGHTMARES\", {\"A\": \"One\", \"B\": \"Four\", \"C\": \"Two\", \"D\": \"Three\"}) == [\"B\"]\n# 2024-09-09_1230_R12: SYSTEM, count of letters that change (repeated S)\nassert pick(\"SYSTEM\", {\"A\": \"Three\", \"B\": \"Five\", \"C\": \"Four\", \"D\": \"Six\"}, ask=\"change\") == [\"B\"]\n# 2024-09-09_1600_R12: JANITOR\nassert pick(\"JANITOR\", {\"A\": \"Zero\", \"B\": \"Three\", \"C\": \"One\", \"D\": \"Two\"}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "alphabet.letters-between",
+  "topic": "Alphabet/Word order",
+  "subtopic": "Letter sorting in word",
+  "name": "Letters between / gap count",
+  "statement": "\\text{letters between } X \\text{ and } Y = |p_X - p_Y| - 1,\\ \\text{anchors } E=5,\\ J=10,\\ O=15,\\ T=20,\\ Y=25",
+  "conditions": [
+   "X \\neq Y"
+  ],
+  "derivation": [
+   "Letters strictly between positions $a < b$ are $a+1, \\dots, b-1$.",
+   "That run has $b - 1 - a$ letters, i.e. $|p_X - p_Y| - 1$.",
+   "Get positions fast from the nearest EJOTY anchor (R = T $- 2$ = 18).",
+   "In sort-then-count questions, sort the letters first, then pick 'kth from left' and 'kth from right' in the new order."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-12_1600_R12",
+   "answer": "C",
+   "steps": [
+    "FROWNED sorted: D E F N O R W.",
+    "4th from left = N (14), 2nd from right = R (18).",
+    "$18 - 14 - 1 = 3$ (O, P, Q), answer (C)."
+   ]
+  },
+  "common_traps": [
+   "Using $|p_X - p_Y|$ without the $-1$, which gives one too many (4 instead of 3 between N and R).",
+   "Counting 'from the right' in the original word instead of the sorted one.",
+   "Off-by-one on 'kth from right': 2nd from right in DEFNORW is R, not O."
+  ],
+  "related_ids": [
+   "alphabet.sorted-position-compare",
+   "alphabet.opposite-letter"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\nALPHA = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\nNUM = {\"Two\": 2, \"Three\": 3, \"Four\": 4, \"Five\": 5, \"Six\": 6, \"Seven\": 7, \"Eight\": 8}\n\ndef gap(x, y):\n    return abs(P(x) - P(y)) - 1\n\n# formula against direct counting for every pair of distinct letters\nfor x in ALPHA:\n    for y in ALPHA:\n        if x != y:\n            i, j = sorted((ALPHA.index(x), ALPHA.index(y)))\n            assert gap(x, y) == len(ALPHA[i + 1:j])\n# EJOTY anchors\nassert [P(c) for c in \"EJOTY\"] == [5, 10, 15, 20, 25]\n\ndef solve(word, left, right, options):\n    s = sorted(word)\n    a, b = s[left - 1], s[-right]\n    return [lab for lab, v in options.items() if NUM[v] == gap(a, b)]\n\n# worked example 2024-09-12_1600_R12: FROWNED, 4th from left and 2nd from right\nassert \"\".join(sorted(\"FROWNED\")) == \"DEFNORW\"\nassert solve(\"FROWNED\", 4, 2, {\"A\": \"Five\", \"B\": \"Two\", \"C\": \"Three\", \"D\": \"Four\"}) == [\"C\"]\n# 2024-09-18_1230_R07: SLANTED\nassert solve(\"SLANTED\", 4, 2, {\"A\": \"Six\", \"B\": \"Eight\", \"C\": \"Five\", \"D\": \"Seven\"}) == [\"A\"]\n# boundary of p1 != p2: adjacent letters give 0, the same letter would give -1 (meaningless)\nassert gap(\"M\", \"N\") == 0\nassert gap(\"M\", \"M\") == -1\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "alphabet.opposite-letter",
+  "topic": "Alphabet/Word order",
+  "subtopic": "Letter sorting in word",
+  "name": "Opposite letter pairs",
+  "statement": "\\text{opp}(p) = 27 - p:\\ A\\!-\\!Z,\\ B\\!-\\!Y,\\ C\\!-\\!X,\\ \\dots,\\ M\\!-\\!N",
+  "conditions": [],
+  "derivation": [
+   "Fold the alphabet in the middle: A sits on Z, B on Y, and so on.",
+   "Each pair has positions $p$ and $q$ with $p + q = 1 + 26 = 27$.",
+   "So $\\text{opp}(p) = 27 - p$; it pairs M (13) with N (14), and no letter is its own opposite.",
+   "Opposite of the opposite is the letter itself, so the rule works both ways."
+  ],
+  "visual_proof": null,
+  "shortcut": "Memory pairs: AZ, BY, CX, DW, EV, FU, GT, HS, IR, JQ, KP, LO, MN.",
+  "worked_example": {
+   "question_key": "2024-09-17_1230_R21",
+   "answer": "C",
+   "steps": [
+    "ACKO $\\to$ ZXPL: A-Z, C-X, K-P, O-L (opposites).",
+    "HIND $\\to$ SRMW confirms.",
+    "PUKE: P-K, U-F, K-P, E-V $\\to$ KFPV, answer (C)."
+   ]
+  },
+  "common_traps": [
+   "Using $26 - p$, which pairs A with Y and gives every answer one letter early.",
+   "Adding a shift that is not there: check the plain opposite before 'opposite then +2'.",
+   "Mixing up M and N: they are each other's opposites."
+  ],
+  "related_ids": [
+   "alphabet.letters-between",
+   "coding.reverse-alphabet-position",
+   "analogy.letter-cluster-shift"
+  ],
+  "diagram": {
+   "alt_text": "Two-row table: A to M on top and their opposites Z to N below.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "F",
+     "G",
+     "H",
+     "I",
+     "J",
+     "K",
+     "L",
+     "M"
+    ],
+    "rows": [
+     [
+      "Z",
+      "Y",
+      "X",
+      "W",
+      "V",
+      "U",
+      "T",
+      "S",
+      "R",
+      "Q",
+      "P",
+      "O",
+      "N"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\nALPHA = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\nopp = lambda ch: chr(27 - P(ch) + 64)\nassert all(opp(a) == b for a, b in zip(ALPHA, ALPHA[::-1]))\nassert all(opp(opp(ch)) == ch and opp(ch) != ch for ch in ALPHA)   # no letter is its own opposite (13.5)\nassert opp(\"M\") == \"N\"\n\ndef solve(examples, target, options):\n    assert all(\"\".join(map(opp, w)) == c for w, c in examples)\n    return [lab for lab, v in options.items() if v == \"\".join(map(opp, target))]\n\n# worked example 2024-09-17_1230_R21: ACKO -> ZXPL, HIND -> SRMW, PUKE -> ?\nassert solve([(\"ACKO\", \"ZXPL\"), (\"HIND\", \"SRMW\")], \"PUKE\",\n             {\"A\": \"JGQW\", \"B\": \"LFQV\", \"C\": \"KFPV\", \"D\": \"JGPW\"}) == [\"C\"]\n# 2024-09-09_0900_R11: MEK:NVP :: GYT:TBG :: JWH:?\nassert solve([(\"MEK\", \"NVP\"), (\"GYT\", \"TBG\")], \"JWH\",\n             {\"A\": \"QDS\", \"B\": \"PCR\", \"C\": \"QDT\", \"D\": \"PCS\"}) == [\"A\"]\n# 2024-09-09_1600_R01: opposite then +2\nsh = lambda ch: chr((ord(opp(ch)) - 65 + 2) % 26 + 65)\nassert \"\".join(map(sh, \"CWE\")) == \"ZFX\" and \"\".join(map(sh, \"PYT\")) == \"MDI\"\nassert [l for l, v in {\"A\": \"PRO\", \"B\": \"RTQ\", \"C\": \"PQO\", \"D\": \"STQ\"}.items() if v == \"\".join(map(sh, \"KIL\"))] == [\"B\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "alphabet.dictionary-order",
+  "topic": "Alphabet/Word order",
+  "subtopic": "Dictionary order",
+  "name": "Dictionary order",
+  "statement": "\\text{compare from the left; the first differing letter decides; if one word is the start of the other, the shorter comes first}",
+  "conditions": [],
+  "derivation": [
+   "Line the words up by their first letters and group by first letter.",
+   "Within a group, compare the second letters, then the third, and so on.",
+   "The first position where two words differ fixes their order.",
+   "If all letters of the shorter word match the start of the longer, the shorter word comes first (CAR before CARD)."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Putting the longer word first when one is a prefix (CARD before CAR).",
+   "Deciding by word length instead of letters.",
+   "Skipping a letter while comparing long words that share a long start."
+  ],
+  "related_ids": [
+   "alphabet.sorted-position-compare"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "import random\nrandom.seed(0)\n\ndef before(x, y):\n    # True when x comes before y in a dictionary\n    for a, b in zip(x, y):\n        if a != b:\n            return a < b\n    return len(x) < len(y)        # one is a prefix of the other: shorter first\n\ndef arrange(words):\n    out = []\n    for w in words:                # insertion sort using only before()\n        i = 0\n        while i < len(out) and before(out[i], w):\n            i += 1\n        out.insert(i, w)\n    return out\n\nn = 0\nfor _ in range(2000):\n    ws = [\"\".join(random.choice(\"ABCDE\") for _ in range(random.randint(1, 5))) for _ in range(6)]\n    assert arrange(ws) == sorted(ws)\n    n += 1\n# constructed case with shared prefixes\nassert arrange([\"CARD\", \"CAR\", \"CART\", \"CARE\", \"CAP\"]) == [\"CAP\", \"CAR\", \"CARD\", \"CARE\", \"CART\"]\nassert arrange([\"MASTER\", \"MAST\", \"MASK\", \"MAT\"]) == [\"MASK\", \"MAST\", \"MASTER\", \"MAT\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ }
+]

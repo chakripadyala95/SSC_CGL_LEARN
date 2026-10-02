@@ -1,0 +1,284 @@
+[
+ {
+  "id": "analogy.word-relation",
+  "topic": "Analogy",
+  "subtopic": "Word analogy",
+  "name": "Word-pair relationship",
+  "statement": "\\text{Name the exact relation in } A:B \\text{ (synonym, antonym, worker-tool, country-river, item-category), then pick the option } C:D \\text{ with the same relation in the same order.}",
+  "conditions": [],
+  "derivation": [
+   "Make a sentence that links the pair: 'Nile is the main river of Egypt'.",
+   "Make the sentence as specific as possible (main river, not just 'water body').",
+   "Put each option into the same sentence; keep the order (country first, river second).",
+   "Exactly one option makes a true sentence; if two do, sharpen the sentence and test again."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R10",
+   "answer": "D",
+   "steps": [
+    "Sentence: 'Nile is the main river of Egypt' (country : its river).",
+    "Myanmar : Irrawaddy fits: the Irrawaddy is Myanmar's main river.",
+    "Mekong does not flow through South Korea, Colorado is not in Brazil, Mississippi is not in Russia.",
+    "Answer (D)."
+   ]
+  },
+  "common_traps": [
+   "Settling for a loose relation ('both are places'), which lets two options fit.",
+   "Reversing the order: 'Nile : Egypt' type options look right but break the pair order.",
+   "Picking a near-synonym when the pair is an antonym (Stagnate : Languish instead of Stagnate : Flow).",
+   "Using letter counts or vowels: the question note forbids it."
+  ],
+  "related_ids": [
+   "classification.word-category"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "manual",
+   "code": null,
+   "reason": "The relation depends on word meaning and general knowledge (which river belongs to which country, which words are antonyms); no offline lexicon is available to check it, so a reviewer confirms it.",
+   "result": {
+    "status": "NEEDS_REVIEW",
+    "note": "The relation depends on word meaning and general knowledge (which river belongs to which country, which words are antonyms); no offline lexicon is available to check it, so a reviewer confirms it.",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "analogy.number-arithmetic-rule",
+  "topic": "Analogy",
+  "subtopic": "Number pair analogy",
+  "name": "Number pair arithmetic rule",
+  "statement": "a \\mapsto b:\\ \\text{try } b = ka + c \\ \\text{(includes } a+c \\text{ and } ka\\text{)}, \\text{ fit } k, c \\text{ from the two given pairs and test every option}",
+  "conditions": [],
+  "derivation": [
+   "With two pairs $(a_1, b_1)$, $(a_2, b_2)$: $k = \\frac{b_2 - b_1}{a_2 - a_1}$.",
+   "Then $c = b_1 - k a_1$.",
+   "$k = 1$ means 'add $c$'; $c = 0$ means 'multiply by $k$'.",
+   "Apply $b = ka + c$ to the asked number, or check $b \\overset{?}{=} ka + c$ for each option pair.",
+   "If $k$ or $c$ is not a whole number, switch to [[f:analogy.number-power-rule]]."
+  ],
+  "visual_proof": null,
+  "shortcut": "Check $b - a$ first (constant difference = add rule), then $b \\div a$ (constant ratio = multiply rule).",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R24",
+   "answer": "D",
+   "steps": [
+    "$k = \\frac{297 - 209}{27 - 19} = \\frac{88}{8} = 11$, $c = 209 - 11\\times 19 = 0$.",
+    "Rule $b = 11a$: $19\\times 11 = 209$, $27\\times 11 = 297$.",
+    "$61 \\times 11 = 671$, answer (D)."
+   ]
+  },
+  "common_traps": [
+   "Fitting the rule on one pair only: 19 to 209 is also '+190', which gives 27 to 217, not 297.",
+   "Splitting numbers into digits when the note forbids it.",
+   "In option-pair questions, computing only the difference of the first pair and forgetting to check every option."
+  ],
+  "related_ids": [
+   "analogy.number-power-rule",
+   "analogy.number-set-rule",
+   "classification.number-pair-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\n\ndef fit(pairs):\n    (a1, b1), (a2, b2) = pairs[0], pairs[1]\n    assert a1 != a2\n    k = F(b2 - b1, a2 - a1)\n    c = b1 - k * a1\n    assert all(b == k * a + c for a, b in pairs)\n    return lambda a: k * a + c\n\ndef pick_single(pairs, x, options):\n    f = fit(pairs)\n    return [lab for lab, v in options.items() if v == f(x)]\n\ndef pick_pair(pairs, options):\n    f = fit(pairs)\n    return [lab for lab, (a, b) in options.items() if b == f(a)]\n\n# worked example 2024-09-09_0900_R24: 19 -> 209, 27 -> 297, 61 -> ?\nf = fit([(19, 209), (27, 297)])\nassert f(1) - f(0) == 11 and f(0) == 0\nassert pick_single([(19, 209), (27, 297)], 61, {\"A\": 653, \"B\": 600, \"C\": 571, \"D\": 671}) == [\"D\"]\n# second case 2024-09-09_0900_R02: 31 -> 152, 47 -> 168 (add 121)\nassert pick_single([(31, 152), (47, 168)], 66, {\"A\": 180, \"B\": 187, \"C\": 185, \"D\": 190}) == [\"B\"]\n# third case 2024-09-09_0900_R09: pairs differ by 64\nassert pick_pair([(149, 213), (168, 232)],\n                 {\"A\": (162, 222), \"B\": (153, 217), \"C\": (137, 211), \"D\": (144, 198)}) == [\"B\"]\n# constructed: b = 3a - 4\nassert pick_single([(5, 11), (9, 23)], 12, {\"A\": 36, \"B\": 32, \"C\": 33, \"D\": 30}) == [\"B\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "analogy.number-power-rule",
+  "topic": "Analogy",
+  "subtopic": "Number pair analogy",
+  "name": "Square/cube based number rule",
+  "statement": "a \\mapsto b:\\ \\text{test } b = a^2 + c \\text{ or } b = a^3 + c \\text{ (and the reverse, } a = b^2 + c\\text{) before linear rules}",
+  "conditions": [],
+  "derivation": [
+   "Know squares to $30^2$ and cubes to $12^3$; a number near one of them signals a power rule.",
+   "Compute $c = b - a^2$ (or $b - a^3$) for the first pair.",
+   "The rule holds only if the second pair gives the same $c$.",
+   "Apply $a^2 + c$ or $a^3 + c$ to each option; exactly one matches."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-13_0900_R06",
+   "answer": "A",
+   "steps": [
+    "$3^3 = 27$, $27 - 2 = 25$; $4^3 = 64$, $64 - 2 = 62$: rule $n^3 - 2$.",
+    "$5^3 - 2 = 123$ matches (A).",
+    "$6^3 - 2 = 214 \\ne 218$, $7^3 - 2 = 341 \\ne 345$, $9^3 - 2 = 727 \\ne 731$: answer (A)."
+   ]
+  },
+  "common_traps": [
+   "Using the square when the numbers are cubes: 3 to 25 is $3^2 + 16$, but 4 to 62 is not $4^2 + 16$.",
+   "Accepting an option that is off by one: $6^3 - 2 = 214$, not 218.",
+   "Trying linear rules first and wasting time on large gaps like 44 to 1936."
+  ],
+  "related_ids": [
+   "analogy.number-arithmetic-rule",
+   "series.square-cube-pattern",
+   "classification.number-pair-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "def fit(pairs):\n    rules = []\n    for e in (2, 3):\n        for swap in (False, True):\n            ps = [(b, a) if swap else (a, b) for a, b in pairs]\n            c = ps[0][1] - ps[0][0] ** e\n            if all(y == x ** e + c for x, y in ps):\n                rules.append((e, swap, c))\n    return rules\n\ndef holds(rule, a, b):\n    e, swap, c = rule\n    x, y = (b, a) if swap else (a, b)\n    return y == x ** e + c\n\ndef pick_pair(pairs, options):\n    rules = fit(pairs)\n    assert rules\n    return [lab for lab, (a, b) in options.items() if any(holds(r, a, b) for r in rules)]\n\n# worked example 2024-09-13_0900_R06: 3:25, 4:62 -> cube - 2\nassert fit([(3, 25), (4, 62)]) == [(3, False, -2)]\nassert pick_pair([(3, 25), (4, 62)],\n                 {\"A\": (5, 123), \"B\": (6, 218), \"C\": (7, 345), \"D\": (9, 731)}) == [\"A\"]\n# 2024-09-09_1600_R18: (12,145), (9,82) -> square + 1\nassert pick_pair([(12, 145), (9, 82)],\n                 {\"A\": (22, 483), \"B\": (16, 256), \"C\": (14, 197), \"D\": (8, 69)}) == [\"C\"]\n# 2024-09-12_1600_R22: 44 -> 1936, 59 -> 3481, 77 -> ?\nr = fit([(44, 1936), (59, 3481)])\nassert r == [(2, False, 0)]\nassert [lab for lab, v in {\"A\": 5824, \"B\": 5929, \"C\": 7642, \"D\": 4469}.items() if holds(r[0], 77, v)] == [\"B\"]\n# constructed: root rule (a = b^2 + 2) found by the swapped fit\nassert pick_pair([(66, 8), (102, 10)], {\"A\": (83, 9), \"B\": (36, 6), \"C\": (50, 7), \"D\": (17, 4)}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "analogy.number-set-rule",
+  "topic": "Analogy",
+  "subtopic": "Number set analogy",
+  "name": "Number triad operation rule",
+  "statement": "(x, y, z):\\ \\text{find the one operation that turns two terms into the third (} xy + k,\\ (x+y)k,\\ xyk \\text{, or } z = 2y+1 \\text{ chains) on every given triad; whole numbers only}",
+  "conditions": [],
+  "derivation": [
+   "Decide which term is the result: usually the largest one (last or middle).",
+   "Try $xy$ first: $z - xy$ constant means $z = xy + k$; $z \\div xy$ constant means $z = xyk$.",
+   "Then try $x + y$: constant $z - (x+y)$ or $z \\div (x+y)$.",
+   "If each term grows about 2x, test a chain: next $= m\\cdot$previous $+ q$.",
+   "Accept the rule only if it fits both given triads, then test every option."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R04",
+   "answer": "A",
+   "steps": [
+    "$2\\times 3 = 6$, $17 - 6 = 11$; $5\\times 2 = 10$, $21 - 10 = 11$: rule $z = xy + 11$.",
+    "(3, 4, 23): $12 + 11 = 23$ fits.",
+    "$30 + 11 = 41 \\ne 72$, $10 + 11 = 21 \\ne 42$, $4 + 11 = 15 \\ne 17$: answer (A)."
+   ]
+  },
+  "common_traps": [
+   "Fitting only the first triad: (2, 3, 17) is also $2 + 3 + 12$, which fails (5, 2, 21).",
+   "Splitting numbers into digits when the note forbids it.",
+   "Assuming the result is always the last term: in (18, 378, 7) it is the middle one."
+  ],
+  "related_ids": [
+   "analogy.number-arithmetic-rule",
+   "classification.number-triad-rule",
+   "missing-number.set-operation-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\n\nFORMS = {\n    \"xy+k\": (lambda x, y, z: z - x * y, lambda x, y, k: x * y + k),\n    \"x+y+k\": (lambda x, y, z: z - x - y, lambda x, y, k: x + y + k),\n    \"(x+y)k\": (lambda x, y, z: F(z, x + y), lambda x, y, k: (x + y) * k),\n    \"xyk\": (lambda x, y, z: F(z, x * y), lambda x, y, k: x * y * k),\n}\nOTHERS = {0: (1, 2), 1: (0, 2), 2: (0, 1)}\n\ndef rules(triads):\n    out = []\n    for t, (i, j) in OTHERS.items():\n        for name, (solve, make) in FORMS.items():\n            ks = {solve(tr[i], tr[j], tr[t]) for tr in triads}\n            if len(ks) == 1:\n                out.append((\"pos\", t, i, j, make, ks.pop()))\n    # chain rule: next = m * prev + c, fitted from the first triad\n    a, b, c = triads[0]\n    if b != a:\n        m = F(c - b, b - a)\n        q = b - m * a\n        if all(tr[1] == m * tr[0] + q and tr[2] == m * tr[1] + q for tr in triads):\n            out.append((\"chain\", m, q))\n    return out\n\ndef holds(r, tr):\n    if r[0] == \"pos\":\n        _, t, i, j, make, k = r\n        return tr[t] == make(tr[i], tr[j], k)\n    _, m, q = r\n    return tr[1] == m * tr[0] + q and tr[2] == m * tr[1] + q\n\ndef pick(triads, options):\n    rs = rules(triads)\n    assert rs\n    return [lab for lab, tr in options.items() if any(holds(r, tr) for r in rs)]\n\n# worked example 2024-09-09_1230_R04: (2,3,17), (5,2,21) -> first x second + 11\nassert pick([(2, 3, 17), (5, 2, 21)],\n            {\"A\": (3, 4, 23), \"B\": (5, 6, 72), \"C\": (2, 5, 42), \"D\": (1, 4, 17)}) == [\"A\"]\n# 2024-09-09_1230_R16: middle = first x third x 3\nassert pick([(18, 378, 7), (14, 210, 5)],\n            {\"A\": (17, 272, 8), \"B\": (17, 204, 6), \"C\": (23, 230, 5), \"D\": (15, 405, 9)}) == [\"D\"]\n# 2024-09-09_1230_R17: each term = 2 x previous + 1\nassert pick([(16, 33, 67), (19, 39, 79)],\n            {\"A\": (22, 45, 91), \"B\": (14, 27, 53), \"C\": (18, 36, 80), \"D\": (21, 45, 90)}) == [\"A\"]\n# constructed: third = (first + second) x 4\nassert pick([(3, 5, 32), (6, 1, 28)],\n            {\"A\": (2, 7, 36), \"B\": (4, 4, 30), \"C\": (5, 2, 30), \"D\": (1, 8, 32)}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "analogy.letter-cluster-shift",
+  "topic": "Analogy",
+  "subtopic": "Letter-cluster analogy",
+  "name": "Letter-cluster position shift",
+  "statement": "d_i = p(\\text{code}_i) - p(\\text{word}_i) \\pmod{26};\\ \\text{the } d_i \\text{ are constant, alternating or increasing; apply the same } d_i \\text{ to the target}",
+  "conditions": [],
+  "derivation": [
+   "Write the alphabet position $p$ under each letter of the first pair (EJOTY anchors: 5, 10, 15, 20, 25).",
+   "Subtract position by position: $d_i = p(\\text{code}_i) - p(\\text{word}_i)$, wrapping past Z (Z + 1 = A).",
+   "Read the pattern of the $d_i$: all equal, $+/-$ alternating, or rising by a fixed step.",
+   "Confirm on the second pair, then add the same $d_i$ to the target letters.",
+   "If no shift fits, try opposite letters [[f:alphabet.opposite-letter]] or a reordering."
+  ],
+  "visual_proof": null,
+  "shortcut": "A shift of $\\pm 13$ is the same both ways: A$\\leftrightarrow$N, B$\\leftrightarrow$O, ... .",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_R14",
+   "answer": "D",
+   "steps": [
+    "FISH $\\to$ DKQJ: F$-2$, I$+2$, S$-2$, H$+2$.",
+    "POND $\\to$ NQLF: P$-2$=N, O$+2$=Q, N$-2$=L, D$+2$=F, same rule.",
+    "SIZE: S$-2$=Q, I$+2$=K, Z$-2$=X, E$+2$=G $\\to$ QKXG, answer (D)."
+   ]
+  },
+  "common_traps": [
+   "Taking the shift from code to word instead of word to code, which flips every sign.",
+   "Forgetting to wrap: Y + 3 = B, not an error.",
+   "Applying an alternating rule from the wrong starting sign on the target."
+  ],
+  "related_ids": [
+   "alphabet.opposite-letter",
+   "coding.letter-position-shift",
+   "series.letter-position-steps"
+  ],
+  "diagram": {
+   "alt_text": "Table: FISH above DKQJ with shifts -2, +2, -2, +2, and the same shifts taking SIZE to QKXG.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    "rows": [
+     [
+      "Word",
+      "F",
+      "I",
+      "S",
+      "H"
+     ],
+     [
+      "Code",
+      "D",
+      "K",
+      "Q",
+      "J"
+     ],
+     [
+      "Shift",
+      "-2",
+      "+2",
+      "-2",
+      "+2"
+     ],
+     [
+      "Target",
+      "S",
+      "I",
+      "Z",
+      "E"
+     ],
+     [
+      "Answer",
+      "Q",
+      "K",
+      "X",
+      "G"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\nL = lambda p: chr((p - 1) % 26 + 65)\n\ndef shifts(w, c):\n    return [((P(b) - P(a) + 13) % 26) - 13 for a, b in zip(w, c)]\n\ndef infer(d):\n    if len(set(d)) == 1:\n        return lambda i: d[0]\n    if len(d) > 2 and all(d[i] == d[i % 2] for i in range(len(d))):\n        return lambda i: d[i % 2]\n    s = d[1] - d[0]\n    if all(d[i + 1] - d[i] == s for i in range(len(d) - 1)):\n        return lambda i: d[0] + s * i\n    return None\n\ndef apply(rule, w):\n    return \"\".join(L(P(ch) + rule(i)) for i, ch in enumerate(w))\n\ndef learn(examples):\n    rule = infer(shifts(*examples[0]))\n    if rule is None or any(apply(rule, w) != c for w, c in examples):\n        return None\n    return rule\n\ndef solve(examples, target, options):\n    rule = learn(examples)\n    assert rule is not None\n    return [lab for lab, v in options.items() if v == apply(rule, target)]\n\n# worked example 2024-09-12_1600_R14: FISH:DKQJ :: POND:NQLF :: SIZE:?\nassert shifts(\"FISH\", \"DKQJ\") == [-2, 2, -2, 2]\nassert solve([(\"FISH\", \"DKQJ\"), (\"POND\", \"NQLF\")], \"SIZE\",\n             {\"A\": \"QGXG\", \"B\": \"UGXC\", \"C\": \"UKXC\", \"D\": \"QKXG\"}) == [\"D\"]\n# 2024-09-12_1600_R08: +13 on every letter\nassert solve([(\"ALW\", \"NYJ\"), (\"CNY\", \"PAL\")], \"DEP\", {\"A\": \"QRD\", \"B\": \"QRC\", \"C\": \"SRC\", \"D\": \"SRD\"}) == [\"B\"]\n# constructed: increasing shifts +1, +2, +3, +4\nassert solve([(\"ABCD\", \"BDFH\"), (\"WXYZ\", \"XZBD\")], \"MOON\",\n             {\"A\": \"NQRR\", \"B\": \"NPQR\", \"C\": \"NQSR\", \"D\": \"OQRR\"}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

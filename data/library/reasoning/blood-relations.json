@@ -1,0 +1,342 @@
+[
+ {
+  "id": "blood-relations.symbol-decoding",
+  "topic": "Blood Relations",
+  "subtopic": "Coded relations",
+  "name": "Decode symbol relations",
+  "statement": "\\text{Decode each symbol into a relation, draw it on a family tree with gender marks, and read the relation between the two end persons.}",
+  "conditions": [],
+  "derivation": [
+   "Write the code table once: e.g. $+$ = sister, $-$ = father, $\\ast$ = wife, $\\div$ = mother.",
+   "Read the chain two persons at a time: A + B means 'A is the sister of B'.",
+   "Draw parents above children, couples side by side (=), siblings on one row; mark each gender as soon as a relation fixes it.",
+   "A wife of the father is the mother; children of one person are siblings.",
+   "Trace the path from the reference person to the target and name it in their order."
+  ],
+  "visual_proof": "The decoded chain drawn as a tree: each symbol becomes a vertical (parent-child), horizontal (sibling) or double (couple) line.",
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R09",
+   "answer": "C",
+   "steps": [
+    "C ÷ D: C is mother of D. D * E: D is wife of E, so D is female.",
+    "E - F: E is father of F, so D (his wife) is F's mother.",
+    "F ÷ G: F is mother of G, so F is female.",
+    "F is the daughter of C's daughter D: daughter's daughter (C)."
+   ]
+  },
+  "common_traps": [
+   "Reading 'A + B' backwards (B is sister of A) and getting the inverse relation.",
+   "Assuming a gender the code never fixed; G in 'F ÷ G' has no gender.",
+   "Stopping one step early: D is C's daughter, F is D's daughter, so F is C's daughter's daughter, not daughter.",
+   "Treating the father's wife as a step-relation instead of the mother."
+  ],
+  "related_ids": [
+   "blood-relations.family-tree",
+   "blood-relations.pointing-statements"
+  ],
+  "diagram": {
+   "alt_text": "Family tree for A + B - C ÷ D * E - F ÷ G: A (female) sister of B (male); B father of C (female); C mother of D (female); D married to E (male); D and E parents of F (female); F mother of G.",
+   "spec": {
+    "type": "family-tree",
+    "nodes": [
+     {
+      "id": "a",
+      "label": "A",
+      "gender": "f"
+     },
+     {
+      "id": "b",
+      "label": "B",
+      "gender": "m"
+     },
+     {
+      "id": "c",
+      "label": "C",
+      "gender": "f"
+     },
+     {
+      "id": "d",
+      "label": "D",
+      "gender": "f"
+     },
+     {
+      "id": "e",
+      "label": "E",
+      "gender": "m"
+     },
+     {
+      "id": "f",
+      "label": "F",
+      "gender": "f"
+     },
+     {
+      "id": "g",
+      "label": "G",
+      "gender": "?"
+     }
+    ],
+    "edges": [
+     {
+      "from": "a",
+      "to": "b",
+      "type": "sibling"
+     },
+     {
+      "from": "b",
+      "to": "c",
+      "type": "parent"
+     },
+     {
+      "from": "c",
+      "to": "d",
+      "type": "parent"
+     },
+     {
+      "from": "d",
+      "to": "e",
+      "type": "spouse"
+     },
+     {
+      "from": "d",
+      "to": "f",
+      "type": "parent"
+     },
+     {
+      "from": "e",
+      "to": "f",
+      "type": "parent"
+     },
+     {
+      "from": "f",
+      "to": "g",
+      "type": "parent"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "class Family:\n    def __init__(self):\n        self.g, self.par, self.sp, self.sib = {}, {}, {}, []\n\n    def person(self, *xs):\n        for x in xs:\n            self.par.setdefault(x, set())\n\n    def sex(self, x, s):\n        self.person(x)\n        assert self.g.get(x, s) == s, f\"gender clash on {x}\"\n        self.g[x] = s\n\n    def tell(self, a, rel, b):\n        \"\"\"Record 'a is the <rel> of b'.\"\"\"\n        self.person(a, b)\n        sexes = {\"father\": \"m\", \"mother\": \"f\", \"son\": \"m\", \"daughter\": \"f\", \"brother\": \"m\", \"sister\": \"f\",\n                 \"husband\": \"m\", \"wife\": \"f\", \"child\": None, \"parent\": None, \"sibling\": None, \"spouse\": None}\n        if sexes[rel]:\n            self.sex(a, sexes[rel])\n        if rel in (\"father\", \"mother\", \"parent\"):\n            self.par[b].add(a)\n        elif rel in (\"son\", \"daughter\", \"child\"):\n            self.par[a].add(b)\n        elif rel in (\"husband\", \"wife\", \"spouse\"):\n            self.sp[a], self.sp[b] = b, a\n        else:\n            self.sib.append({a, b})\n        self.close()\n\n    def close(self):\n        changed = True\n        while changed:\n            changed = False\n            # merge sibling groups that share a member\n            groups = []\n            for s in self.sib:\n                s = set(s)\n                for t in [t for t in groups if t & s]:\n                    groups.remove(t)\n                    s |= t\n                groups.append(s)\n            self.sib = groups\n            for grp in groups:\n                common = set().union(*(self.par[x] for x in grp))\n                for x in grp:\n                    if not common <= self.par[x]:\n                        self.par[x] |= common\n                        changed = True\n            for c, ps in self.par.items():\n                for p in list(ps):\n                    s = self.sp.get(p)\n                    if s and s not in ps:\n                        ps.add(s)\n                        changed = True\n                if len(ps) == 2:\n                    p, q = sorted(ps)\n                    if self.sp.get(p) != q:\n                        self.sp[p], self.sp[q] = q, p\n                        changed = True\n            for a, b in self.sp.items():\n                if a in self.g and b not in self.g:\n                    self.g[b] = \"f\" if self.g[a] == \"m\" else \"m\"\n                    changed = True\n\n    def siblings(self, x):\n        for grp in self.sib:\n            if x in grp:\n                return grp - {x}\n        return {y for y in self.par if y != x and self.par[x] and self.par[y] & self.par[x]}\n\n    def base(self, x, y, rel):\n        \"\"\"True when 'x is the <rel> of y' is forced by the facts.\"\"\"\n        m, f = self.g.get(x) == \"m\", self.g.get(x) == \"f\"\n        if rel in (\"father\", \"mother\"):\n            return x in self.par.get(y, ()) and (m if rel == \"father\" else f)\n        if rel in (\"son\", \"daughter\"):\n            return y in self.par.get(x, ()) and (m if rel == \"son\" else f)\n        if rel in (\"husband\", \"wife\"):\n            return self.sp.get(y) == x and (m if rel == \"husband\" else f)\n        if rel in (\"brother\", \"sister\"):\n            return x in self.siblings(y) and (m if rel == \"brother\" else f)\n        raise ValueError(rel)\n\n    def holds(self, x, y, rel):\n        \"\"\"rel like \"daughter's daughter\": x is the daughter of (y's daughter).\"\"\"\n        parts = rel.split(\"'s \")\n        if len(parts) == 1:\n            return self.base(x, y, rel)\n        first, rest = parts[0], \"'s \".join(parts[1:])\n        return any(self.base(z, y, first) and self.holds(x, z, rest) for z in self.par if z not in (x, y))\n\ndef decode(expr, codes):\n    fam = Family()\n    toks = expr.split()\n    for i in range(0, len(toks) - 2, 2):\n        fam.tell(toks[i], codes[toks[i + 1]], toks[i + 2])\n    return fam\n\ndef only_answer(fam, x, y, options):\n    ok = [k for k, rels in options.items() if any(fam.holds(x, y, r) for r in rels)]\n    assert len(ok) == 1, ok\n    return ok[0]\n\n# Worked example 2024-09-09_1230_R09: + sister, - father, * wife, ÷ mother; F related to C?\ncodes = {\"+\": \"sister\", \"-\": \"father\", \"*\": \"wife\", \"÷\": \"mother\"}\nfam = decode(\"A + B - C ÷ D * E - F ÷ G\", codes)\nassert fam.holds(\"D\", \"F\", \"mother\") and fam.g[\"F\"] == \"f\"\nopts = {\"A\": [\"wife\"], \"B\": [\"daughter\"], \"C\": [\"daughter's daughter\"], \"D\": [\"mother\"]}\nassert only_answer(fam, \"F\", \"C\", opts) == \"C\"\n\n# 2024-09-09_1600_R19: + son, - sister, × brother, ÷ mother; T related to P?\ncodes = {\"+\": \"son\", \"-\": \"sister\", \"×\": \"brother\", \"÷\": \"mother\"}\nfam = decode(\"P ÷ Q × R - M + T\", codes)\nopts = {\"A\": [\"brother\"], \"B\": [\"husband\"], \"C\": [\"father\"], \"D\": [\"son\"]}\nassert only_answer(fam, \"T\", \"P\", opts) == \"B\"\n\n# 2024-09-09_0900_R23: which expression makes A the daughter of K?\ncodes = {\"+\": \"mother\", \"-\": \"father\", \"$\": \"son\", \"%\": \"sister\", \"/\": \"wife\", \"=\": \"brother\"}\nexprs = {\"A\": \"A + K / J - P = D\", \"B\": \"K + A / P - D % J\", \"C\": \"J % P = K + A = D\", \"D\": \"D + K = A / P - J\"}\nok = [k for k, e in exprs.items() if decode(e, codes).holds(\"A\", \"K\", \"daughter\")]\nassert ok == [\"B\"], ok\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "blood-relations.family-tree",
+  "topic": "Blood Relations",
+  "subtopic": "Family tree deduction",
+  "name": "Family tree diagram",
+  "statement": "\\text{Draw generations as rows, mark + (male) / - (female), join couples with =, then trace the path between the two persons.}",
+  "conditions": [],
+  "derivation": [
+   "Put each statement on the tree as you read it; one generation per row.",
+   "Siblings share parents: if C is E's sister and A is C's parent, A is E's parent too.",
+   "A child's two parents are a couple, so their genders are opposite.",
+   "Name the relation from the reference person's side: 'G is A's ...' starts at A."
+  ],
+  "visual_proof": "Generations stacked as rows: vertical lines for parent-child, = for couples, a horizontal bar for siblings.",
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-17_0900_R11",
+   "answer": "D",
+   "steps": [
+    "F is mother of E; C is sister of E, so C and E are F's children.",
+    "C is daughter of A, so A is E's parent too: A (+) is F's husband.",
+    "G is the brother of F.",
+    "G is A's wife's brother (D)."
+   ]
+  },
+  "common_traps": [
+   "Naming the relation from the wrong end: 'wife's brother' versus 'sister's husband'.",
+   "Fixing gender from a name or from 'is the child of'; only words like brother, mother, wife fix it.",
+   "Missing that two children of one parent are siblings, so the second parent is shared.",
+   "Taking 'not the mother' as unknown instead of 'the father' when the person is a parent."
+  ],
+  "related_ids": [
+   "blood-relations.symbol-decoding",
+   "blood-relations.pointing-statements"
+  ],
+  "diagram": {
+   "alt_text": "Family tree: A (male) married to F (female); their children C (female) and E (male); G (male) is F's brother; E is father of K.",
+   "spec": {
+    "type": "family-tree",
+    "nodes": [
+     {
+      "id": "a",
+      "label": "A",
+      "gender": "m"
+     },
+     {
+      "id": "f",
+      "label": "F",
+      "gender": "f"
+     },
+     {
+      "id": "g",
+      "label": "G",
+      "gender": "m"
+     },
+     {
+      "id": "c",
+      "label": "C",
+      "gender": "f"
+     },
+     {
+      "id": "e",
+      "label": "E",
+      "gender": "m"
+     },
+     {
+      "id": "k",
+      "label": "K",
+      "gender": "?"
+     }
+    ],
+    "edges": [
+     {
+      "from": "a",
+      "to": "f",
+      "type": "spouse"
+     },
+     {
+      "from": "g",
+      "to": "f",
+      "type": "sibling"
+     },
+     {
+      "from": "a",
+      "to": "c",
+      "type": "parent"
+     },
+     {
+      "from": "f",
+      "to": "c",
+      "type": "parent"
+     },
+     {
+      "from": "a",
+      "to": "e",
+      "type": "parent"
+     },
+     {
+      "from": "f",
+      "to": "e",
+      "type": "parent"
+     },
+     {
+      "from": "c",
+      "to": "e",
+      "type": "sibling"
+     },
+     {
+      "from": "e",
+      "to": "k",
+      "type": "parent"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "class Family:\n    def __init__(self):\n        self.g, self.par, self.sp, self.sib = {}, {}, {}, []\n\n    def person(self, *xs):\n        for x in xs:\n            self.par.setdefault(x, set())\n\n    def sex(self, x, s):\n        self.person(x)\n        assert self.g.get(x, s) == s, f\"gender clash on {x}\"\n        self.g[x] = s\n\n    def tell(self, a, rel, b):\n        \"\"\"Record 'a is the <rel> of b'.\"\"\"\n        self.person(a, b)\n        sexes = {\"father\": \"m\", \"mother\": \"f\", \"son\": \"m\", \"daughter\": \"f\", \"brother\": \"m\", \"sister\": \"f\",\n                 \"husband\": \"m\", \"wife\": \"f\", \"child\": None, \"parent\": None, \"sibling\": None, \"spouse\": None}\n        if sexes[rel]:\n            self.sex(a, sexes[rel])\n        if rel in (\"father\", \"mother\", \"parent\"):\n            self.par[b].add(a)\n        elif rel in (\"son\", \"daughter\", \"child\"):\n            self.par[a].add(b)\n        elif rel in (\"husband\", \"wife\", \"spouse\"):\n            self.sp[a], self.sp[b] = b, a\n        else:\n            self.sib.append({a, b})\n        self.close()\n\n    def close(self):\n        changed = True\n        while changed:\n            changed = False\n            # merge sibling groups that share a member\n            groups = []\n            for s in self.sib:\n                s = set(s)\n                for t in [t for t in groups if t & s]:\n                    groups.remove(t)\n                    s |= t\n                groups.append(s)\n            self.sib = groups\n            for grp in groups:\n                common = set().union(*(self.par[x] for x in grp))\n                for x in grp:\n                    if not common <= self.par[x]:\n                        self.par[x] |= common\n                        changed = True\n            for c, ps in self.par.items():\n                for p in list(ps):\n                    s = self.sp.get(p)\n                    if s and s not in ps:\n                        ps.add(s)\n                        changed = True\n                if len(ps) == 2:\n                    p, q = sorted(ps)\n                    if self.sp.get(p) != q:\n                        self.sp[p], self.sp[q] = q, p\n                        changed = True\n            for a, b in self.sp.items():\n                if a in self.g and b not in self.g:\n                    self.g[b] = \"f\" if self.g[a] == \"m\" else \"m\"\n                    changed = True\n\n    def siblings(self, x):\n        for grp in self.sib:\n            if x in grp:\n                return grp - {x}\n        return {y for y in self.par if y != x and self.par[x] and self.par[y] & self.par[x]}\n\n    def base(self, x, y, rel):\n        \"\"\"True when 'x is the <rel> of y' is forced by the facts.\"\"\"\n        m, f = self.g.get(x) == \"m\", self.g.get(x) == \"f\"\n        if rel in (\"father\", \"mother\"):\n            return x in self.par.get(y, ()) and (m if rel == \"father\" else f)\n        if rel in (\"son\", \"daughter\"):\n            return y in self.par.get(x, ()) and (m if rel == \"son\" else f)\n        if rel in (\"husband\", \"wife\"):\n            return self.sp.get(y) == x and (m if rel == \"husband\" else f)\n        if rel in (\"brother\", \"sister\"):\n            return x in self.siblings(y) and (m if rel == \"brother\" else f)\n        raise ValueError(rel)\n\n    def holds(self, x, y, rel):\n        \"\"\"rel like \"daughter's daughter\": x is the daughter of (y's daughter).\"\"\"\n        parts = rel.split(\"'s \")\n        if len(parts) == 1:\n            return self.base(x, y, rel)\n        first, rest = parts[0], \"'s \".join(parts[1:])\n        return any(self.base(z, y, first) and self.holds(x, z, rest) for z in self.par if z not in (x, y))\n\ndef decode(expr, codes):\n    fam = Family()\n    toks = expr.split()\n    for i in range(0, len(toks) - 2, 2):\n        fam.tell(toks[i], codes[toks[i + 1]], toks[i + 2])\n    return fam\n\ndef only_answer(fam, x, y, options):\n    ok = [k for k, rels in options.items() if any(fam.holds(x, y, r) for r in rels)]\n    assert len(ok) == 1, ok\n    return ok[0]\n\n# Worked example 2024-09-17_0900_R11: how is G related to A?\nfam = Family()\nfam.tell(\"G\", \"brother\", \"F\")\nfam.tell(\"E\", \"father\", \"K\")\nfam.tell(\"C\", \"daughter\", \"A\")\nfam.tell(\"F\", \"mother\", \"E\")\nfam.tell(\"C\", \"sister\", \"E\")\nassert fam.sp[\"A\"] == \"F\" and fam.g[\"A\"] == \"m\"\nopts = {\"A\": [\"brother's wife\"], \"B\": [\"sister's husband\"], \"C\": [\"husband's sister\"], \"D\": [\"wife's brother\"]}\nassert only_answer(fam, \"G\", \"A\", opts) == \"D\"\n\n# 2024-09-25_0900_R11: 3 is a parent of 2 but not the mother, so 3 is the father. Who is the mother of 2?\nfam = Family()\nfam.tell(\"3\", \"parent\", \"2\"); fam.sex(\"2\", \"f\"); fam.sex(\"3\", \"m\")\nfam.tell(\"1\", \"spouse\", \"3\"); fam.tell(\"5\", \"sister\", \"3\")\nfam.tell(\"4\", \"daughter\", \"1\"); fam.tell(\"6\", \"brother\", \"2\")\nlabels = {\"A\": \"2\", \"B\": \"1\", \"C\": \"4\", \"D\": \"5\"}\nok = [k for k, p in labels.items() if fam.holds(p, \"2\", \"mother\")]\nassert ok == [\"B\"], ok\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "blood-relations.pointing-statements",
+  "topic": "Blood Relations",
+  "subtopic": "Family tree deduction",
+  "name": "Pointing/introduction statements",
+  "statement": "\\text{Resolve the sentence from its end towards the speaker ('my father's only son' = the speaker if male), then name the pointed person's relation.}",
+  "conditions": [],
+  "derivation": [
+   "Start at the speaker and the last 'my ...' phrase: 'my mother' is the speaker's mother.",
+   "Resolve each phrase in turn: 'only daughter of my mother' = the speaker's sister if the speaker is male, the speaker herself if female.",
+   "'My father's only son' = the speaker if the speaker is male; a brother if female.",
+   "Place the pointed person on that node ('his mother is ...') and read the relation to the speaker."
+  ],
+  "visual_proof": "A three-generation tree built from the speaker outward: the speaker's mother on top, the speaker and the sister below, the boy under the sister.",
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Taking 'my father's only son' as a brother when the speaker is male; it is the speaker.",
+   "Calling the sister's son a son or a cousin; he is a nephew.",
+   "Reading the relation from the pointed person's side instead of the speaker's.",
+   "Ignoring 'only': with an only daughter, a female speaker is that daughter herself."
+  ],
+  "related_ids": [
+   "blood-relations.family-tree",
+   "blood-relations.symbol-decoding"
+  ],
+  "diagram": {
+   "alt_text": "Ravi says 'His mother is the only daughter of my mother': Ravi's mother has two children, Ravi (male) and his sister; the boy is the sister's son, so Ravi's nephew.",
+   "spec": {
+    "type": "family-tree",
+    "nodes": [
+     {
+      "id": "m",
+      "label": "Ravi's mother",
+      "gender": "f"
+     },
+     {
+      "id": "r",
+      "label": "Ravi (speaker)",
+      "gender": "m"
+     },
+     {
+      "id": "s",
+      "label": "Sister",
+      "gender": "f"
+     },
+     {
+      "id": "b",
+      "label": "Boy",
+      "gender": "m"
+     }
+    ],
+    "edges": [
+     {
+      "from": "m",
+      "to": "r",
+      "type": "parent"
+     },
+     {
+      "from": "m",
+      "to": "s",
+      "type": "parent"
+     },
+     {
+      "from": "r",
+      "to": "s",
+      "type": "sibling"
+     },
+     {
+      "from": "s",
+      "to": "b",
+      "type": "parent"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "class Family:\n    def __init__(self):\n        self.g, self.par, self.sp, self.sib = {}, {}, {}, []\n\n    def person(self, *xs):\n        for x in xs:\n            self.par.setdefault(x, set())\n\n    def sex(self, x, s):\n        self.person(x)\n        assert self.g.get(x, s) == s, f\"gender clash on {x}\"\n        self.g[x] = s\n\n    def tell(self, a, rel, b):\n        \"\"\"Record 'a is the <rel> of b'.\"\"\"\n        self.person(a, b)\n        sexes = {\"father\": \"m\", \"mother\": \"f\", \"son\": \"m\", \"daughter\": \"f\", \"brother\": \"m\", \"sister\": \"f\",\n                 \"husband\": \"m\", \"wife\": \"f\", \"child\": None, \"parent\": None, \"sibling\": None, \"spouse\": None}\n        if sexes[rel]:\n            self.sex(a, sexes[rel])\n        if rel in (\"father\", \"mother\", \"parent\"):\n            self.par[b].add(a)\n        elif rel in (\"son\", \"daughter\", \"child\"):\n            self.par[a].add(b)\n        elif rel in (\"husband\", \"wife\", \"spouse\"):\n            self.sp[a], self.sp[b] = b, a\n        else:\n            self.sib.append({a, b})\n        self.close()\n\n    def close(self):\n        changed = True\n        while changed:\n            changed = False\n            # merge sibling groups that share a member\n            groups = []\n            for s in self.sib:\n                s = set(s)\n                for t in [t for t in groups if t & s]:\n                    groups.remove(t)\n                    s |= t\n                groups.append(s)\n            self.sib = groups\n            for grp in groups:\n                common = set().union(*(self.par[x] for x in grp))\n                for x in grp:\n                    if not common <= self.par[x]:\n                        self.par[x] |= common\n                        changed = True\n            for c, ps in self.par.items():\n                for p in list(ps):\n                    s = self.sp.get(p)\n                    if s and s not in ps:\n                        ps.add(s)\n                        changed = True\n                if len(ps) == 2:\n                    p, q = sorted(ps)\n                    if self.sp.get(p) != q:\n                        self.sp[p], self.sp[q] = q, p\n                        changed = True\n            for a, b in self.sp.items():\n                if a in self.g and b not in self.g:\n                    self.g[b] = \"f\" if self.g[a] == \"m\" else \"m\"\n                    changed = True\n\n    def siblings(self, x):\n        for grp in self.sib:\n            if x in grp:\n                return grp - {x}\n        return {y for y in self.par if y != x and self.par[x] and self.par[y] & self.par[x]}\n\n    def base(self, x, y, rel):\n        \"\"\"True when 'x is the <rel> of y' is forced by the facts.\"\"\"\n        m, f = self.g.get(x) == \"m\", self.g.get(x) == \"f\"\n        if rel in (\"father\", \"mother\"):\n            return x in self.par.get(y, ()) and (m if rel == \"father\" else f)\n        if rel in (\"son\", \"daughter\"):\n            return y in self.par.get(x, ()) and (m if rel == \"son\" else f)\n        if rel in (\"husband\", \"wife\"):\n            return self.sp.get(y) == x and (m if rel == \"husband\" else f)\n        if rel in (\"brother\", \"sister\"):\n            return x in self.siblings(y) and (m if rel == \"brother\" else f)\n        raise ValueError(rel)\n\n    def holds(self, x, y, rel):\n        \"\"\"rel like \"daughter's daughter\": x is the daughter of (y's daughter).\"\"\"\n        parts = rel.split(\"'s \")\n        if len(parts) == 1:\n            return self.base(x, y, rel)\n        first, rest = parts[0], \"'s \".join(parts[1:])\n        return any(self.base(z, y, first) and self.holds(x, z, rest) for z in self.par if z not in (x, y))\n\ndef decode(expr, codes):\n    fam = Family()\n    toks = expr.split()\n    for i in range(0, len(toks) - 2, 2):\n        fam.tell(toks[i], codes[toks[i + 1]], toks[i + 2])\n    return fam\n\ndef only_answer(fam, x, y, options):\n    ok = [k for k, rels in options.items() if any(fam.holds(x, y, r) for r in rels)]\n    assert len(ok) == 1, ok\n    return ok[0]\n\ndef only_child(fam, speaker, parent, sex):\n    \"\"\"'my <parent>'s only son/daughter': the speaker themself when the sex matches, else a sibling.\"\"\"\n    if fam.g[speaker] == sex:\n        return speaker\n    sib = \"X_\" + sex\n    fam.tell(sib, \"brother\" if sex == \"m\" else \"sister\", speaker)\n    return sib\n\n# Constructed: pointing to a boy, Ravi says, \"His mother is the only daughter of my mother.\"\nfam = Family()\nfam.sex(\"Ravi\", \"m\")\nfam.tell(\"M\", \"mother\", \"Ravi\")\ns = only_child(fam, \"Ravi\", \"M\", \"f\")          # Ravi is male, so this is his sister\nfam.tell(s, \"mother\", \"Boy\"); fam.sex(\"Boy\", \"m\")\nopts = {\"A\": [\"son\"], \"B\": [\"brother\"], \"C\": [\"sister's son\", \"brother's son\"], \"D\": [\"father's brother's son\"]}\nassert only_answer(fam, \"Boy\", \"Ravi\", opts) == \"C\"     # nephew\n\n# Constructed: pointing to a girl, Ajay says, \"She is the daughter of my father's only son.\"\nfam = Family()\nfam.sex(\"Ajay\", \"m\")\nfam.tell(\"Fa\", \"father\", \"Ajay\")\ns = only_child(fam, \"Ajay\", \"Fa\", \"m\")\nassert s == \"Ajay\"                                # male speaker: the only son is the speaker\nfam.tell(\"Girl\", \"daughter\", s)\nopts = {\"A\": [\"daughter\"], \"B\": [\"sister\"], \"C\": [\"brother's daughter\"], \"D\": [\"mother\"]}\nassert only_answer(fam, \"Girl\", \"Ajay\", opts) == \"A\"\n\n# Same sentence from a woman (Priya): her father's only son is her brother, so the girl is her niece.\nfam = Family()\nfam.sex(\"Priya\", \"f\")\nfam.tell(\"Fa\", \"father\", \"Priya\")\ns = only_child(fam, \"Priya\", \"Fa\", \"m\")\nfam.tell(\"Girl\", \"daughter\", s)\nassert only_answer(fam, \"Girl\", \"Priya\", opts) == \"C\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

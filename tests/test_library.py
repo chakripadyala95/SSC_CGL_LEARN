@@ -52,3 +52,8 @@ def test_manual_goes_to_review():
     e["verification"] = {"kind": "manual", "code": None, "reason": "judged on an image"}
     assert check_entry(e, APPROVED, ANSWERS) == []
     assert verify_entry(e)["status"] == "NEEDS_REVIEW"
+
+
+def test_committed_library_passes_check():
+    from pipeline.library import ROOT, check
+    assert check(ROOT) == {}

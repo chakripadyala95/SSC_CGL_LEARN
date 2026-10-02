@@ -1,0 +1,194 @@
+[
+ {
+  "id": "direction.net-displacement",
+  "topic": "Direction",
+  "subtopic": "Distance and direction",
+  "name": "Net displacement",
+  "statement": "d=\\sqrt{(\\text{net N-S})^2+(\\text{net E-W})^2}",
+  "conditions": [],
+  "derivation": [
+   "Take north and east as $+$, south and west as $-$.",
+   "Add all north-south moves into one number and all east-west moves into another.",
+   "The two nets are the legs of a right triangle, so the straight-line distance is $\\sqrt{NS^2 + EW^2}$ ([[f:geometry.pythagoras]]).",
+   "Direction from the start: the sign of NS gives North/South, the sign of EW gives East/West (e.g. $-$, $+$ = South-East)."
+  ],
+  "visual_proof": "The walk drawn on a grid; the start-to-end segment is the hypotenuse of a right triangle whose legs are the net N-S and E-W moves.",
+  "shortcut": "Look for 3-4-5, 5-12-13, 8-15-17 triples in the two nets.",
+  "worked_example": null,
+  "common_traps": [
+   "Adding all distances walked (22 km) instead of the net displacement (10 km).",
+   "Giving the direction of the start from the end (North-West) instead of the end from the start (South-East).",
+   "Subtracting moves on different axes (south 10 minus east 3).",
+   "Forgetting a turn and putting a move on the wrong axis."
+  ],
+  "related_ids": [
+   "direction.turn-tracking",
+   "geometry.pythagoras"
+  ],
+  "diagram": {
+   "alt_text": "Grid path: from the start 10 km south, 3 km east, 4 km north, 5 km east. Net 6 km south and 8 km east; the end is 10 km south-east of the start.",
+   "spec": {
+    "type": "direction-grid",
+    "path": [
+     [
+      0,
+      0
+     ],
+     [
+      0,
+      -10
+     ],
+     [
+      3,
+      -10
+     ],
+     [
+      3,
+      -6
+     ],
+     [
+      8,
+      -6
+     ]
+    ],
+    "labels": [
+     {
+      "at": [
+       0,
+       0
+      ],
+      "text": "Start"
+     },
+     {
+      "at": [
+       8,
+       -6
+      ],
+      "text": "End: 10 km SE"
+     },
+     {
+      "at": [
+       4,
+       -3
+      ],
+      "text": "6 S, 8 E"
+     }
+    ],
+    "compass": true
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "import math\nimport random\n\nSTEP = {\"N\": (0, 1), \"S\": (0, -1), \"E\": (1, 0), \"W\": (-1, 0)}\n\ndef net(moves):\n    \"\"\"moves: [(dir, km)] -> (distance, direction from start).\"\"\"\n    ew = sum(STEP[d][0] * k for d, k in moves)\n    ns = sum(STEP[d][1] * k for d, k in moves)\n    dist = math.hypot(ns, ew)\n    name = (\"North\" if ns > 0 else \"South\" if ns < 0 else \"\") + (\"-\" if ns and ew else \"\") + \\\n           (\"East\" if ew > 0 else \"West\" if ew < 0 else \"\")\n    return dist, name or \"start\"\n\n# Constructed: 10 km S, 3 km E, 4 km N, 5 km E -> NS = -6, EW = +8 -> 10 km South-East\nd, name = net([(\"S\", 10), (\"E\", 3), (\"N\", 4), (\"E\", 5)])\nassert (d, name) == (10.0, \"South-East\")\noptions = {\"A\": (10, \"North-East\"), \"B\": (10, \"South-East\"), \"C\": (14, \"South-East\"), \"D\": (12, \"South-West\")}\nassert [k for k, v in options.items() if v == (d, name)] == [\"B\"]\n\n# Constructed: 5 km N, 12 km W -> 13 km North-West\nassert net([(\"N\", 5), (\"W\", 12)]) == (13.0, \"North-West\")\n\n# The separate-axes sum equals walking the path point by point.\nrandom.seed(0)\nn = 0\nfor _ in range(1000):\n    moves = [(random.choice(\"NSEW\"), random.randint(1, 20)) for _ in range(random.randint(1, 8))]\n    x = y = 0\n    for dname, k in moves:\n        x, y = x + STEP[dname][0] * k, y + STEP[dname][1] * k\n    assert math.isclose(net(moves)[0], math.sqrt(x * x + y * y))\n    n += 1\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "direction.turn-tracking",
+  "topic": "Direction",
+  "subtopic": "Distance and direction",
+  "name": "Turn tracking",
+  "statement": "\\text{Right turn = 90° clockwise, left turn = 90° anticlockwise; update the facing direction after every turn.}",
+  "conditions": [],
+  "derivation": [
+   "Order the compass clockwise: N, E, S, W (with NE, SE, SW, NW between at 45°).",
+   "A right turn moves one step clockwise (N to E); a left turn moves one step anticlockwise (N to W).",
+   "Two rights or two lefts face the opposite way; a right then a left cancel.",
+   "For angles, add clockwise degrees and subtract anticlockwise ones, then reduce mod 360°."
+  ],
+  "visual_proof": "An arrow on a compass rose rotated a quarter turn clockwise for each right and anticlockwise for each left.",
+  "shortcut": "Count net turns: (rights $-$ lefts) mod 4 steps clockwise from the start direction.",
+  "worked_example": null,
+  "common_traps": [
+   "Writing West for a left turn while facing South; facing South, a left turn faces East.",
+   "Using the reader's left instead of the walker's left when the walker faces south.",
+   "Forgetting to apply a turn mentioned between two walks.",
+   "Treating 'turns 135° clockwise then 45° anticlockwise' as 180° instead of $90°$."
+  ],
+  "related_ids": [
+   "direction.net-displacement",
+   "seating.linear-arrangement"
+  ],
+  "diagram": {
+   "alt_text": "Facing East, walk 2 km, turn left and walk 2 km north, turn left and walk 2 km west, turn right and walk 2 km north: the final facing direction is North.",
+   "spec": {
+    "type": "direction-grid",
+    "path": [
+     [
+      0,
+      0
+     ],
+     [
+      2,
+      0
+     ],
+     [
+      2,
+      2
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      4
+     ]
+    ],
+    "labels": [
+     {
+      "at": [
+       0,
+       0
+      ],
+      "text": "Start, facing E"
+     },
+     {
+      "at": [
+       2,
+       0
+      ],
+      "text": "L"
+     },
+     {
+      "at": [
+       2,
+       2
+      ],
+      "text": "L"
+     },
+     {
+      "at": [
+       0,
+       2
+      ],
+      "text": "R"
+     },
+     {
+      "at": [
+       0,
+       4
+      ],
+      "text": "Facing N"
+     }
+    ],
+    "compass": true
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "DIRS = [\"North\", \"North-East\", \"East\", \"South-East\", \"South\", \"South-West\", \"West\", \"North-West\"]\n\ndef face(start, turns):\n    \"\"\"turns: 'R'/'L' (90 deg) or signed degrees (+ clockwise, - anticlockwise, multiples of 45).\"\"\"\n    h = DIRS.index(start) * 45\n    for t in turns:\n        deg = 90 if t == \"R\" else -90 if t == \"L\" else t\n        h = (h + deg) % 360\n    return DIRS[h // 45]\n\n# Constructed: facing East, turn left, left, right -> North\nassert face(\"East\", [\"L\", \"L\", \"R\"]) == \"North\"\noptions = {\"A\": \"South\", \"B\": \"North\", \"C\": \"West\", \"D\": \"East\"}\nassert [k for k, v in options.items() if v == face(\"East\", [\"L\", \"L\", \"R\"])] == [\"B\"]\n# Constructed: facing North, 135 deg clockwise then 45 deg anticlockwise -> East\nassert face(\"North\", [135, -45]) == \"East\"\n# Two rights = about turn; four same turns = original direction\nfor d in DIRS:\n    assert face(d, [\"R\", \"R\"]) == DIRS[(DIRS.index(d) + 4) % 8]\n    assert face(d, [\"L\"] * 4) == d and face(d, [\"R\", \"L\"]) == d\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

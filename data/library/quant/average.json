@@ -1,0 +1,216 @@
+[
+ {
+  "id": "average.arithmetic-mean",
+  "topic": "Average",
+  "subtopic": "Basic average",
+  "name": "Arithmetic mean",
+  "statement": "\\bar x=\\frac{\\Sigma x_i}{n};\\ \\text{sum}=n\\times\\bar x",
+  "conditions": [],
+  "derivation": [
+   "The mean is the equal share: put all values together and split them equally among $n$.",
+   "So $\\bar x = \\frac{\\Sigma x_i}{n}$.",
+   "Multiply back: $\\text{sum} = n\\bar x$; most average questions are solved on sums.",
+   "Deviations from the mean add to zero: $\\Sigma(x_i - \\bar x) = 0$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Assumed mean: $\\bar x = A + \\frac{\\Sigma(x_i - A)}{n}$ (e.g. 94.5 = 93 + 9/6 for marks 98, 97, 93, 94, 92, 93).",
+  "worked_example": {
+   "question_key": "2024-09-23_1600_Q01",
+   "answer": "A",
+   "steps": [
+    "Overall mean $a$: sum of seven $= 7a$.",
+    "$6 \\times 42 + (a + 36) = 7a$, so $6a = 288$ and $a = 48$.",
+    "Seventh member $= 48 + 36 = 84$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Adding 36 to the six-member mean ($42 + 36 = 78$) instead of the seven-member mean: option B.",
+   "Dividing by 6 instead of 7 after adding the seventh member.",
+   "Averaging averages of unequal groups: use sums, see [[f:average.weighted-average]]."
+  ],
+  "related_ids": [
+   "average.weighted-average",
+   "average.replacement",
+   "average.ap-mean-middle-term"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    xs = [F(random.randint(-10**4, 10**4), random.randint(1, 10)) for _ in range(random.randint(1, 20))]\n    mean = sum(xs) / len(xs)\n    assert mean * len(xs) == sum(xs)\n    A = F(random.randint(-500, 500))                 # assumed mean\n    assert A + sum(x - A for x in xs) / len(xs) == mean\n    assert sum(x - mean for x in xs) == 0\n    n += 1\n# worked example: six average 42, seventh = overall mean + 36\na = F(6 * 42 + 36, 7 - 1)\nassert a == 48 and a + 36 == 84\nassert F(98 + 97 + 93 + 94 + 92 + 93, 6) == F(945, 10)\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:12+00:00"
+   }
+  }
+ },
+ {
+  "id": "average.weighted-average",
+  "topic": "Average",
+  "subtopic": "Weighted & combined average",
+  "name": "Weighted / combined average",
+  "statement": "\\bar x=\\frac{n_1\\bar x_1+n_2\\bar x_2}{n_1+n_2}",
+  "conditions": [],
+  "derivation": [
+   "Group sums are $n_1\\bar x_1$ and $n_2\\bar x_2$.",
+   "Total sum over total count gives the combined mean.",
+   "Rearranged: $n_1(\\bar x - \\bar x_1) = n_2(\\bar x_2 - \\bar x)$.",
+   "The combined mean lies between the two and is nearer the bigger group."
+  ],
+  "visual_proof": "On a number line from $\\bar x_1$ to $\\bar x_2$ the combined mean cuts the gap in the ratio $n_2 : n_1$, like a balance.",
+  "shortcut": "Start at $\\bar x_1$ and move toward $\\bar x_2$ by the second group's share: $\\bar x = \\bar x_1 + (\\bar x_2 - \\bar x_1)\\frac{n_2}{n_1+n_2}$.",
+  "worked_example": {
+   "question_key": "2024-09-13_1600_Q08",
+   "answer": "B",
+   "steps": [
+    "Groups: 12 at 62, 18 at 72.",
+    "$\\bar x = 62 + 10 \\times \\frac{18}{30} = 62 + 6$.",
+    "Class average $= 68$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Averaging the two averages $\\frac{62+72}{2} = 67$ when the groups differ in size: option A.",
+   "Using 30 students at 72 for 'the rest' instead of 18.",
+   "Overlapping groups (first 16 and last 16 days of 31 share day 16): the shared value is counted twice; subtract the total."
+  ],
+  "related_ids": [
+   "average.arithmetic-mean",
+   "mixture-alligation.alligation-rule",
+   "mixture-alligation.weighted-mean-price"
+  ],
+  "diagram": {
+   "alt_text": "Number line from 62 to 72; the class average 68 splits it into 6 and 4, the inverse of the group sizes 12 and 18.",
+   "spec": {
+    "type": "number-line",
+    "min": 60,
+    "max": 74,
+    "marks": [
+     {
+      "at": 62,
+      "label": "12 students: 62"
+     },
+     {
+      "at": 68,
+      "label": "class: 68"
+     },
+     {
+      "at": 72,
+      "label": "18 students: 72"
+     }
+    ],
+    "segments": [
+     {
+      "from": 62,
+      "to": 68,
+      "label": "6"
+     },
+     {
+      "from": 68,
+      "to": 72,
+      "label": "4"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    n1, n2 = random.randint(1, 500), random.randint(1, 500)\n    g1 = [F(random.randint(0, 1000)) for _ in range(n1)]\n    m1 = sum(g1) / n1\n    m2 = F(random.randint(0, 10**5), 100)\n    whole = (n1 * m1 + n2 * m2) / (n1 + n2)\n    assert whole == (sum(g1) + n2 * m2) / (n1 + n2)\n    assert whole == m1 + (m2 - m1) * F(n2, n1 + n2)      # move from m1 by the n2 share\n    if m1 != m2:\n        assert (whole - m1) / (m2 - whole) == F(n2, n1)  # inverse split of the gap\n        assert min(m1, m2) < whole < max(m1, m2)\n    n += 1\nassert F(12 * 62 + 18 * 72, 30) == 68\nassert F(16 * 22 + 16 * 26 - 31 * 24) == 24\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:13+00:00"
+   }
+  }
+ },
+ {
+  "id": "average.replacement",
+  "topic": "Average",
+  "subtopic": "Replacement",
+  "name": "Replacement of a member",
+  "statement": "\\text{new}-\\text{old}=n\\times(\\text{change in average})",
+  "conditions": [],
+  "derivation": [
+   "Group size $n$ stays the same; only one member changes.",
+   "Change in sum $= n \\times$ (new mean $-$ old mean).",
+   "The whole change in sum comes from the swap: new $-$ old member $= n\\Delta$."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q19",
+   "answer": "B",
+   "steps": [
+    "Sum rises by $10 \\times 0.5 = 5$ kg.",
+    "New student $= 51 + 5 = 56$ kg (B)."
+   ]
+  },
+  "common_traps": [
+   "Adding only the half kg: $51.5$ kg.",
+   "Subtracting when the average increases: $51 - 5 = 46$ kg, near option A.",
+   "Using $n + 1$ as the count: the group size does not change in a replacement."
+  ],
+  "related_ids": [
+   "average.arithmetic-mean",
+   "average.weighted-average"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    k = random.randint(2, 50)\n    xs = [F(random.randint(1, 1000), random.randint(1, 4)) for _ in range(k)]\n    i = random.randrange(k)\n    new = F(random.randint(1, 1000), random.randint(1, 4))\n    ys = xs[:]; old = ys[i]; ys[i] = new\n    change = sum(ys) / k - sum(xs) / k\n    assert new - old == k * change\n    n += 1\nassert 51 + 10 * F(1, 2) == 56\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:13+00:00"
+   }
+  }
+ },
+ {
+  "id": "average.ap-mean-middle-term",
+  "topic": "Average",
+  "subtopic": "Average of series",
+  "name": "Average of an AP / consecutive numbers",
+  "statement": "\\text{mean of an AP}=\\frac{\\text{first}+\\text{last}}{2}=\\text{middle term};\\ \\text{mean of } 1..n=\\frac{n+1}{2}",
+  "conditions": [
+   "the numbers are in AP (equal gaps)"
+  ],
+  "derivation": [
+   "Pair the first with the last, the second with the second-last: each pair sums to first $+$ last.",
+   "So every pair has mean $\\frac{\\text{first}+\\text{last}}{2}$, and so does the whole list.",
+   "The terms are symmetric about this value: for an odd count it is the middle term, for an even count the mean of the two middle terms.",
+   "For $1, 2, \\dots, n$: mean $= \\frac{1+n}{2}$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Consecutive numbers with sum $S$ and count $n$: middle $= \\frac Sn$; step out by the gap to reach the ends.",
+  "worked_example": {
+   "question_key": "2024-09-18_0900_Q14",
+   "answer": "A",
+   "steps": [
+    "Middle (3rd) number $= \\frac{80}{5} = 16$.",
+    "Largest is two steps on: $16 + 2 = 18$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Taking the middle as the answer (16) when the largest is asked.",
+   "For 1 to 125 using $\\frac n2 = 62.5$ instead of $\\frac{n+1}{2} = 63$: option D.",
+   "Ages 2 years apart: stepping by 1 instead of the gap 2."
+  ],
+  "related_ids": [
+   "average.arithmetic-mean",
+   "number-system.natural-number-sums"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, d, i = sp.symbols('a d i')\nn = sp.symbols('n', positive=True, integer=True)\nS = sp.summation(a + i * d, (i, 0, n - 1))\nassert sp.simplify(S / n - (a + (a + (n - 1) * d)) / 2) == 0\nassert sp.simplify(sp.summation(i, (i, 1, n)) / n - (n + 1) / 2) == 0\nfor m in range(1, 30, 2):                          # odd count: mean is the middle term\n    terms = [a + j * d for j in range(m)]\n    assert sp.expand(sum(terms) / m - terms[m // 2]) == 0\nfor m in range(2, 30, 2):                          # even count: mean of the two middle terms\n    terms = [a + j * d for j in range(m)]\n    assert sp.expand(sum(terms) / m - (terms[m // 2 - 1] + terms[m // 2]) / 2) == 0\nassert sp.Rational(80, 5) + 2 == 18                # five consecutive, sum 80\nassert sp.Rational(125 + 1, 2) == 63\nassert sp.Rational(90, 6) + 5 == 20                # six ages 2 apart, mean 15, eldest 15 + 5\n# boundary: unequal gaps break the rule\nxs = [1, 2, 10]\nassert sp.Rational(sum(xs), 3) != sp.Rational(xs[0] + xs[-1], 2)\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:13+00:00"
+   }
+  }
+ }
+]
