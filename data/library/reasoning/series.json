@@ -1,0 +1,523 @@
+[
+ {
+  "id": "series.repeating-block",
+  "topic": "Series",
+  "subtopic": "Repeating-block letter series",
+  "name": "Repeating block fill-in",
+  "statement": "\\text{Remove spaces, pick a block length } p\\text{, write the series in rows of } p\\text{; every column must hold one letter.}",
+  "conditions": [],
+  "derivation": [
+   "Strip the spaces and count the total length $L$ (letters + blanks).",
+   "Try block lengths $p$ that divide $L$ or nearly divide it (4, 5, 6 are most common), starting from a letter pattern that visibly repeats.",
+   "Write the series in rows of $p$ characters; each column must contain one letter only.",
+   "Read each blank's letter from the known letters in its column, then match the blank sequence with the options."
+  ],
+  "visual_proof": null,
+  "shortcut": "Fill only the first two or three blanks from the columns, then eliminate options that disagree; usually one survives.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R16",
+   "answer": "D",
+   "steps": [
+    "Series without spaces: L_P_QS_K_P_S_KP_Q_L__PQS, 24 places, try $p = 6$.",
+    "Rows: L_P_QS / _K_P_S / _KP_Q_ / L__PQS; columns give L, K, P, P, Q, S.",
+    "Blanks in order: K P L P Q L P S K P.",
+    "Matches KPLPQLPSKP, option D (block LKPPQS)."
+   ]
+  },
+  "common_traps": [
+   "Counting the spaces in the printed stem as places, which shifts every column.",
+   "Choosing a block length from the first few letters only; a block that fits the start can break later.",
+   "Stopping once one blank matches: options often share the first few letters and differ only at the end."
+  ],
+  "related_ids": [
+   "series.alternating",
+   "alphabet.letters-between"
+  ],
+  "diagram": {
+   "alt_text": "The series L_P_QS_K_P_S_KP_Q_L__PQS written in four rows of six; each column holds one letter: L, K, P, P, Q, S.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6"
+    ],
+    "rows": [
+     [
+      "L",
+      "_",
+      "P",
+      "_",
+      "Q",
+      "S"
+     ],
+     [
+      "_",
+      "K",
+      "_",
+      "P",
+      "_",
+      "S"
+     ],
+     [
+      "_",
+      "K",
+      "P",
+      "_",
+      "Q",
+      "_"
+     ],
+     [
+      "L",
+      "_",
+      "_",
+      "P",
+      "Q",
+      "S"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "def fill(pattern, letters):\n    it = iter(letters)\n    out = \"\".join(next(it) if ch == \"_\" else ch for ch in pattern)\n    assert next(it, None) is None\n    return out\n\ndef block(s):\n    # shortest period p (a full block fits at least twice) with s[i] == s[i+p] everywhere\n    for p in range(1, len(s) // 2 + 1):\n        if all(s[i] == s[i + p] for i in range(len(s) - p)):\n            return s[:p]\n    return None\n\ndef solve(pattern, options):\n    pattern = pattern.replace(\" \", \"\")\n    fits = {k: block(fill(pattern, v)) for k, v in options.items()\n            if len(v) == pattern.count(\"_\")}\n    return [k for k, b in fits.items() if b]\n\n# worked example 2024-09-09_0900_R16\nopts = {\"A\": \"KPLPLQLSPK\", \"B\": \"PKLPQPLSKP\", \"C\": \"KPLPQQLPSK\", \"D\": \"KPLPQLPSKP\"}\nassert solve(\"L_P_QS_K_P_S_KP_Q_L_ _PQS\", opts) == [\"D\"]\nassert block(fill(\"L_P_QS_K_P_S_KP_Q_L__PQS\", opts[\"D\"])) == \"LKPPQS\"\n# 2024-09-09_1230_R05\nopts = {\"A\": \"ANANB\", \"B\": \"NANAB\", \"C\": \"ANABN\", \"D\": \"ANBAN\"}\nassert solve(\"N _ B A N A _ A _ A N A N A B _ N A N A B A _ A N A\", opts) == [\"D\"]\n# 2024-09-09_1600_R14\nopts = {\"A\": \"ZVPAPZAV\", \"B\": \"ZPVVAPVZ\", \"C\": \"VZAAPVPZ\", \"D\": \"VPZZPVAP\"}\nassert solve(\"P _ A A _ _ Z A _V _ _ A _ _\", opts) == [\"A\"]\nassert block(fill(\"P_AA__ZA_V__A__\", opts[\"A\"])) == \"PZAAV\"\n# constructed: block abc\nassert solve(\"a_ca_c_bc_bc\", {\"A\": \"bbaa\", \"B\": \"baab\", \"C\": \"bcaa\", \"D\": \"abab\"}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.letter-position-steps",
+  "topic": "Series",
+  "subtopic": "Letter-cluster series",
+  "name": "Position-wise letter steps",
+  "statement": "t_{n+1}[i]=t_n[i]+d_i\\pmod{26},\\ \\ A=1,\\dots,Z=26",
+  "conditions": [],
+  "derivation": [
+   "Convert each letter to its position: A = 1 ... Z = 26 (EJOTY = 5, 10, 15, 20, 25 as anchors).",
+   "Write the first letters of all terms in one line, the second letters in the next, and so on.",
+   "In each line find the step $d_i$: constant, or itself changing by a fixed amount (+1, +2, +3 ...).",
+   "Moving past Z wraps to A (add or subtract 26), then rebuild the missing cluster position by position."
+  ],
+  "visual_proof": null,
+  "shortcut": "Solve only the position where the options differ most; often one position eliminates three options.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R22",
+   "answer": "A",
+   "steps": [
+    "1st letters Y, ?, Q, M, I: step $-4$, so ? = U.",
+    "2nd letters Z, ?, T, Q, N: step $-3$, so W; 3rd U, ?, Q, O, M: step $-2$, so S.",
+    "4th letters W, ?, U, T, S: step $-1$, so V.",
+    "Missing term UWSV, option A."
+   ]
+  },
+  "common_traps": [
+   "Mixing up positions: reading UWVS (B) by swapping the 3rd and 4th letters.",
+   "Forgetting the wrap from Z to A (or A to Z) and rejecting the right option.",
+   "Assuming every position uses the same step; each position has its own $d_i$."
+  ],
+  "related_ids": [
+   "series.alphanumeric-split",
+   "alphabet.opposite-letter",
+   "coding.letter-position-shift"
+  ],
+  "diagram": {
+   "alt_text": "Table of the four letter positions of YZUW, ?, QTQU, MQOT, INMS with steps -4, -3, -2, -1 and the filled term UWSV.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Position",
+     "Letters",
+     "Step",
+     "Missing"
+    ],
+    "rows": [
+     [
+      "1st",
+      "Y ? Q M I",
+      "-4",
+      "U"
+     ],
+     [
+      "2nd",
+      "Z ? T Q N",
+      "-3",
+      "W"
+     ],
+     [
+      "3rd",
+      "U ? Q O M",
+      "-2",
+      "S"
+     ],
+     [
+      "4th",
+      "W ? U T S",
+      "-1",
+      "V"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "V = lambda c: ord(c) - 64\n\ndef wrap(d):  # step mod 26 as the smallest signed move\n    d %= 26\n    return d - 26 if d > 13 else d\n\ndef regular(vals):\n    \"\"\"True when the steps (mod 26) are constant or change by a constant amount.\"\"\"\n    steps = [wrap(b - a) for a, b in zip(vals, vals[1:])]\n    second = [b - a for a, b in zip(steps, steps[1:])]\n    return len(set(second)) <= 1\n\ndef solve(terms, options):\n    good = []\n    for k, cand in options.items():\n        full = [cand if t == \"?\" else t for t in terms]\n        if len({len(t) for t in full}) == 1 and all(\n                regular([V(t[i]) for t in full]) for i in range(len(full[0]))):\n            good.append(k)\n    return good\n\nassert solve([\"YZUW\", \"?\", \"QTQU\", \"MQOT\", \"INMS\"],\n             {\"A\": \"UWSV\", \"B\": \"UWVS\", \"C\": \"USWV\", \"D\": \"WUSV\"}) == [\"A\"]\nassert solve([\"BVTO\", \"DTVM\", \"?\", \"HPZI\", \"JNBG\"],\n             {\"A\": \"RFXK\", \"B\": \"RXFK\", \"C\": \"FKXR\", \"D\": \"FRXK\"}) == [\"D\"]\nassert solve([\"MFT\", \"NIS\", \"PLQ\", \"SON\", \"WRJ\", \"?\"],\n             {\"A\": \"BUP\", \"B\": \"BVD\", \"C\": \"BUE\", \"D\": \"RUE\"}) == [\"C\"]\n# constructed: +1, +3, -2 per position\nassert solve([\"ACE\", \"BFC\", \"?\", \"DLY\"], {\"A\": \"CIA\", \"B\": \"CHA\", \"C\": \"CIB\", \"D\": \"DIA\"}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.alphanumeric-split",
+  "topic": "Series",
+  "subtopic": "Alphanumeric series",
+  "name": "Split letter and number streams",
+  "statement": "\\text{term} = \\underbrace{L_1L_2\\dots}_{\\text{letter steps}}\\ \\underbrace{N}_{\\text{number series}}",
+  "conditions": [],
+  "derivation": [
+   "Split each term into its letter part and its number part.",
+   "Treat each letter position as its own letter series (position values, wrap Z to A).",
+   "Treat the numbers as a number series (difference, ratio, squares).",
+   "Join the next letter of each line with the next number."
+  ],
+  "visual_proof": null,
+  "shortcut": "Check the number first: it is the fastest to compute and usually leaves one or two options.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_R15",
+   "answer": "A",
+   "steps": [
+    "1st letters X, Y, Z, A: $+1$ with wrap, so B.",
+    "2nd letters F, I, L, O: $+3$, so R.",
+    "Numbers 11, 15, 19, 23: $+4$, so 27.",
+    "Next term BR 27, option A."
+   ]
+  },
+  "common_traps": [
+   "Not wrapping Z to A and looking for a letter after Z, which pushes toward CQ 25 or CR 25.",
+   "Checking only the number: 25 and 27 both appear, so letters must still be checked.",
+   "Combining a letter and number into one value instead of solving them separately."
+  ],
+  "related_ids": [
+   "series.letter-position-steps",
+   "series.first-differences"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "import re\nV = lambda c: ord(c) - 64\n\ndef wrap(d):\n    d %= 26\n    return d - 26 if d > 13 else d\n\ndef regular(vals, mod26):\n    steps = [(wrap(b - a) if mod26 else b - a) for a, b in zip(vals, vals[1:])]\n    return len({b - a for a, b in zip(steps, steps[1:])}) <= 1\n\ndef split(term):\n    m = re.fullmatch(r\"([A-Z]+)\\s*(\\d+)\", term.strip())\n    return m.group(1), int(m.group(2))\n\ndef solve(terms, options):\n    good = []\n    for k, cand in options.items():\n        parts = [split(cand if t == \"?\" else t) for t in terms]\n        letters, nums = [p[0] for p in parts], [p[1] for p in parts]\n        if len({len(w) for w in letters}) != 1:\n            continue\n        if all(regular([V(w[i]) for w in letters], True) for i in range(len(letters[0]))) \\\n                and regular(nums, False):\n            good.append(k)\n    return good\n\nassert solve([\"XF 11\", \"YI 15\", \"ZL 19\", \"AO 23\", \"?\"],\n             {\"A\": \"BR 27\", \"B\": \"CQ 25\", \"C\": \"CR 25\", \"D\": \"BP 26\"}) == [\"A\"]\nassert solve([\"UE 88\", \"VG 84\", \"WI 80\", \"XK76\", \"?\"],\n             {\"A\": \"ZM72\", \"B\": \"ZN71\", \"C\": \"YN73\", \"D\": \"YM72\"}) == [\"D\"]\nassert solve([\"VO39\", \"TM35\", \"RK31\", \"PI27\", \"?\"],\n             {\"A\": \"OH24\", \"B\": \"MG22\", \"C\": \"NG23\", \"D\": \"MH24\"}) == [\"C\"]\n# constructed: letters +2, numbers +3, +5, +7\nassert solve([\"A1\", \"C4\", \"E9\", \"?\"], {\"A\": \"G16\", \"B\": \"G15\", \"C\": \"H16\", \"D\": \"F16\"}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.first-differences",
+  "topic": "Series",
+  "subtopic": "Number series",
+  "name": "First differences",
+  "statement": "d_n=t_{n+1}-t_n;\\ \\ t_{\\text{next}}=t_{\\text{last}}+d_{\\text{next}}",
+  "conditions": [],
+  "derivation": [
+   "Write the differences $d_n = t_{n+1}-t_n$ under the gaps of the series.",
+   "Look at the differences: constant, rising by a fixed step (3, 5, 7, 9), or each a fixed multiple of the last (243, 81, 27, 9).",
+   "Extend the difference pattern by one step.",
+   "Add the new difference to the last term (or fill a middle gap from both sides)."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_1600_R20",
+   "answer": "B",
+   "steps": [
+    "Differences: $38-35=3$, $43-38=5$, $50-43=7$, $59-50=9$.",
+    "Odd numbers rising by 2: next difference 11.",
+    "$59+11=70$, option B."
+   ]
+  },
+  "common_traps": [
+   "Taking the next difference equal to the last one (9) and choosing 68 (A).",
+   "Subtracting in the wrong order for a falling series, so the signs flip and the pattern hides.",
+   "Stopping at the differences when they are themselves a ratio pattern (243, 81, 27, 9 needs $\\div 3$)."
+  ],
+  "related_ids": [
+   "series.second-differences",
+   "series.prime-pattern",
+   "series.square-cube-pattern",
+   "algebra.arithmetic-progression"
+  ],
+  "diagram": {
+   "alt_text": "Table with the terms 35, 38, 43, 50, 59, 70 and the differences 3, 5, 7, 9, 11 between them.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Term",
+     "35",
+     "38",
+     "43",
+     "50",
+     "59",
+     "70"
+    ],
+    "rows": [
+     [
+      "Difference",
+      "",
+      "3",
+      "5",
+      "7",
+      "9",
+      "11"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\n\ndef diffs(s):\n    return [b - a for a, b in zip(s, s[1:])]\n\ndef diff_pattern(d):\n    \"\"\"Name the pattern of the differences: constant, AP, GP, or None.\"\"\"\n    if len(set(d)) == 1:\n        return \"constant\"\n    if len(set(diffs(d))) == 1:\n        return \"AP\"\n    if 0 not in d and len({F(b, a) for a, b in zip(d, d[1:])}) == 1:\n        return \"GP\"\n    return None\n\ndef solve(terms, options):\n    good = []\n    for k, v in options.items():\n        s = [v if t is None else t for t in terms]\n        if diff_pattern(diffs(s)):\n            good.append(k)\n    return good\n\nassert diffs([35, 38, 43, 50, 59]) == [3, 5, 7, 9]\nassert solve([35, 38, 43, 50, 59, None], {\"A\": 68, \"B\": 70, \"C\": 62, \"D\": 78}) == [\"B\"]\nassert solve([949, 1006, 1066, 1129, 1195, None], {\"A\": 1264, \"B\": 1233, \"C\": 1254, \"D\": 1244}) == [\"A\"]\nassert solve([625, 382, 301, 274, 265, None], {\"A\": 258, \"B\": 262, \"C\": 248, \"D\": 260}) == [\"B\"]\nassert diff_pattern(diffs([625, 382, 301, 274, 265, 262])) == \"GP\"\n# constructed: constant difference\nassert solve([12, 19, None, 33], {\"A\": 26, \"B\": 25, \"C\": 27, \"D\": 28}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.second-differences",
+  "topic": "Series",
+  "subtopic": "Number series",
+  "name": "Second-order differences",
+  "statement": "\\Delta^2_n=d_{n+1}-d_n=\\text{const}\\ \\Rightarrow\\ d_{\\text{next}}=d_{\\text{last}}+\\Delta^2",
+  "conditions": [],
+  "derivation": [
+   "Take first differences $d_n$ of the series.",
+   "If $d_n$ is not constant, take differences of the $d_n$: the second differences $\\Delta^2$.",
+   "A constant $\\Delta^2$ means the series is quadratic ($an^2+bn+c$): extend $d_n$ by $\\Delta^2$.",
+   "Add the extended difference to the last term; for a middle blank, check that the terms after it still fit."
+  ],
+  "visual_proof": null,
+  "shortcut": "Constant $\\Delta^2 = 2$ with $d_n$ odd numbers means the terms are $n^2 + c$ (here $n^2+1$).",
+  "worked_example": {
+   "question_key": "2024-09-24_1230_R11",
+   "answer": "D",
+   "steps": [
+    "First differences: 5, 7, 9, 11.",
+    "Second differences: 2, 2, 2.",
+    "Next first difference $11+2=13$; $37+13=50$, option D."
+   ]
+  },
+  "common_traps": [
+   "Repeating the last difference (11) and getting 48, which is not an option, then guessing.",
+   "For a middle blank, fixing it from the left only and not checking the terms on its right.",
+   "Taking second differences when first differences already form a ratio pattern."
+  ],
+  "related_ids": [
+   "series.first-differences",
+   "series.square-cube-pattern"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "def diffs(s):\n    return [b - a for a, b in zip(s, s[1:])]\n\ndef solve(terms, options):\n    \"\"\"Fill the blank; keep options whose second differences are constant.\"\"\"\n    good = []\n    for k, v in options.items():\n        s = [v if t is None else t for t in terms]\n        if len(set(diffs(diffs(s)))) == 1:\n            good.append(k)\n    return good\n\nassert diffs([5, 10, 17, 26, 37]) == [5, 7, 9, 11]\nassert diffs(diffs([5, 10, 17, 26, 37])) == [2, 2, 2]\nassert solve([5, 10, 17, 26, 37, None], {\"A\": 54, \"B\": 52, \"C\": 60, \"D\": 50}) == [\"D\"]\nassert solve([99, 123, 150, 180, 213, None], {\"A\": 248, \"B\": 258, \"C\": 259, \"D\": 249}) == [\"D\"]\nassert solve([81, 65, 50, None, 23, 11], {\"A\": 37, \"B\": 34, \"C\": 35, \"D\": 36}) == [\"D\"]\n# n^2 + 1 closed form agrees with the difference method\nassert [n * n + 1 for n in range(2, 8)] == [5, 10, 17, 26, 37, 50]\n# constructed: second difference -3\nassert solve([10, 30, 47, 61, None], {\"A\": 72, \"B\": 75, \"C\": 70, \"D\": 73}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.prime-pattern",
+  "topic": "Series",
+  "subtopic": "Number series",
+  "name": "Prime-number pattern",
+  "statement": "\\text{Differences (or terms) } = p_k, p_{k+1}, p_{k+2},\\dots\\ \\text{(consecutive primes, rising or falling)}",
+  "conditions": [],
+  "derivation": [
+   "Take first differences and ignore the sign.",
+   "Compare with the prime list 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47.",
+   "Consecutive primes with none skipped is the pattern; the next difference is the next prime in that direction.",
+   "Apply it with the same sign as the earlier differences."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-17_1600_R21",
+   "answer": "D",
+   "steps": [
+    "Differences: $1225-1184=41$, then 37, 31, 29.",
+    "Consecutive primes going down: 41, 37, 31, 29, next 23.",
+    "$1087-23=1064$, option D."
+   ]
+  },
+  "common_traps": [
+   "Skipping a prime (next taken as 19) and getting 1068, or treating 37 to 31 as $-6$ and expecting a fixed step.",
+   "Counting 1 or 9 as prime, which breaks the chain.",
+   "Using the wrong sign: adding 23 for a falling series gives 1110."
+  ],
+  "related_ids": [
+   "series.first-differences",
+   "classification.number-property"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "def is_prime(n):\n    return n > 1 and all(n % p for p in range(2, int(n ** 0.5) + 1))\n\nPRIMES = [p for p in range(2, 200) if is_prime(p)]\n\ndef consecutive_primes(d):\n    \"\"\"Differences are consecutive primes, ascending or descending.\"\"\"\n    a = [abs(x) for x in d]\n    if not all(x in PRIMES for x in a):\n        return False\n    idx = [PRIMES.index(x) for x in a]\n    steps = {j - i for i, j in zip(idx, idx[1:])}\n    return steps in ({1}, {-1}) and len({x > 0 for x in d}) == 1\n\ndef solve(terms, options):\n    good = []\n    for k, v in options.items():\n        s = [v if t is None else t for t in terms]\n        if consecutive_primes([b - a for a, b in zip(s, s[1:])]):\n            good.append(k)\n    return good\n\nassert solve([1225, 1184, 1147, 1116, 1087, None], {\"A\": 1078, \"B\": 1072, \"C\": 1054, \"D\": 1064}) == [\"D\"]\nassert solve([96, 77, 60, 47, 36, None], {\"A\": 32, \"B\": 30, \"C\": 29, \"D\": 28}) == [\"C\"]\nassert solve([389, 420, 457, 498, 541, None], {\"A\": 572, \"B\": 584, \"C\": 588, \"D\": 598}) == [\"C\"]\n# constructed: terms themselves prime, differences 2,3,5,7 from 10\nassert solve([10, 12, 15, 20, None], {\"A\": 27, \"B\": 28, \"C\": 29, \"D\": 26}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.square-cube-pattern",
+  "topic": "Series",
+  "subtopic": "Number series",
+  "name": "Squares and cubes pattern",
+  "statement": "\\text{Terms or differences} = n^2,\\ n^3,\\ n^2\\pm n,\\ n^2\\pm1\\ \\text{for } n \\text{ in an AP}",
+  "conditions": [],
+  "derivation": [
+   "Know $1^2$ to $30^2$ and $1^3$ to $15^3$ by heart.",
+   "Check the terms first: are they $n^2$ or $n^3$ for consecutive (or every second) $n$?",
+   "If not, check the first differences the same way; a mix such as $1^3, 2^2, 3^3, 4^2$ also appears.",
+   "Continue the base sequence $n$ one step and add or write the next power."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-10_0900_R24",
+   "answer": "B",
+   "steps": [
+    "Differences: 4, 16, 36, 64.",
+    "These are $2^2, 4^2, 6^2, 8^2$; next $10^2=100$.",
+    "$143+100=243$, option B."
+   ]
+  },
+  "common_traps": [
+   "Taking the next base as 9 instead of 10, giving $143+81=224$.",
+   "Calling 4, 16, 36, 64 a ratio pattern and multiplying.",
+   "Missing an alternating square/cube mix and declaring no pattern."
+  ],
+  "related_ids": [
+   "series.first-differences",
+   "series.second-differences",
+   "analogy.number-power-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "def root(n, k):\n    r = round(abs(n) ** (1 / k))\n    return next((x for x in (r - 1, r, r + 1) if x ** k == n), None)\n\ndef bases(seq, powers):\n    \"\"\"Bases b with seq[i] = b**powers[i], or None.\"\"\"\n    out = [root(x, p) for x, p in zip(seq, powers)]\n    return None if None in out else out\n\ndef is_ap(b):\n    return len({y - x for x, y in zip(b, b[1:])}) == 1\n\ndef fits(s):\n    d = [b - a for a, b in zip(s, s[1:])]\n    for seq in (s, d):  # terms first, then differences\n        for pw in ([2] * len(seq), [3] * len(seq), [3 if i % 2 == 0 else 2 for i in range(len(seq))]):\n            b = bases(seq, pw)\n            if b and is_ap(b):\n                return True\n    return False\n\ndef solve(terms, options):\n    good = []\n    for k, v in options.items():\n        vals = v if isinstance(v, tuple) else (v,)\n        it = iter(vals)\n        s = [next(it) if t is None else t for t in terms]\n        if fits(s):\n            good.append(k)\n    return good\n\nassert solve([23, 27, 43, 79, 143, None], {\"A\": 240, \"B\": 243, \"C\": 200, \"D\": 250}) == [\"B\"]\nassert solve([16, 36, 64, None, None, 196, 256, 324],\n             {\"A\": (81, 100), \"B\": (81, 121), \"C\": (100, 121), \"D\": (100, 144)}) == [\"D\"]\nassert solve([22, 23, 27, 54, 70, 195, None], {\"A\": 231, \"B\": 200, \"C\": 230, \"D\": 196}) == [\"A\"]\n# constructed: differences 1, 4, 9, 16 -> 25\nassert solve([3, 4, 8, 17, 33, None], {\"A\": 56, \"B\": 58, \"C\": 60, \"D\": 49}) == [\"B\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.multiply-add",
+  "topic": "Series",
+  "subtopic": "Number series",
+  "name": "Multiply then add pattern",
+  "statement": "t_{n+1}=t_n\\times m_n \\pm c_n,\\ \\ m_n,\\ c_n\\ \\text{constant or rising by a fixed step}",
+  "conditions": [],
+  "derivation": [
+   "Divide each term by the one before it; a roughly steady or slowly rising ratio points to multiplication.",
+   "Take the nearest whole multiplier and find what must be added or subtracted.",
+   "The multiplier and the added part each stay constant or move by a fixed step (x2, x3, x4 ...; +1, +2, +3 ...).",
+   "Apply the next multiplier and adjustment; check against the term after the blank when there is one."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R25",
+   "answer": "D",
+   "steps": [
+    "$1\\times2+1=3$, $3\\times3+1=10$, $10\\times4+1=41$.",
+    "Next: $41\\times5+1=206$.",
+    "Check: $206\\times6+1=1237$, option D."
+   ]
+  },
+  "common_traps": [
+   "Using the same multiplier each time (x4: $41\\times4+1=165$), not an option.",
+   "Not checking the term after the blank: 202 or 210 come from a wrong adjustment and fail at 1237.",
+   "Ignoring fractional multipliers (0.5, 1, 1.5, 2) when a series first falls then rises."
+  ],
+  "related_ids": [
+   "series.alternating",
+   "series.first-differences"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nfrom itertools import product\n\ndef rule_fits(s, m0, dm, c0, dc):\n    \"\"\"t[i+1] = t[i] * (m0 + i*dm) + (c0 + i*dc) for every step.\"\"\"\n    return all(s[i + 1] == s[i] * (m0 + i * dm) + c0 + i * dc for i in range(len(s) - 1))\n\nMULTS = [F(k, 2) for k in range(1, 13)]          # 0.5 .. 6\nSTEPS_M = [F(0), F(1, 2), F(1)]\nCONSTS = range(-10, 21)\nSTEPS_C = range(-3, 11)\n\ndef rules(s):\n    return [r for r in product(MULTS, STEPS_M, CONSTS, STEPS_C) if rule_fits(s, *r)]\n\ndef solve(terms, options):\n    good = []\n    for k, v in options.items():\n        s = [v if t is None else t for t in terms]\n        if rules(s):\n            good.append(k)\n    return good\n\n# worked example 2024-09-09_0900_R25: x2+1, x3+1, x4+1, x5+1, x6+1\nassert solve([1, 3, 10, 41, None, 1237], {\"A\": 202, \"B\": 210, \"C\": 200, \"D\": 206}) == [\"D\"]\nassert (F(2), F(1), 1, 0) in rules([1, 3, 10, 41, 206, 1237])\n# 2024-09-12_1600_R23: x2-1, x3-2, x4-3, ...\nassert solve([7, 13, None, 145, 721, 4321], {\"A\": 23, \"B\": 36, \"C\": 25, \"D\": 37}) == [\"D\"]\n# 2024-09-13_0900_R04: x0.5+5, x1+10, x1.5+15, x2+20\nassert solve([30, 20, None, 60, 140], {\"A\": 30, \"B\": 40, \"C\": 35, \"D\": 25}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "series.alternating",
+  "topic": "Series",
+  "subtopic": "Number series",
+  "name": "Alternating two-series pattern",
+  "statement": "\\text{Odd places: } t_1,t_3,t_5,\\dots;\\ \\ \\text{even places: } t_2,t_4,t_6,\\dots\\ \\text{each with its own rule}",
+  "conditions": [],
+  "derivation": [
+   "Signs of alternation: the series rises and falls, or has 8 or more terms.",
+   "Write terms at odd positions in one line and even positions in another.",
+   "Solve each line as a separate series.",
+   "Variant: one series whose operations alternate (x2, +3, x2, +3)."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-18_1230_R14",
+   "answer": "B",
+   "steps": [
+    "Odd places: 20, 25, 30, ?, 40, step $+5$.",
+    "Even places: 25, 35, 45, 55, step $+10$.",
+    "? $=35$, option B."
+   ]
+  },
+  "common_traps": [
+   "Taking differences of the whole series (5, 0, 10, -5 ...) and finding no pattern.",
+   "Putting the blank in the wrong sub-series by miscounting positions; 55 belongs to the even line.",
+   "For alternating operations, applying x2 at the wrong step: $21+3=24$ (D) instead of $21\\times2=42$."
+  ],
+  "related_ids": [
+   "series.first-differences",
+   "series.multiply-add"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "def ap(s):\n    return len({b - a for a, b in zip(s, s[1:])}) <= 1\n\ndef split_fits(s):\n    return ap(s[0::2]) and ap(s[1::2])\n\ndef alt_ops_fits(s):\n    \"\"\"Operations alternate: the odd steps share one (x k or + k) and so do the even steps.\"\"\"\n    def same_op(pairs):\n        adds = {b - a for a, b in pairs}\n        mults = {b / a for a, b in pairs if a} if all(a for a, _ in pairs) else set()\n        return len(adds) == 1 or len(mults) == 1\n    steps = list(zip(s, s[1:]))\n    return same_op(steps[0::2]) and same_op(steps[1::2])\n\ndef solve(terms, options, test):\n    good = []\n    for k, v in options.items():\n        s = [v if t is None else t for t in terms]\n        if test(s):\n            good.append(k)\n    return good\n\n# worked example 2024-09-18_1230_R14\nt = [20, 25, 25, 35, 30, 45, None, 55, 40]\nassert solve(t, {\"A\": 60, \"B\": 35, \"C\": 50, \"D\": 30}, split_fits) == [\"B\"]\n# 2024-09-18_1600_R16: x2, +3 alternately\nassert solve([3, 6, 9, 18, 21, None], {\"A\": 42, \"B\": 40, \"C\": 63, \"D\": 24}, alt_ops_fits) == [\"A\"]\n# constructed: two interleaved series 2,4,6,8 and 50,45,40\nassert solve([2, 50, 4, 45, 6, None, 8], {\"A\": 40, \"B\": 35, \"C\": 44, \"D\": 42}, split_fits) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:48+00:00"
+   }
+  }
+ }
+]

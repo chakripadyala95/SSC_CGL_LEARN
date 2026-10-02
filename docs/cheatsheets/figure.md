@@ -1,0 +1,21 @@
+# Figure-based: cheat sheet
+
+- [Element tracking across frames](/formulas/figure#element-tracking): $\text{Track one element at a time: record its position in every frame, find its path and step, move it one more step.}$
+  - Shortcut: Solve for two elements only, then pick the option where both sit correctly; usually only one option survives.
+- [Fixed-angle rotation](/formulas/figure#rotation-step): $\text{Find the turn per frame (45°, 90°, 135°; clockwise or anticlockwise) for each element and apply it once more.}$
+  - Shortcut: Count the eighth-turns between frames 1 and 2 and check it against frames 3 and 4; then turn the last frame by the same count.
+- [Element addition/removal](/formulas/figure#element-count-change): $\text{Count the elements in each frame and continue the add/remove pattern; track position changes separately.}$
+  - Shortcut: Eliminate options with the wrong count first, then use the position rule to choose among the rest.
+- [Position permutation of symbols](/formulas/figure#position-permutation): $\text{Number the slots, record where each symbol goes from one frame to the next, and repeat that slot-to-slot move.}$
+  - Shortcut: When the maps alternate, frame 5 uses the same move as 2 → 3; compare only a few slots against the options.
+- [Mirror image about a line](/formulas/figure#mirror-image): $\text{Vertical mirror: left} \leftrightarrow \text{right, top and bottom stay. Horizontal mirror: top} \leftrightarrow \text{bottom, left and right stay.}$
+  - Shortcut: With the mirror to the right or left, reverse the order and flip only the asymmetric characters; check those first in the options.
+- [Water image](/formulas/figure#water-image): $\text{Water image: top} \leftrightarrow \text{bottom; left and right stay. Order of characters is kept.}$
+- [Paper fold and unfold](/formulas/figure#paper-fold-unfold): $\text{Unfold in reverse order of folding; at each fold line every hole or cut gains its mirror image.}$
+  - Shortcut: Count first: holes punched × $2^{\text{folds}}$; drop every option with the wrong count, then check the symmetry.
+- [Transparent sheet fold](/formulas/figure#transparent-sheet-fold): $\text{Reflect the pattern on the folded half across the fold line and superimpose it on the other half.}$
+  - Shortcut: Track only the end points and the arrow head: reflect those across the fold line and join them as before.
+- [Embedded figure trace](/formulas/figure#embedded-figure): $\text{Find the most distinctive corner or line of the target and trace it in each option, same size and same orientation.}$
+  - Shortcut: Look for the line that options differ on (a half-diagonal, a midline) and test only that line.
+- [Symmetry pattern completion](/formulas/figure#pattern-completion): $\text{Use the figure's line(s) of symmetry: the missing quarter is the mirror image of its partner across that line.}$
+  - Shortcut: Check the one line that differs between options (here the short slanted line) after reflecting it.

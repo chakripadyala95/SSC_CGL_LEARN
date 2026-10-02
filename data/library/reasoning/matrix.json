@@ -1,0 +1,66 @@
+[
+ {
+  "id": "matrix.row-column-rule",
+  "topic": "Matrix",
+  "subtopic": "Number matrix",
+  "name": "Row/column rule",
+  "statement": "\\text{Find one operation } f(a,b)=c \\text{ true in every complete row (else every column); apply it to the row with the blank.}",
+  "conditions": [],
+  "derivation": [
+   "Read the first complete row and list rules that fit: sum, product, $a^2+b^2$, $(a+b)^2$, $ab+a+b$.",
+   "Keep only the rules that also fit the second complete row.",
+   "If no row rule survives, repeat the same test down the columns.",
+   "Apply the surviving rule to the row (or column) with the blank."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Using a rule that fits only the first row: $5\\times3+19=34$ fails on the second row.",
+   "Reading rows when the rule runs down columns (row 3 = row 1 + row 2).",
+   "Mixing a row rule and a column rule in the same grid."
+  ],
+  "related_ids": [
+   "missing-number.set-operation-rule",
+   "analogy.number-arithmetic-rule"
+  ],
+  "diagram": {
+   "alt_text": "A 3 by 3 grid: 5, 3, 34; 6, 2, 40; 4, 7, ?. Each row follows a^2 + b^2 = c, so the blank is 16 + 49 = 65.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "a",
+     "b",
+     "c = a^2 + b^2"
+    ],
+    "rows": [
+     [
+      "5",
+      "3",
+      "34"
+     ],
+     [
+      "6",
+      "2",
+      "40"
+     ],
+     [
+      "4",
+      "7",
+      "? = 65"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "# constructed grid (no paper question yet):\n#   5  3  34\n#   6  2  40\n#   4  7   ?\nRULES = {\n    \"a+b\": lambda a, b: a + b,\n    \"a*b\": lambda a, b: a * b,\n    \"a^2+b^2\": lambda a, b: a * a + b * b,\n    \"(a+b)^2\": lambda a, b: (a + b) ** 2,\n    \"a^2-b^2\": lambda a, b: a * a - b * b,\n    \"a*b+a+b\": lambda a, b: a * b + a + b,\n}\n\ndef find_rule(rows):\n    \"\"\"Rules that hold along every complete row.\"\"\"\n    return [n for n, f in RULES.items() if all(f(a, b) == c for a, b, c in rows if c is not None)]\n\ndef find_rule_cols(grid):\n    cols = [tuple(r[j] for r in grid) for j in range(3)]\n    return find_rule(cols)\n\ndef solve(grid, options):\n    rules = find_rule(grid)\n    assert len(rules) == 1, rules\n    f = RULES[rules[0]]\n    a, b, _ = next(r for r in grid if r[2] is None)\n    return [k for k, v in options.items() if v == f(a, b)]\n\ngrid = [(5, 3, 34), (6, 2, 40), (4, 7, None)]\nassert find_rule(grid) == [\"a^2+b^2\"]\nassert solve(grid, {\"A\": 65, \"B\": 28, \"C\": 121, \"D\": 33}) == [\"A\"]\n# a column rule: third row = first row + second row\ngrid2 = [(3, 8, 5), (4, 6, 9), (7, 14, 14)]\nassert find_rule_cols(grid2) == [\"a+b\"]\nassert find_rule(grid2) == []          # the rows do not share a rule, so read down the columns\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

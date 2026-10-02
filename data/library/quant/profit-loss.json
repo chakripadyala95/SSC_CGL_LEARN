@@ -1,0 +1,510 @@
+[
+ {
+  "id": "profit-loss.profit-percent",
+  "topic": "Profit & Loss",
+  "subtopic": "Profit & loss basics",
+  "name": "Profit / loss percent and CP from SP",
+  "statement": "P\\%=\\frac{SP-CP}{CP}\\times100;\\ SP=CP\\left(1\\pm\\frac P{100}\\right) \\iff CP=\\frac{SP}{1\\pm P/100}",
+  "conditions": [
+   "CP > 0",
+   "\\text{loss} < 100\\%"
+  ],
+  "derivation": [
+   "Profit = SP − CP (negative means loss).",
+   "Profit % is always on CP: $\\frac{SP-CP}{CP}\\times100$.",
+   "Rearrange: $SP = CP(1+\\frac P{100})$, or $CP(1-\\frac L{100})$ for a loss.",
+   "Divide back for CP: $CP = \\frac{SP}{1\\pm P/100}$."
+  ],
+  "visual_proof": "A CP bar of 100 with a profit piece P attached; the whole bar is SP = 100 + P.",
+  "shortcut": "Take $CP = 100$: $SP = 100 + P$, so $CP : SP = 100 : (100+P)$.",
+  "worked_example": {
+   "question_key": "2024-09-13_0900_Q02",
+   "answer": "D",
+   "steps": [
+    "Take CP = 100.",
+    "Profit 250% gives SP = 100 + 250 = 350.",
+    "CP : SP = 100 : 350 = 2 : 7 (D)."
+   ]
+  },
+  "common_traps": [
+   "Taking SP = 250 (profit % read as SP %), giving 2 : 5.",
+   "Writing SP : CP when CP : SP is asked (7 : 2).",
+   "Computing profit % on SP instead of CP."
+  ],
+  "related_ids": [
+   "profit-loss.gain-fraction-of-sp",
+   "profit-loss.markup-discount",
+   "percentage.reverse-percentage"
+  ],
+  "diagram": {
+   "alt_text": "A CP bar of 100 and an SP bar of 350 made of CP 100 plus profit 250.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "CP",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       }
+      ]
+     },
+     {
+      "label": "SP",
+      "parts": [
+       {
+        "value": 100,
+        "label": "CP 100"
+       },
+       {
+        "value": 250,
+        "label": "Profit 250"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    CP = rq(1, 100000)\n    SP = rq(1, 300000)\n    P = (SP - CP) / CP * 100\n    assert SP == CP * (1 + P / 100)\n    assert CP == SP / (1 + P / 100)\n    L = rq(0, 99)\n    SP2 = CP * (1 - L / 100)\n    assert CP == SP2 / (1 - L / 100)\n    n += 1\n# boundary: a 100% loss means SP = 0 and CP cannot be recovered from SP\ntry:\n    F(0) / (1 - F(100, 100))\n    raise SystemExit(\"100% loss should be undefined\")\nexcept ZeroDivisionError:\n    pass\nassert F(100) / (100 + 250) == F(2, 7)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "profit-loss.gain-fraction-of-sp",
+  "topic": "Profit & Loss",
+  "subtopic": "Profit & loss basics",
+  "name": "Gain as a fraction of SP",
+  "statement": "\\text{If gain}=\\tfrac{a}{b}SP \\text{ then } CP=\\tfrac{b-a}{b}SP,\\ \\text{gain}\\%=\\frac{a}{b-a}\\times100",
+  "conditions": [
+   "0 < a < b"
+  ],
+  "derivation": [
+   "Split SP into $b$ equal parts; gain is $a$ of them.",
+   "CP is the rest: $b - a$ parts, so $CP = \\frac{b-a}{b}SP$.",
+   "Gain % is on CP: $\\frac{a}{b-a}\\times100$."
+  ],
+  "visual_proof": "An SP bar cut into b equal parts: a parts are gain, b − a parts are CP.",
+  "shortcut": "Gain $g\\%$ of SP $\\Rightarrow$ gain $\\frac{g}{100-g}\\times100\\%$ of CP (1/6 of SP ⇒ 1/5 = 20% of CP).",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_Q01",
+   "answer": "B",
+   "steps": [
+    "Gain = $\\frac16$ SP, so CP = $\\frac56$ SP.",
+    "Gain % = $\\frac{1}{5}\\times100 = 20\\%$ (B); the SP ₹42,564 is not needed."
+   ]
+  },
+  "common_traps": [
+   "Answering $\\frac16 = 16.67\\%$, which is gain on SP, not on CP.",
+   "Working out the rupee amounts from ₹42,564 when the ratio alone answers it.",
+   "Using $\\frac{a}{a+b}$: that turns a gain fraction of CP into one of SP, the opposite direction."
+  ],
+  "related_ids": [
+   "profit-loss.profit-percent",
+   "percentage.more-than-less-than"
+  ],
+  "diagram": {
+   "alt_text": "An SP bar of 6 equal parts: 5 parts CP and 1 part gain.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "SP",
+      "parts": [
+       {
+        "value": 5,
+        "label": "CP 5 parts"
+       },
+       {
+        "value": 1,
+        "label": "Gain 1 part"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    b = random.randint(2, 50)\n    a = random.randint(1, b - 1)\n    SP = rq(1, 100000)\n    gain = F(a, b) * SP\n    CP = SP - gain\n    assert CP == F(b - a, b) * SP\n    assert gain / CP * 100 == F(a, b - a) * 100\n    n += 1\n# boundary: a = b makes CP = 0 and gain% undefined\ntry:\n    F(5, 5 - 5)\n    raise SystemExit(\"a=b should be undefined\")\nexcept ZeroDivisionError:\n    pass\nassert F(1, 6 - 1) * 100 == 20\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "profit-loss.overall-gain",
+  "topic": "Profit & Loss",
+  "subtopic": "Profit & loss basics",
+  "name": "Overall gain on parts sold at different rates",
+  "statement": "\\text{overall }\\%=\\frac{\\Sigma CP_i\\,p_i}{\\Sigma CP_i};\\ \\text{target SP of rest}=\\text{target total}-\\text{SP already realised}",
+  "conditions": [],
+  "derivation": [
+   "Each part earns $CP_i\\times\\frac{p_i}{100}$ (negative for a loss).",
+   "Total profit $= \\sum CP_i\\frac{p_i}{100}$; total cost $= \\sum CP_i$.",
+   "Overall % $= \\frac{\\sum CP_i p_i}{\\sum CP_i}$: a CP-weighted average of the rates.",
+   "For a target: total SP needed $= \\sum CP_i(1+\\frac{t}{100})$; the unsold part must bring in that minus what is already realised."
+  ],
+  "visual_proof": "An alligation cross: the overall rate sits between the two rates, closer to the part with more cost.",
+  "shortcut": "Equal cost per article: overall % = (fraction sold at $p_1$)$\\times p_1$ + (rest)$\\times p_2$.",
+  "worked_example": {
+   "question_key": "2024-09-18_0900_Q22",
+   "answer": "C",
+   "steps": [
+    "Weights: $\\frac58$ of the articles at 20%, $\\frac38$ at 0%.",
+    "Overall = $\\frac58\\times20 + \\frac38\\times0 = 12.5\\%$.",
+    "Answer: $12\\frac12\\%$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Averaging the rates without weights: $\\frac{20+0}{2} = 10\\%$.",
+   "Weighting by SP instead of CP when costs differ.",
+   "For a target, applying the target % to the remaining part only instead of the whole cost."
+  ],
+  "related_ids": [
+   "average.weighted-average",
+   "mixture-alligation.alligation-rule",
+   "profit-loss.profit-percent"
+  ],
+  "diagram": {
+   "alt_text": "Alligation cross with 20% gain and 0% gain; overall 12.5%, so the parts are in ratio 12.5 : 7.5 = 5 : 3.",
+   "spec": {
+    "type": "alligation-cross",
+    "high": 20,
+    "low": 0,
+    "mean": 12.5,
+    "ratio": "12.5 : 7.5 = 5 : 3"
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    k = random.randint(1, 6)\n    cps = [rq(1, 10000) for _ in range(k)]\n    ps = [rq(-99, 200) for _ in range(k)]\n    sps = [c * (1 + p / 100) for c, p in zip(cps, ps)]\n    overall = (sum(sps) - sum(cps)) / sum(cps) * 100\n    assert overall == sum(c * p for c, p in zip(cps, ps)) / sum(cps)\n    target = rq(-50, 100)\n    realised = sps[0]\n    need = sum(cps) * (1 + target / 100) - realised\n    assert realised + need == sum(cps) * (1 + target / 100)\n    n += 1\nassert (F(5, 8) * 20 + F(3, 8) * 0) == F(25, 2)\ncp = F(448, 10) / F(112, 100)\nassert cp == 40 and (cp * F(105, 100)) / F(4, 5) == F(105, 2)\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "profit-loss.discount-on-marked-price",
+  "topic": "Profit & Loss",
+  "subtopic": "Discount & marked price",
+  "name": "Discount on marked price",
+  "statement": "SP=MP\\left(1-\\frac d{100}\\right);\\ d\\%=\\frac{MP-SP}{MP}\\times100",
+  "conditions": [
+   "0 \\leq d < 100"
+  ],
+  "derivation": [
+   "Discount is always a percentage of the marked price.",
+   "Discount amount $= \\frac{d}{100}MP$, so $SP = MP - \\frac d{100}MP = MP(1-\\frac d{100})$.",
+   "Rearrange: $d\\% = \\frac{MP-SP}{MP}\\times100$ and $MP = \\frac{SP}{1-d/100}$."
+  ],
+  "visual_proof": "An MP bar split into the discount piece and the SP piece the customer pays.",
+  "shortcut": "$MP = SP\\times\\frac{100}{100-d}$ (₹1,792 after 20% off: $1792\\times\\frac{100}{80}$).",
+  "worked_example": {
+   "question_key": "2024-09-18_1600_Q04",
+   "answer": "D",
+   "steps": [
+    "SP is $100 - 20 = 80\\%$ of MP.",
+    "MP = $\\frac{1792}{0.8} = 2240$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Adding 20% to SP: $1792\\times1.2 = 2150.4$, close to but not the MP.",
+   "Taking the discount % on SP or on CP instead of MP.",
+   "Mixing profit (on CP) with discount (on MP) in one percentage."
+  ],
+  "related_ids": [
+   "profit-loss.markup-discount",
+   "profit-loss.successive-discount",
+   "percentage.reverse-percentage"
+  ],
+  "diagram": {
+   "alt_text": "An MP bar of ₹2,240 split into SP ₹1,792 (80%) and discount ₹448 (20%).",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "MP",
+      "parts": [
+       {
+        "value": 1792,
+        "label": "SP ₹1,792 (80%)"
+       },
+       {
+        "value": 448,
+        "label": "Discount ₹448 (20%)"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    MP = rq(1, 100000)\n    d = rq(0, 99)\n    SP = MP * (1 - d / 100)\n    assert (MP - SP) / MP * 100 == d\n    assert SP / (1 - d / 100) == MP\n    n += 1\n# boundary: d = 100 gives SP = 0 and MP cannot be recovered\nassert F(500) * (1 - F(100, 100)) == 0\ntry:\n    F(0) / (1 - F(100, 100))\n    raise SystemExit(\"d=100 should be undefined\")\nexcept ZeroDivisionError:\n    pass\nassert F(1792) / F(80, 100) == 2240\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "profit-loss.markup-discount",
+  "topic": "Profit & Loss",
+  "subtopic": "Discount & marked price",
+  "name": "Markup then discount",
+  "statement": "\\frac{SP}{CP}=\\left(1+\\frac m{100}\\right)\\left(1-\\frac d{100}\\right);\\ \\frac{MP}{CP}=\\frac{100+p}{100-d}",
+  "conditions": [
+   "d < 100"
+  ],
+  "derivation": [
+   "Markup $m\\%$ on CP: $MP = CP(1+\\frac m{100})$.",
+   "Discount $d\\%$ on MP: $SP = MP(1-\\frac d{100})$.",
+   "Chain them: $\\frac{SP}{CP} = (1+\\frac m{100})(1-\\frac d{100})$.",
+   "With profit $p\\%$, $SP = CP\\frac{100+p}{100}$ and $SP = MP\\frac{100-d}{100}$; divide: $\\frac{MP}{CP} = \\frac{100+p}{100-d}$."
+  ],
+  "visual_proof": "Three bars, CP, MP and SP: markup lengthens CP to MP, discount trims MP to SP.",
+  "shortcut": "Net profit % $= m - d - \\frac{md}{100}$ (successive change with $+m$, $-d$).",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_Q16",
+   "answer": "D",
+   "steps": [
+    "Markup 26%: MP = 1.26 CP.",
+    "Discount 32%: SP = $0.68\\times1.26$ CP $= 0.8568$ CP.",
+    "Loss = $1 - 0.8568 = 14.32\\%$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Subtracting the rates: $32 - 26 = 6\\%$ loss.",
+   "Applying the discount to CP instead of MP.",
+   "Using $\\frac{100-d}{100+p}$ (the ratio upside down) for MP : CP."
+  ],
+  "related_ids": [
+   "profit-loss.discount-on-marked-price",
+   "profit-loss.profit-percent",
+   "percentage.successive-change"
+  ],
+  "diagram": {
+   "alt_text": "CP 100; MP 126 after a 26% markup; SP 85.68 after a 32% discount, a loss of 14.32.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "CP",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       }
+      ]
+     },
+     {
+      "label": "MP",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       },
+       {
+        "value": 26,
+        "label": "+26"
+       }
+      ]
+     },
+     {
+      "label": "SP",
+      "parts": [
+       {
+        "value": 85.68,
+        "label": "85.68"
+       },
+       {
+        "value": 14.32,
+        "label": "loss 14.32"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    CP = rq(1, 100000)\n    m, d = rq(0, 300), rq(0, 99)\n    MP = CP * (1 + m / 100)\n    SP = MP * (1 - d / 100)\n    assert SP / CP == (1 + m / 100) * (1 - d / 100)\n    p = (SP - CP) / CP * 100\n    assert MP / CP == (100 + p) / (100 - d)\n    n += 1\n# boundary: d = 100 makes MP/CP = (100+p)/(100-d) undefined\ntry:\n    F(1) / (100 - F(100))\n    raise SystemExit(\"d=100 should be undefined\")\nexcept ZeroDivisionError:\n    pass\nr = F(126, 100) * F(68, 100)\nassert (1 - r) * 100 == F(1432, 100)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "profit-loss.successive-discount",
+  "topic": "Profit & Loss",
+  "subtopic": "Successive discount",
+  "name": "Successive discounts / gains",
+  "statement": "\\text{single equivalent of } d_1,d_2=d_1+d_2-\\frac{d_1d_2}{100};\\ \\text{successive gains } a,b: a+b+\\frac{ab}{100}",
+  "conditions": [],
+  "derivation": [
+   "Discount $d_1$ leaves $(1-\\frac{d_1}{100})$ of MP; the second discount applies to that reduced price.",
+   "Remaining $= (1-\\frac{d_1}{100})(1-\\frac{d_2}{100}) = 1 - \\frac{d_1+d_2-d_1d_2/100}{100}$.",
+   "So the single equivalent discount is $d_1+d_2-\\frac{d_1d_2}{100}$.",
+   "For gains, $(1+\\frac a{100})(1+\\frac b{100})$ gives $a+b+\\frac{ab}{100}$."
+  ],
+  "visual_proof": "A 100 by 100 square with strips d₁ and d₂ cut off two sides; the corner piece d₁d₂/100 would be counted twice if the rates were added.",
+  "shortcut": "Remaining-fraction method: multiply $(100-d_1)\\%$ by $(100-d_2)\\%$, e.g. $0.85\\times0.8 = 0.68$ ⇒ 32% off.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q02",
+   "answer": "B",
+   "steps": [
+    "15% then 20%: $15 + 20 - \\frac{15\\times20}{100} = 32\\%$.",
+    "Difference from a flat 25% discount: $32 - 25 = 7\\%$ of the bill.",
+    "$7\\%$ of bill = ₹28, so bill = ₹400 (B)."
+   ]
+  },
+  "common_traps": [
+   "Adding the discounts: $15 + 20 = 35\\%$ (difference 10%, bill ₹280).",
+   "Applying the second discount to the original MP instead of the reduced price.",
+   "Using $+\\frac{d_1d_2}{100}$ for discounts (that sign is for gains)."
+  ],
+  "related_ids": [
+   "percentage.successive-change",
+   "profit-loss.discount-on-marked-price",
+   "profit-loss.markup-discount"
+  ],
+  "diagram": {
+   "alt_text": "A bill of 100 becomes 85 after 15% off, then 68 after 20% off: one equivalent discount of 32.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Bill",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       }
+      ]
+     },
+     {
+      "label": "After 15%",
+      "parts": [
+       {
+        "value": 85,
+        "label": "85"
+       },
+       {
+        "value": 15,
+        "label": "−15"
+       }
+      ]
+     },
+     {
+      "label": "After 20%",
+      "parts": [
+       {
+        "value": 68,
+        "label": "68"
+       },
+       {
+        "value": 17,
+        "label": "−17"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    d1, d2 = rq(0, 100), rq(0, 100)\n    MP = rq(1, 100000)\n    SP = MP * (1 - d1 / 100) * (1 - d2 / 100)\n    assert (MP - SP) / MP * 100 == d1 + d2 - d1 * d2 / 100\n    a, b = rq(0, 200), rq(0, 200)\n    assert ((1 + a / 100) * (1 + b / 100) - 1) * 100 == a + b + a * b / 100\n    n += 1\neq = F(15) + 20 - F(15 * 20, 100)\nassert eq == 32 and F(28) / ((eq - 25) / 100) == 400\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ },
+ {
+  "id": "profit-loss.false-weight",
+  "topic": "Profit & Loss",
+  "subtopic": "False weight",
+  "name": "False weights",
+  "statement": "\\text{gain}\\%=\\frac{\\text{true}-\\text{false}}{\\text{false}}\\times100;\\ \\text{with profit } p:\\ \\frac{SP}{CP}=(1+p)\\frac{\\text{true}}{\\text{false}}",
+  "conditions": [
+   "0 < \\text{false} \\leq \\text{true}",
+   "p \\text{ is the profit as a fraction of the stated price}"
+  ],
+  "derivation": [
+   "The customer pays for the true weight but receives only the false weight.",
+   "The seller's cost is for the false weight; the goods held back, $\\text{true}-\\text{false}$, are pure gain.",
+   "Gain % is on what was actually given (the cost): $\\frac{\\text{true}-\\text{false}}{\\text{false}}\\times100$.",
+   "If the stated price is also $(1+p)$ times cost, both effects multiply: $\\frac{SP}{CP} = (1+p)\\frac{\\text{true}}{\\text{false}}$."
+  ],
+  "visual_proof": "A 1 kg bar split into the 870 g actually given and the 130 g kept back; the gain is the kept piece over the given piece.",
+  "shortcut": "Gain % = $\\frac{\\text{error}}{\\text{true value} - \\text{error}}\\times100$ (200 g short per kg ⇒ $\\frac{200}{800} = 25\\%$).",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q01",
+   "answer": "B",
+   "steps": [
+    "Charged for 1000 g, gives 870 g: 130 g gained per 870 g given.",
+    "Gain % = $\\frac{130}{870}\\times100 = 14.94\\%$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Dividing by the true weight: $\\frac{130}{1000} = 13\\%$.",
+   "Adding the price profit and the weight profit instead of multiplying (20% + 25% = 45%, not 50%)."
+  ],
+  "related_ids": [
+   "profit-loss.profit-percent",
+   "percentage.successive-change"
+  ],
+  "diagram": {
+   "alt_text": "A 1,000 g bar split into 870 g given and 130 g held back; gain = 130/870 = 14.94%.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Claimed 1 kg",
+      "parts": [
+       {
+        "value": 870,
+        "label": "Given 870 g"
+       },
+       {
+        "value": 130,
+        "label": "Kept 130 g"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    true = rq(1, 2000)\n    false = true * rq(1, 100) / 100                # 0 < false <= true\n    rate = rq(1, 1000)                              # price per true unit, = CP per unit\n    cost_given = rate * false / true\n    gain = (rate - cost_given) / cost_given * 100\n    assert gain == (true - false) / false * 100\n    p = rq(-50, 100) / 100                          # profit on the stated price, as a fraction\n    sp = rate * (1 + p)\n    assert sp / cost_given == (1 + p) * true / false\n    n += 1\n# boundary: false = true gives 0% gain\nassert (F(1000) - 1000) / 1000 == 0\ng = (F(1000) - 870) / 870 * 100\nassert round(float(g), 2) == 14.94\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ }
+]

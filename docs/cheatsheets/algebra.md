@@ -1,0 +1,36 @@
+# Algebra: cheat sheet
+
+- [Linear equation in one variable](/formulas/algebra#linear-one-variable): $ax+b=c \Rightarrow x=\frac{c-b}{a}$
+  - Shortcut: With options given, substitute each option into the equation and keep the one that balances.
+- [Simultaneous linear equations](/formulas/algebra#linear-equations-system): $\text{eliminate or substitute; } x=\frac{c_1b_2-c_2b_1}{a_1b_2-a_2b_1};\ \text{cyclic 3-variable systems: add all equations first}$
+  - Shortcut: Count + value pair (coins, cups, tickets): assume all are the cheaper item, then (actual total − assumed total) ÷ (price difference) = number of dearer items.
+- [Unique / no / infinite solutions](/formulas/algebra#linear-system-consistency): $\frac{a_1}{a_2}\neq\frac{b_1}{b_2}: \text{unique};\ \frac{a_1}{a_2}=\frac{b_1}{b_2}\neq\frac{c_1}{c_2}: \text{none};\ \text{all equal}: \text{infinite}$
+  - Shortcut: 'Parallel' or 'no solution' → set $\frac{a_1}{a_2}=\frac{b_1}{b_2}$; 'infinite' or 'coincident' → also set it equal to $\frac{c_1}{c_2}$.
+- [Square of a sum / difference](/formulas/algebra#square-of-sum-difference): $(a\pm b)^2=a^2\pm2ab+b^2;\ (a+b)^2-(a-b)^2=4ab;\ (a+b+c)^2=\Sigma a^2+2\Sigma ab$
+  - Shortcut: Spot the pattern $x^2+y^2+z^2+2xy+2yz+2zx$ in a numeric expression and write it as $(x+y+z)^2$.
+- [Difference of squares](/formulas/algebra#difference-of-squares): $a^2-b^2=(a+b)(a-b);\ x^4+x^2+1=(x^2+1)^2-x^2=(x^2+x+1)(x^2-x+1)$
+  - Shortcut: $\frac{x^4+x^2+1}{x^2+x+1}=x^2-x+1$; and $(p+q)(p-q)$ with long $p$: square $p$ as a block, then subtract $q^2$.
+- [Cube of a sum / difference](/formulas/algebra#cube-of-sum): $(a\pm b)^3=a^3\pm b^3\pm3ab(a\pm b)$
+  - Shortcut: Given $a+b=s$ and $a^3+b^3=T$: $ab=\frac{s^3-T}{3s}$.
+- [Sum / difference of cubes](/formulas/algebra#sum-difference-of-cubes): $a^3\pm b^3=(a\pm b)(a^2\mp ab+b^2)$
+  - Shortcut: $\frac{a^3-b^3}{a^2+ab+b^2}=a-b$ and $\frac{a^3+b^3}{a^2-ab+b^2}=a+b$: read the answer straight off.
+- [a^3+b^3+c^3-3abc](/formulas/algebra#a3-b3-c3-3abc): $a^3+b^3+c^3-3abc=(a+b+c)(a^2+b^2+c^2-ab-bc-ca);\ a+b+c=0 \Rightarrow a^3+b^3+c^3=3abc$
+  - Shortcut: With sum $S$ and sum of squares $Q$: $ab+bc+ca=\frac{S^2-Q}{2}$ and $a^3+b^3+c^3-3abc=S\left(Q-\frac{S^2-Q}{2}\right)$.
+- [Sum of squares equals zero](/formulas/algebra#sum-of-squares-zero): $a^2+b^2+c^2=0 \Rightarrow a=b=c=0;\ a^2+b^2+c^2-ab-bc-ca=0 \Rightarrow a=b=c$
+  - Shortcut: Move everything to one side and complete squares: $(x-p)^2+(y-q)^2+\dots=0$ gives $x=p,\ y=q,\dots$ at once.
+- [x + 1/x squared](/formulas/algebra#reciprocal-square): $x^2+\frac1{x^2}=\left(x+\frac1x\right)^2-2=\left(x-\frac1x\right)^2+2;\ x+\frac1x=2 \Rightarrow x=1$
+  - Shortcut: $k=x+\frac1x$: $x^2+\frac1{x^2}=k^2-2$, $x^4+\frac1{x^4}=(k^2-2)^2-2$; and $\left(x-\frac1x\right)^2=k^2-4$.
+- [x + 1/x cubed](/formulas/algebra#reciprocal-cube): $x^3+\frac1{x^3}=k^3-3k \text{ where } k=x+\frac1x;\ x^3-\frac1{x^3}=m^3+3m,\ m=x-\frac1x$
+  - Shortcut: $x+\frac1x=k \Rightarrow x^3+\frac1{x^3}=k^3-3k$; for $x^6+\frac1{x^6}$ use $p=x^2+\frac1{x^2}$: $p^3-3p$.
+- [Factorising a quadratic](/formulas/algebra#quadratic-factorisation): $ax^2+bx+c=a(x-\alpha)(x-\beta),\ \alpha+\beta=-\tfrac ba,\ \alpha\beta=\tfrac ca$
+  - Shortcut: Monic $x^2+bx+c$: two numbers with product $c$ and sum $b$ give $(x+p)(x+q)$; when options list roots, test sum $=-\frac ba$ and product $=\frac ca$.
+- [Remainder theorem](/formulas/algebra#remainder-theorem): $p(x)\div(x-a) \text{ leaves remainder } p(a)$
+  - Shortcut: Divisor $x+2$ → substitute $x=-2$; to make $p(x)$ divisible, subtract $p(a)$ from it.
+- [Arithmetic progression](/formulas/algebra#arithmetic-progression): $a_n=a+(n-1)d;\ S_n=\frac n2[2a+(n-1)d]=\frac n2(a+l)$
+  - Shortcut: $S_n=n\times$ (middle term); a quadratic in $n$ can give two roots: keep the one where every term stays valid.
+- [AM >= GM >= HM](/formulas/algebra#am-gm-hm-inequality): $\frac{a+b}2\ge\sqrt{ab}\ge\frac{2ab}{a+b};\ (a_1+\dots+a_n)\left(\tfrac1{a_1}+\dots+\tfrac1{a_n}\right)\ge n^2$
+  - Shortcut: Fixed sum $S$ of $n$ positives: $\Sigma\frac1{a_i}\ge\frac{n^2}{S}$, minimum when all equal $\frac Sn$; fixed product: sum is least when all equal.
+- [Age ratios at two points in time](/formulas/algebra#age-ratio-time-shift): $\frac{a-t}{b-t}=\frac pq \text{ with } a=kx,\ b=lx;\ \text{the age difference never changes}$
+  - Shortcut: $x=\frac{t(q-p)}{kq-lp}$; or match differences: scale both ratios so $l-k$ equals $q-p$, then one ratio unit $=\frac{t}{\text{unit change}}$.
+- [Age multiples and linear relations](/formulas/algebra#age-linear-relations): $\text{If } A=mB \text{ now and } A+t=n(B+t),\ \text{then } B=\frac{(n-1)t}{m-n}$
+  - Shortcut: $B=\frac{(n-1)t}{m-n}$ at the first time point; for several people, write every age in one unknown and form one equation.

@@ -1,0 +1,411 @@
+[
+ {
+  "id": "counting.triangles",
+  "topic": "Counting Figures",
+  "subtopic": "Triangles",
+  "name": "Systematic triangle count",
+  "statement": "\\text{Label every point, then count triangles region by region or size by size; an apex joined to a base cut into } n \\text{ parts gives } \\tfrac{n(n+1)}{2}.",
+  "conditions": [],
+  "derivation": [
+   "Label every corner and crossing point.",
+   "A triangle is three labelled points, not in one line, joined pairwise by drawn straight lines.",
+   "Count smallest triangles first, then those made of 2, 3, ... pieces, so none is missed or repeated.",
+   "Apex rule: a base cut into $n$ parts has $n+1$ points; any 2 of them with the apex make a triangle: $\\binom{n+1}{2} = \\frac{n(n+1)}{2}$."
+  ],
+  "visual_proof": "The kite with its diagonal, two short verticals and the extended side: the four triangles are the small left one, the two kite halves and the small one below.",
+  "shortcut": "Apex over a base with $n$ parts: $\\frac{n(n+1)}{2}$ triangles; a square with both diagonals: 8.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R01",
+   "answer": "A",
+   "steps": [
+    "Ignore the semicircle: it gives no straight side.",
+    "Small triangle at the left cut off by the short vertical: 1.",
+    "The two halves of the kite on either side of the diagonal: 2.",
+    "Small triangle below the kite between the extended side and the right vertical: 1. Total 4 (A)."
+   ]
+  },
+  "common_traps": [
+   "Counting the quadrilateral left after cutting off the small triangle: gives 5 (D).",
+   "Counting the whole kite as a triangle: gives 5 or 6.",
+   "Using the semicircle as a side: adds false triangles."
+  ],
+  "related_ids": [
+   "counting.squares",
+   "counting.lines-shapes"
+  ],
+  "diagram": {
+   "alt_text": "Kite L, T, R, B with diagonal TB, a short vertical near L, side LB extended to E, and a vertical from side RB down to E.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "L": [
+      0,
+      0
+     ],
+     "T": [
+      4,
+      4
+     ],
+     "R": [
+      8,
+      0
+     ],
+     "B": [
+      4,
+      -4
+     ],
+     "E": [
+      6,
+      -6
+     ],
+     "P": [
+      2,
+      2
+     ],
+     "Q": [
+      2,
+      -2
+     ],
+     "U": [
+      6,
+      -2
+     ]
+    },
+    "segments": [
+     [
+      "L",
+      "T"
+     ],
+     [
+      "T",
+      "R"
+     ],
+     [
+      "R",
+      "B"
+     ],
+     [
+      "L",
+      "E"
+     ],
+     [
+      "T",
+      "B"
+     ],
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "U",
+      "E"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [],
+    "to_scale": false
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nfrom itertools import combinations\n\ndef cross(o, a, b):\n    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])\n\ndef on_seg(p, s):\n    a, b = s\n    return cross(a, b, p) == 0 and min(a[0], b[0]) <= p[0] <= max(a[0], b[0]) and min(a[1], b[1]) <= p[1] <= max(a[1], b[1])\n\ndef intersect(s, t):\n    (x1, y1), (x2, y2) = s\n    (x3, y3), (x4, y4) = t\n    d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)\n    if d == 0:\n        return None\n    u = F((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4), d)\n    p = (x1 + u * (x2 - x1), y1 + u * (y2 - y1))\n    return p if on_seg(p, s) and on_seg(p, t) else None\n\ndef count_triangles(segs):\n    segs = [tuple((F(x), F(y)) for x, y in s) for s in segs]\n    pts = {p for s in segs for p in s}\n    for s, t in combinations(segs, 2):\n        p = intersect(s, t)\n        if p is not None:\n            pts.add(p)\n    joined = lambda p, q: any(on_seg(p, s) and on_seg(q, s) for s in segs)\n    return sum(1 for a, b, c in combinations(sorted(pts), 3)\n               if cross(a, b, c) != 0 and joined(a, b) and joined(b, c) and joined(a, c))\n\n# 2024-09-09_1230_R01 (semicircle ignored; it makes no straight side)\nL, T, R, B, E = (0, 0), (4, 4), (8, 0), (4, -4), (6, -6)\nfig = [(L, T), (T, R), (R, B), (L, E), (T, B), ((2, 2), (2, -2)), ((6, -2), (6, -6))]\nn = count_triangles(fig)\noptions = {\"A\": 4, \"B\": 6, \"C\": 3, \"D\": 5}\nassert n == options[\"A\"] and [k for k, v in options.items() if v == n] == [\"A\"]\n# base-line rule: apex joined to every point of a base cut into k segments gives k(k+1)/2 triangles\nfor k in range(1, 8):\n    base = [((0, 0), (k, 0))]\n    rays = [((i, 0), (k // 2, 5)) for i in range(k + 1)]\n    assert count_triangles(base + rays) == k * (k + 1) // 2, k\n# square with both diagonals: 8 triangles\nassert count_triangles([((0, 0), (2, 0)), ((2, 0), (2, 2)), ((2, 2), (0, 2)), ((0, 2), (0, 0)),\n                        ((0, 0), (2, 2)), ((2, 0), (0, 2))]) == 8\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "counting.squares",
+  "topic": "Counting Figures",
+  "subtopic": "Squares/rectangles",
+  "name": "Square count by size",
+  "statement": "\\text{Count squares size by size; an } n\\times n \\text{ grid has } \\sum_{k=1}^{n} k^2 = \\frac{n(n+1)(2n+1)}{6} \\text{ squares.}",
+  "conditions": [],
+  "derivation": [
+   "Group squares by side length so each is counted once.",
+   "In an $n \\times n$ grid a $k \\times k$ square can start in $n-k+1$ columns and $n-k+1$ rows: $(n-k+1)^2$ squares.",
+   "Add over $k = 1..n$: $n^2 + (n-1)^2 + \\dots + 1^2 = \\frac{n(n+1)(2n+1)}{6}$.",
+   "In an irregular figure, also count squares made where two drawn squares overlap."
+  ],
+  "visual_proof": "A 3 × 3 grid shows 9 unit squares, 4 squares of side 2 and 1 of side 3: 14 = 1 + 4 + 9.",
+  "shortcut": "Grid: $1, 5, 14, 30, 55$ squares for $n = 1..5$.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_R10",
+   "answer": "B",
+   "steps": [
+    "Drawn squares: the big square, the separate top-left square, the corner square, the middle square: 4.",
+    "The bottom rectangle is split into 2 squares: 2.",
+    "Overlaps that are squares: top-left with the corner square 1, middle with each bottom square 2.",
+    "Total 4 + 2 + 3 = 9 (B)."
+   ]
+  },
+  "common_traps": [
+   "Missing the small overlap squares: gives 7 (C) or 8 (D).",
+   "Counting the bottom rectangle itself as a square: gives 10 (A).",
+   "Using $\\sum k^2$ on a figure that is not a full grid."
+  ],
+  "related_ids": [
+   "counting.triangles",
+   "counting.lines-shapes"
+  ],
+  "diagram": {
+   "alt_text": "Big square with a separate square at its top-left, a corner square inside, a middle square, and a bottom rectangle split into two squares.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A1": [
+      0,
+      0
+     ],
+     "A2": [
+      8,
+      0
+     ],
+     "A3": [
+      8,
+      -8
+     ],
+     "A4": [
+      0,
+      -8
+     ],
+     "B1": [
+      4,
+      -4
+     ],
+     "B2": [
+      24,
+      -4
+     ],
+     "B3": [
+      24,
+      -24
+     ],
+     "B4": [
+      4,
+      -24
+     ],
+     "C2": [
+      11,
+      -4
+     ],
+     "C3": [
+      11,
+      -11
+     ],
+     "C4": [
+      4,
+      -11
+     ],
+     "D1": [
+      12,
+      -12
+     ],
+     "D2": [
+      20,
+      -12
+     ],
+     "D3": [
+      20,
+      -20
+     ],
+     "D4": [
+      12,
+      -20
+     ],
+     "E1": [
+      8,
+      -16
+     ],
+     "E2": [
+      24,
+      -16
+     ],
+     "E3": [
+      8,
+      -24
+     ],
+     "S1": [
+      16,
+      -16
+     ],
+     "S2": [
+      16,
+      -24
+     ]
+    },
+    "segments": [
+     [
+      "A1",
+      "A2"
+     ],
+     [
+      "A2",
+      "A3"
+     ],
+     [
+      "A3",
+      "A4"
+     ],
+     [
+      "A4",
+      "A1"
+     ],
+     [
+      "B1",
+      "B2"
+     ],
+     [
+      "B2",
+      "B3"
+     ],
+     [
+      "B3",
+      "B4"
+     ],
+     [
+      "B4",
+      "B1"
+     ],
+     [
+      "C2",
+      "C3"
+     ],
+     [
+      "C3",
+      "C4"
+     ],
+     [
+      "D1",
+      "D2"
+     ],
+     [
+      "D2",
+      "D3"
+     ],
+     [
+      "D3",
+      "D4"
+     ],
+     [
+      "D4",
+      "D1"
+     ],
+     [
+      "E1",
+      "E2"
+     ],
+     [
+      "E1",
+      "E3"
+     ],
+     [
+      "S1",
+      "S2"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [],
+    "to_scale": false
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import combinations\n\ndef covered(a, b, segs, horizontal, at):\n    \"\"\"Is the straight piece from a to b (on line y=at if horizontal else x=at) fully drawn?\"\"\"\n    spans = sorted((min(s[0][0], s[1][0]), max(s[0][0], s[1][0])) if horizontal else\n                   (min(s[0][1], s[1][1]), max(s[0][1], s[1][1]))\n                   for s in segs\n                   if (horizontal and s[0][1] == s[1][1] == at) or (not horizontal and s[0][0] == s[1][0] == at))\n    reach = a\n    for lo, hi in spans:\n        if lo <= reach < hi:\n            reach = hi\n        if reach >= b:\n            return True\n    return reach >= b\n\ndef count_squares(segs):\n    xs = sorted({p[0] for s in segs for p in s})\n    ys = sorted({p[1] for s in segs for p in s})\n    by_size = {}\n    for x1, x2 in combinations(xs, 2):\n        k = x2 - x1\n        for y1 in ys:\n            y2 = y1 + k\n            if (covered(x1, x2, segs, True, y1) and covered(x1, x2, segs, True, y2)\n                    and covered(y1, y2, segs, False, x1) and covered(y1, y2, segs, False, x2)):\n                by_size[k] = by_size.get(k, 0) + 1\n    return by_size\n\ndef box(x1, y1, x2, y2):\n    return [((x1, y1), (x2, y1)), ((x2, y1), (x2, y2)), ((x2, y2), (x1, y2)), ((x1, y2), (x1, y1))]\n\n# 2024-09-12_1230_R10 (y downwards)\nfig = box(0, 0, 8, 8) + box(4, 4, 24, 24) + box(4, 4, 11, 11) + box(12, 12, 20, 20) + box(8, 16, 24, 24) + [((16, 16), (16, 24))]\nsizes = count_squares(fig)\nn = sum(sizes.values())\noptions = {\"A\": 10, \"B\": 9, \"C\": 7, \"D\": 8}\nassert n == options[\"B\"] and [k for k, v in options.items() if v == n] == [\"B\"], sizes\n# n x n grid: sum of k^2\nfor g in range(1, 7):\n    grid = [((0, i), (g, i)) for i in range(g + 1)] + [((i, 0), (i, g)) for i in range(g + 1)]\n    assert sum(count_squares(grid).values()) == sum(k * k for k in range(1, g + 1)) == g * (g + 1) * (2 * g + 1) // 6\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "counting.lines-shapes",
+  "topic": "Counting Figures",
+  "subtopic": "Other shapes",
+  "name": "Line and shape enumeration",
+  "statement": "\\text{Label points and list each line or shape once by its end points, grouped by direction or size.}",
+  "conditions": [],
+  "derivation": [
+   "Label every end point and crossing.",
+   "Name each line or shape by its end points; a straight line made of several pieces is still one line.",
+   "Group by direction (horizontal, vertical, slanted) or by size (small, medium, large).",
+   "Count each group and add; a name already on the list is not counted again."
+  ],
+  "visual_proof": "The canopy's diameter line holds three small, two medium and one large semicircle, plus one in the basket: 3 + 2 + 1 + 1.",
+  "shortcut": "On one line cut into $n$ equal parts with arcs on every run of parts, there are $n + (n-1) + \\dots + 1 = \\frac{n(n+1)}{2}$ semicircles.",
+  "worked_example": {
+   "question_key": "2024-09-19_1230_R20",
+   "answer": "C",
+   "steps": [
+    "Small semicircles on the top diameter: 3.",
+    "Medium ones, each spanning two small: 2; the large one over the whole top: 1.",
+    "One semicircle in the basket: 1.",
+    "Total 3 + 2 + 1 + 1 = 7 (C)."
+   ]
+  },
+  "common_traps": [
+   "Missing the basket semicircle: gives 6 (A).",
+   "Missing the two medium arcs: gives 5 (B).",
+   "Counting a straight line twice because a crossing splits it: inflates the count."
+  ],
+  "related_ids": [
+   "counting.triangles",
+   "counting.squares"
+  ],
+  "diagram": {
+   "alt_text": "Table of semicircles by size: 3 small, 2 medium, 1 large on the canopy and 1 in the basket, total 7.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Group",
+     "End points",
+     "Count"
+    ],
+    "rows": [
+     [
+      "Small",
+      "0-2, 2-4, 4-6",
+      "3"
+     ],
+     [
+      "Medium",
+      "0-4, 2-6",
+      "2"
+     ],
+     [
+      "Large",
+      "0-6",
+      "1"
+     ],
+     [
+      "Basket",
+      "its own diameter",
+      "1"
+     ],
+     [
+      "Total",
+      "",
+      "7"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nfrom itertools import combinations\n\ndef semicircles(arcs):\n    \"\"\"arcs: drawn semicircles given by the two ends of their diameter. List each once by its end points.\"\"\"\n    found = {tuple(sorted(a)) for a in arcs}\n    groups = {}\n    for a, b in found:\n        r = abs(F(b[0]) - F(a[0])) / 2\n        groups.setdefault(r, []).append((a, b))\n    return found, groups\n\n# 2024-09-19_1230_R20: canopy diameter 0..6 on y=0, basket diameter on y=-10\ncanopy = [((0, 0), (2, 0)), ((2, 0), (4, 0)), ((4, 0), (6, 0)),     # three small\n          ((0, 0), (4, 0)), ((2, 0), (6, 0)),                       # two medium\n          ((0, 0), (6, 0)),                                         # one large\n          ((6, 0), (0, 0))]                                         # the large one met again from the other end\nbasket = [((1.5, -10), (4.5, -10))]\nfound, groups = semicircles(canopy + basket)\nn = len(found)\noptions = {\"A\": 6, \"B\": 5, \"C\": 7, \"D\": 8}\nassert n == options[\"C\"] and [k for k, v in options.items() if v == n] == [\"C\"]\nassert sorted(len(v) for v in groups.values()) == [1, 1, 2, 3]   # sizes 1.5, 1, 2, 3 radii -> 1, 3, 2, 1\n\n# straight lines: merge collinear overlapping pieces, then count each line once by its end points\ndef lines(segs):\n    def key(s):\n        (x1, y1), (x2, y2) = s\n        a, b = y2 - y1, x1 - x2\n        c = a * x1 + b * y1\n        from math import gcd\n        g = gcd(gcd(a, b), c) or 1\n        if a < 0 or (a == 0 and b < 0):\n            g = -g\n        return (a // g, b // g, c // g)\n    by_line = {}\n    for s in segs:\n        p, q = sorted(s)\n        by_line.setdefault(key(s), []).append((p, q))\n    total = 0\n    for pieces in by_line.values():\n        pieces.sort()\n        end = None\n        for p, q in pieces:\n            if end is None or p > end:\n                total += 1\n                end = q\n            else:\n                end = max(end, q)\n    return total\n\n# a square with both diagonals drawn as 4 half-diagonals: 4 sides + 2 diagonals = 6 lines\nsq = [((0, 0), (2, 0)), ((2, 0), (2, 2)), ((2, 2), (0, 2)), ((0, 2), (0, 0)),\n      ((0, 0), (1, 1)), ((1, 1), (2, 2)), ((2, 0), (1, 1)), ((1, 1), (0, 2))]\nassert lines(sq) == 6\n# a triangle with a median split into two pieces: 3 sides + 1 median\nassert lines([((0, 0), (4, 0)), ((4, 0), (2, 4)), ((2, 4), (0, 0)), ((2, 4), (2, 2)), ((2, 2), (2, 0))]) == 4\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

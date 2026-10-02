@@ -71,7 +71,8 @@ def verification(q: dict, status: str = "KEY_CONFIRMED_DUAL") -> dict:
             "verifications": [dict(run, solver_id="a"), dict(run, solver_id="b")]}
 
 
-def write_data(root: Path, questions: list[dict], verifications: list[dict], queue: list[dict] = ()) -> Path:
+def write_data(root: Path, questions: list[dict], verifications: list[dict], queue: list[dict] = (),
+               decisions: list[dict] = ()) -> Path:
     manifest = {"sources": [
         {"date": "09.09.2024", "time_slot": "0900", "filename": "sheet.pdf", "stored_path": "data/raw/sheet.pdf",
          "sha256": "0" * 64, "key_status": "unknown", "accepted": True},
@@ -85,6 +86,8 @@ def write_data(root: Path, questions: list[dict], verifications: list[dict], que
     (root / "questions" / "review_queue.json").write_text(json.dumps(list(queue)))
     (root / "solver" / "verifications" / f"{PAPER}.jsonl").write_text(
         "".join(json.dumps(v) + "\n" for v in verifications))
+    (root / "review").mkdir(exist_ok=True)
+    (root / "review" / "decisions.jsonl").write_text("".join(json.dumps(d) + "\n" for d in decisions))
     return root
 
 
@@ -197,3 +200,33 @@ def test_discarded_solver_verdicts_stop_counting(session, tmp_path, bank):
     session.commit()
     assert report.counts["key statuses withdrawn"] == 1
     assert session.get(Mock, f"{PAPER}_QUANT").status == "DRAFT"
+
+
+def decision(q: dict, action: str, answer: str | None) -> dict:
+    return {"paper_id": q["paper_id"], "section": q["section"], "q_no": q["q_no"],
+            "question_id": q["ssc_question_id"], "question_version": content_hash(q),
+            "official_answer": q["official_answer"], "status_before": "KEY_DISPUTED", "action": action,
+            "answer": answer, "note": "", "decided_at": "2026-10-01T00:00:00Z"}
+
+
+@pytest.mark.parametrize("action,answer", [("approve", "C"), ("edit", "B")])
+def test_review_decision_confirms_key_and_publishes(session, tmp_path, bank, action, answer):
+    quant, reasoning, verifs = bank
+    data = write_data(tmp_path, quant + reasoning, verifs, decisions=[decision(reasoning[24], action, answer)])
+    load_all(session, data)
+    session.commit()
+    assert session.get(Mock, f"{PAPER}_REASONING").status == "PUBLISHED"
+    q = session.scalar(select(Question).where(Question.mock_id == f"{PAPER}_REASONING", Question.q_no == 25))
+    assert (q.current_version.official_answer, q.current_version.key_status) == (answer, "KEY_CONFIRMED_REVIEW")
+    assert len(q.versions) == (2 if action == "edit" else 1)
+    item = session.scalar(select(ReviewItem).where(ReviewItem.question_id == q.id))
+    assert item.status == {"approve": "APPROVED", "edit": "EDITED"}[action]
+    assert load_all(session, data).changed == 0
+
+
+def test_rejected_question_keeps_mock_unpublished(session, tmp_path, bank):
+    quant, reasoning, verifs = bank
+    load_all(session, write_data(tmp_path, quant + reasoning, verifs,
+                                 decisions=[decision(reasoning[24], "reject", None)]))
+    session.commit()
+    assert session.get(Mock, f"{PAPER}_REASONING").status == "DRAFT"

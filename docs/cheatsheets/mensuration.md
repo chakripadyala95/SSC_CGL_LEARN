@@ -1,0 +1,30 @@
+# Mensuration: cheat sheet
+
+- [Circle area and circumference](/formulas/mensuration#circle-area-circumference): $A=\pi r^2,\ C=2\pi r;\ \text{ring}=\pi(R^2-r^2)$
+  - Shortcut: Circumferences add like radii ($R=r_1+r_2$); areas add like squares ($R^2=r_1^2+r_2^2$, e.g. $8,15\to17$).
+- [Arc length and sector perimeter](/formulas/mensuration#arc-length): $l=\frac{\theta}{360^\circ}2\pi r;\ \text{sector perimeter}=2r+l$
+  - Shortcut: In radians $l=r\theta$; $30^\circ$ arc $=\frac{\pi r}{6}$, $60^\circ$ arc $=\frac{\pi r}{3}$.
+- [Area of a sector](/formulas/mensuration#sector-area): $A=\frac{\theta}{360^\circ}\pi r^2=\frac12 lr$
+  - Shortcut: Arc and radius given: $A=\frac12 lr$ directly, no angle needed.
+- [Clock hand angles](/formulas/mensuration#clock-hand-angle): $\text{minute hand: } 6^\circ/\text{min};\ \text{hour hand: } 0.5^\circ/\text{min};\ \theta=|30H-5.5M|$
+  - Shortcut: The minute hand gains $5.5^\circ$ per minute on the hour hand; it turns $90^\circ$ every 15 min.
+- [Area of a triangle](/formulas/mensuration#triangle-area): $A=\frac12 bh$
+  - Shortcut: Right triangle: $\frac12\times$ leg $\times$ leg; with two sides and the included angle, $\frac12 ab\sin C$.
+- [Heron's formula](/formulas/mensuration#heron-formula): $A=\sqrt{s(s-a)(s-b)(s-c)},\ s=\frac{a+b+c}2$
+  - Shortcut: Isosceles (equal sides $a$, base $b$): $A=\frac b4\sqrt{4a^2-b^2}$.
+- [Equilateral triangle area and height](/formulas/mensuration#equilateral-triangle): $A=\frac{\sqrt3}4a^2,\ h=\frac{\sqrt3}2a$
+  - Shortcut: $h\approx0.866a$; from the height, $a=\frac{2h}{\sqrt3}$ and $A=\frac{h^2}{\sqrt3}$.
+- [Quadrilateral areas](/formulas/mensuration#quadrilateral-areas): $\text{rectangle } lb,\ P=2(l+b);\ \text{parallelogram } bh;\ \text{rhombus } \tfrac12d_1d_2;\ \text{trapezium } \tfrac12(a+b)h$
+  - Shortcut: Rectangle from perimeter and difference: $l=\frac{P/2+(l-b)}{2}$, $b=\frac{P/2-(l-b)}{2}$.
+- [Cylinder volume and surface area](/formulas/mensuration#cylinder): $V=\pi r^2h;\ CSA=2\pi rh;\ TSA=2\pi r(r+h)$
+  - Shortcut: For ratios, drop $\pi$: $V\propto r^2h$, $CSA\propto rh$.
+- [Cone volume and surface area](/formulas/mensuration#cone): $l=\sqrt{r^2+h^2};\ V=\tfrac13\pi r^2h;\ CSA=\pi rl;\ TSA=\pi r(r+l)$
+  - Shortcut: For ratios: $V\propto r^2h$, so $h_1:h_2=\frac{V_1}{r_1^2}:\frac{V_2}{r_2^2}$. Triples to spot: (7, 24, 25), (5, 12, 13), (8, 15, 17).
+- [Volume unit conversion](/formulas/mensuration#unit-conversion): $1\ \text{m}^3=1000\ \text{L};\ 1\ \text{L}=1000\ \text{cm}^3$
+  - Shortcut: cm³ → L: ÷1000; m³ → L: ×1000; $1\text{ m}^3=10^6\text{ cm}^3$ (cube the length factor).
+- [Cube and cuboid volume and surface area](/formulas/mensuration#cube-cuboid): $\text{cuboid } V=lbh,\ TSA=2(lb+bh+hl),\ LSA=2h(l+b);\ \text{cube } V=a^3,\ TSA=6a^2$
+  - Shortcut: $n$ equal cubes of side $a$ in a row: $TSA=(4n+2)a^2$.
+- [Diagonal of a cuboid / cube](/formulas/mensuration#cuboid-diagonal): $d=\sqrt{l^2+b^2+h^2};\ \text{cube: } a\sqrt3$
+  - Shortcut: Longest stick in a box = space diagonal; cube: $a\sqrt3$, face diagonal $a\sqrt2$.
+- [Sphere and hemisphere](/formulas/mensuration#sphere-hemisphere): $\text{sphere } V=\tfrac43\pi r^3,\ S=4\pi r^2;\ \text{hemisphere } V=\tfrac23\pi r^3,\ TSA=3\pi r^2$
+  - Shortcut: Radii ratio $k$: surface ratio $k^2$, volume ratio $k^3$.

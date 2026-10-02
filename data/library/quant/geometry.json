@@ -1,0 +1,3317 @@
+[
+ {
+  "id": "geometry.triangle-angle-sum",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Angle sums (lines, triangle, polygon)",
+  "statement": "\\text{angles on a line}=180^\\circ;\\ \\triangle: A+B+C=180^\\circ;\\ n\\text{-gon}: (n-2)180^\\circ",
+  "conditions": [
+   "n \\ge 3 \\text{ (a polygon has at least 3 sides)}"
+  ],
+  "derivation": [
+   "A straight line is a half-turn, so angles on one side of it at a point add to $180^\\circ$.",
+   "Through the apex $P$ draw a line parallel to $QR$.",
+   "Alternate angles: the two outer angles at $P$ equal $\\angle Q$ and $\\angle R$.",
+   "Those two plus $\\angle P$ lie on the straight line: $P+Q+R=180^\\circ$.",
+   "Diagonals from one vertex cut an $n$-gon into $n-2$ triangles, so the angle sum is $(n-2)\\times180^\\circ$."
+  ],
+  "visual_proof": "A line through the apex parallel to the base copies the two base angles beside the apex angle (alternate angles), and the three together make a straight line.",
+  "shortcut": "Each interior angle of a regular $n$-gon $=\\frac{(n-2)180^\\circ}{n}$; each exterior angle $=\\frac{360^\\circ}{n}$.",
+  "worked_example": {
+   "question_key": "2024-09-19_0900_Q06",
+   "answer": "A",
+   "steps": [
+    "Write all in terms of $Q$: $P=Q+20$, $R=Q-26$.",
+    "$(Q+20)+Q+(Q-26)=180 \\Rightarrow 3Q=186$, $Q=62^\\circ$.",
+    "$P=62+20=82^\\circ$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Taking R = Q + 26 instead of Q - 26 gives 3Q = 134 and a non-option.",
+   "Stopping at Q = 62° and not finding P.",
+   "Using n × 180° for a polygon instead of (n - 2) × 180° (overshoots by 360°)."
+  ],
+  "related_ids": [
+   "geometry.exterior-angle",
+   "geometry.isosceles-triangle",
+   "geometry.incentre-angle"
+  ],
+  "diagram": {
+   "alt_text": "Triangle PQR with angle Q 62°, R 36°, P 82°. A line XY through P parallel to QR shows 62° and 36° beside the 82° at P, together a straight angle.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "P": [
+      1.67,
+      3.14
+     ],
+     "Q": [
+      0,
+      0
+     ],
+     "R": [
+      6,
+      0
+     ],
+     "X": [
+      -1.5,
+      3.14
+     ],
+     "Y": [
+      5,
+      3.14
+     ]
+    },
+    "segments": [
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "Q",
+      "R"
+     ],
+     [
+      "R",
+      "P"
+     ],
+     [
+      "X",
+      "Y"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "Q",
+      "from": "R",
+      "to": "P",
+      "label": "62°",
+      "right": false
+     },
+     {
+      "at": "R",
+      "from": "P",
+      "to": "Q",
+      "label": "36°",
+      "right": false
+     },
+     {
+      "at": "P",
+      "from": "Q",
+      "to": "R",
+      "label": "82°",
+      "right": false
+     },
+     {
+      "at": "P",
+      "from": "X",
+      "to": "Q",
+      "label": "62°",
+      "right": false
+     },
+     {
+      "at": "P",
+      "from": "R",
+      "to": "Y",
+      "label": "36°",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       3.2,
+       3.4
+      ],
+      "text": "XY ∥ QR"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math, random\nimport sympy as sp\nrandom.seed(0)\n\ndef angle(at, p, q):\n    v1 = (p[0] - at[0], p[1] - at[1]); v2 = (q[0] - at[0], q[1] - at[1])\n    c = (v1[0] * v2[0] + v1[1] * v2[1]) / (math.hypot(*v1) * math.hypot(*v2))\n    return math.degrees(math.acos(max(-1.0, min(1.0, c))))\n\n# triangle: A + B + C = 180 on random triangles\nfor _ in range(2000):\n    A, B, C = [(random.uniform(-10, 10), random.uniform(-10, 10)) for _ in range(3)]\n    area2 = abs((B[0]-A[0])*(C[1]-A[1]) - (C[0]-A[0])*(B[1]-A[1]))\n    if area2 < 1e-3:\n        continue\n    assert math.isclose(angle(A, B, C) + angle(B, A, C) + angle(C, A, B), 180, abs_tol=1e-7)\n\n# angles on a line: a ray from a point on a line splits 180\nfor _ in range(500):\n    t = random.uniform(0.01, math.pi - 0.01)\n    O, L, R, P = (0, 0), (-1, 0), (1, 0), (math.cos(t), math.sin(t))\n    assert math.isclose(angle(O, L, P) + angle(O, P, R), 180, abs_tol=1e-7)\n\n# convex n-gon: interior angle sum = (n-2)*180\nfor _ in range(500):\n    n = random.randint(3, 12)\n    ts = sorted(random.uniform(0, 2 * math.pi) for _ in range(n))\n    if min((ts[(i + 1) % n] - ts[i]) % (2 * math.pi) for i in range(n)) < 1e-3:\n        continue\n    pts = [(math.cos(t), math.sin(t)) for t in ts]\n    s = sum(angle(pts[i], pts[i - 1], pts[(i + 1) % n]) for i in range(n))\n    assert math.isclose(s, (n - 2) * 180, abs_tol=1e-6)\n\n# worked example: P - Q = 20, Q - R = 26\nP, Q, R = sp.symbols(\"P Q R\")\nsol = sp.solve([P + Q + R - 180, P - Q - 20, Q - R - 26], [P, Q, R])\nassert sol == {P: 82, Q: 62, R: 36}\nassert [82, 46, 52, 92].index(sol[P]) == 0          # option A\n\n# boundary n = 3: the polygon formula gives the triangle sum; n = 2 gives 0 (no polygon)\nf = lambda n: (n - 2) * 180\nassert f(3) == 180 and f(4) == 360 and f(2) == 0\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:14+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.exterior-angle",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Exterior angle theorem",
+  "statement": "\\text{exterior angle}=\\text{sum of the two interior opposite angles}",
+  "conditions": [],
+  "derivation": [
+   "Produce $BC$ to $D$; $\\angle ACD$ is the exterior angle at $C$.",
+   "On the line: $\\angle ACD = 180^\\circ - \\angle ACB$.",
+   "Angle sum: $\\angle A + \\angle B = 180^\\circ - \\angle ACB$ ([[f:geometry.triangle-angle-sum]]).",
+   "Same right-hand side, so $\\angle ACD = \\angle A + \\angle B$."
+  ],
+  "visual_proof": "A line through C parallel to BA splits the exterior angle into a copy of angle A (alternate angles) and a copy of angle B (corresponding angles).",
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-25_0900_Q10",
+   "answer": "B",
+   "steps": [
+    "$AC=BC$, so $\\angle ABC=\\angle BAC=70^\\circ$.",
+    "Exterior angle: $\\angle ACD = 70^\\circ+70^\\circ = 140^\\circ$.",
+    "$\\angle ACD-\\angle ABC = 140^\\circ-70^\\circ = 70^\\circ$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Adding the adjacent interior angle (angle C) instead of the two opposite ones.",
+   "Setting the equal angles opposite the wrong sides: AC = BC makes angles A and B equal, not A and C.",
+   "Answering ∠ACD = 140° when the question asks for a difference."
+  ],
+  "related_ids": [
+   "geometry.triangle-angle-sum",
+   "geometry.isosceles-triangle"
+  ],
+  "diagram": {
+   "alt_text": "Triangle ABC with AC = BC, BC produced to D. Angles A and B are 70° each and the exterior angle ACD is 140°.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "B": [
+      0,
+      0
+     ],
+     "C": [
+      5,
+      0
+     ],
+     "A": [
+      1.17,
+      3.21
+     ],
+     "D": [
+      8,
+      0
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "D"
+     ],
+     [
+      "C",
+      "A"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "B",
+      "from": "C",
+      "to": "A",
+      "label": "70°",
+      "right": false
+     },
+     {
+      "at": "A",
+      "from": "B",
+      "to": "C",
+      "label": "70°",
+      "right": false
+     },
+     {
+      "at": "C",
+      "from": "D",
+      "to": "A",
+      "label": "140°",
+      "right": false
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math, random\nrandom.seed(0)\n\ndef angle(at, p, q):\n    v1 = (p[0] - at[0], p[1] - at[1]); v2 = (q[0] - at[0], q[1] - at[1])\n    c = (v1[0] * v2[0] + v1[1] * v2[1]) / (math.hypot(*v1) * math.hypot(*v2))\n    return math.degrees(math.acos(max(-1.0, min(1.0, c))))\n\nfor _ in range(2000):\n    A, B, C = [(random.uniform(-10, 10), random.uniform(-10, 10)) for _ in range(3)]\n    if abs((B[0]-A[0])*(C[1]-A[1]) - (C[0]-A[0])*(B[1]-A[1])) < 1e-3:\n        continue\n    s = random.uniform(0.1, 3)\n    D = (C[0] + s * (C[0] - B[0]), C[1] + s * (C[1] - B[1]))     # BC produced to D\n    assert math.isclose(angle(C, A, D), angle(A, B, C) + angle(B, A, C), abs_tol=1e-7)\n\n# worked example: AC = BC, angle BAC = 70\nB_ = 70                     # angle ABC = angle BAC (opposite equal sides)\nACD = 70 + B_               # exterior angle at C\nassert ACD - B_ == 70       # option B\n# check on coordinates: C at origin, CB and CA length 5, angle ACB = 40\nC = (0.0, 0.0); Bp = (-5.0, 0.0); A = (-5 * math.cos(math.radians(40)), 5 * math.sin(math.radians(40))); D = (3.0, 0.0)\nassert math.isclose(angle(Bp, A, C), 70, abs_tol=1e-9) and math.isclose(angle(C, A, D), 140, abs_tol=1e-9)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:15+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.isosceles-triangle",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Isosceles triangle properties",
+  "statement": "AB=AC \\Rightarrow \\angle B=\\angle C;\\ \\text{altitude from } A \\text{ bisects } BC \\text{ and } \\angle A",
+  "conditions": [],
+  "derivation": [
+   "Drop $AD \\perp BC$.",
+   "$\\triangle ABD$ and $\\triangle ACD$: hypotenuses $AB=AC$, leg $AD$ common, so congruent by RHS ([[f:geometry.congruence-criteria]]).",
+   "Corresponding parts: $\\angle B=\\angle C$, $BD=DC$, $\\angle BAD=\\angle CAD$.",
+   "Converse: $\\angle B=\\angle C \\Rightarrow AB=AC$ (equal angles face equal sides)."
+  ],
+  "visual_proof": "Fold the triangle along the altitude from the apex: the two halves match exactly, so the base angles coincide and the foot is the midpoint of the base.",
+  "shortcut": "Apex angle $=180^\\circ-2\\times$base angle; base angle $=\\frac{180^\\circ-\\text{apex}}{2}$.",
+  "worked_example": {
+   "question_key": "2024-09-24_0900_Q15",
+   "answer": "D",
+   "steps": [
+    "$XY=XZ$, so $\\angle Z=\\angle Y=80^\\circ$.",
+    "$\\angle X=180^\\circ-2\\times80^\\circ=20^\\circ$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Taking 80° as the apex angle and halving: (180 - 80)/2 = 50° (option C).",
+   "Equal angles sit opposite the equal sides; with XY = XZ they are at Y and Z, not at X.",
+   "Two radii of a circle make an isosceles triangle; missing this stalls circle questions."
+  ],
+  "related_ids": [
+   "geometry.triangle-angle-sum",
+   "geometry.pythagoras",
+   "geometry.circle-basics"
+  ],
+  "diagram": {
+   "alt_text": "Isosceles triangle XYZ with XY = XZ, base angles Y and Z of 80°, apex angle X of 20°, and the altitude XM meeting YZ at its midpoint M at a right angle.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "Y": [
+      0,
+      0
+     ],
+     "Z": [
+      2,
+      0
+     ],
+     "X": [
+      1,
+      5.67
+     ],
+     "M": [
+      1,
+      0
+     ]
+    },
+    "segments": [
+     [
+      "X",
+      "Y"
+     ],
+     [
+      "Y",
+      "Z"
+     ],
+     [
+      "Z",
+      "X"
+     ],
+     [
+      "X",
+      "M"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "Y",
+      "from": "Z",
+      "to": "X",
+      "label": "80°",
+      "right": false
+     },
+     {
+      "at": "Z",
+      "from": "X",
+      "to": "Y",
+      "label": "80°",
+      "right": false
+     },
+     {
+      "at": "X",
+      "from": "Y",
+      "to": "Z",
+      "label": "20°",
+      "right": false
+     },
+     {
+      "at": "M",
+      "from": "Z",
+      "to": "X",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nm, y = sp.symbols(\"m y\", positive=True)\nx = sp.symbols(\"x\", real=True)\nB, C = sp.Matrix([0, 0]), sp.Matrix([2 * m, 0])\nA = sp.Matrix([x, y])\n# AB = AC forces A onto the perpendicular bisector of BC\nxs = sp.solve(sp.Eq((A - B).dot(A - B), (A - C).dot(A - C)), x)\nassert xs == [m]\nA = A.subs(x, m)\n\ndef cosang(at, p, q):\n    u, v = p - at, q - at\n    return sp.simplify(u.dot(v) / sp.sqrt(u.dot(u) * v.dot(v)))\n\nassert sp.simplify(cosang(B, A, C) - cosang(C, A, B)) == 0         # angle B = angle C\nD = sp.Matrix([m, 0])                                              # foot of altitude from A\nassert sp.simplify((A - D).dot(C - B)) == 0                        # AD is perpendicular to BC\nassert D == (B + C) / 2                                            # it bisects BC\nassert sp.simplify(cosang(A, B, D) - cosang(A, C, D)) == 0         # and bisects angle A\n\n# worked example: XY = XZ, angle Y = 80\nX = 180 - 2 * 80\nassert X == 20 and [\"30\", \"40\", \"50\", \"20\"].index(str(X)) == 3     # option D\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:15+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.equilateral-triangle",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Equilateral triangle properties",
+  "statement": "h=\\frac{\\sqrt3}2a;\\ R=\\frac a{\\sqrt3},\\ r=\\frac a{2\\sqrt3};\\ \\text{a chord equal to the radius subtends } 60^\\circ",
+  "conditions": [],
+  "derivation": [
+   "All sides $a$, all angles $60^\\circ$; the altitude bisects the base.",
+   "Half-triangle: $h^2=a^2-\\left(\\frac a2\\right)^2=\\frac{3a^2}{4}$, so $h=\\frac{\\sqrt3}{2}a$.",
+   "Centroid, circumcentre and incentre coincide and split $h$ as $2:1$ ([[f:geometry.median-apollonius]]).",
+   "$R=\\frac23h=\\frac{a}{\\sqrt3}$, $r=\\frac13h=\\frac{a}{2\\sqrt3}$, so $R=2r$.",
+   "A chord equal to the radius makes a triangle with two radii that has all sides equal, so the angle at the centre is $60^\\circ$."
+  ],
+  "visual_proof": "The altitude splits the triangle into two 30-60-90 halves with sides a/2, h, a; the centre sits on the altitude one-third of the way up.",
+  "shortcut": "$h:R:r=3:2:1$; chord of central angle $\\theta$ in a circle of radius $R$ is $2R\\sin\\frac\\theta2$.",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q25",
+   "answer": "C",
+   "steps": [
+    "$PQ=QR=7=$ radius, so $\\angle POQ=\\angle QOR=60^\\circ$.",
+    "$\\angle POR=120^\\circ$.",
+    "$PR=2\\times7\\times\\sin60^\\circ=7\\sqrt3=\\frac{21}{\\sqrt3}$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Adding chords: PR = 14 is wrong because P, Q, R are not collinear.",
+   "Mixing up R and r: R = a/√3 is twice r = a/(2√3).",
+   "Not rationalising: 7√3 appears as 21/√3 in the options."
+  ],
+  "related_ids": [
+   "mensuration.equilateral-triangle",
+   "geometry.pythagoras",
+   "geometry.central-angle-theorem"
+  ],
+  "diagram": {
+   "alt_text": "Circle with centre O and radius 7. Chords PQ and QR each equal 7, so angles POQ and QOR are 60° each, and chord PR subtends 120°.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "P": [
+      -6.06,
+      3.5
+     ],
+     "Q": [
+      0,
+      7
+     ],
+     "R": [
+      6.06,
+      3.5
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "P"
+     ],
+     [
+      "O",
+      "Q"
+     ],
+     [
+      "O",
+      "R"
+     ],
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "Q",
+      "R"
+     ],
+     [
+      "P",
+      "R"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 7
+     }
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "P",
+      "to": "Q",
+      "label": "60°",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "Q",
+      "to": "R",
+      "label": "60°",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       -3.6,
+       5.6
+      ],
+      "text": "7"
+     },
+     {
+      "at": [
+       3.6,
+       5.6
+      ],
+      "text": "7"
+     },
+     {
+      "at": [
+       0,
+       3.0
+      ],
+      "text": "PR = 7√3"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na = sp.symbols(\"a\", positive=True)\nB, C, A = sp.Matrix([0, 0]), sp.Matrix([a, 0]), sp.Matrix([a / 2, sp.sqrt(3) * a / 2])\nfor P, Q in [(A, B), (B, C), (C, A)]:\n    assert sp.simplify((P - Q).norm() - a) == 0\nh = A[1]\nassert sp.simplify(h - sp.sqrt(3) / 2 * a) == 0\nG = (A + B + C) / 3                       # centroid = circumcentre = incentre\nR = sp.simplify((A - G).norm())\nassert all(sp.simplify((P - G).norm() - R) == 0 for P in (B, C))\nassert sp.simplify(R - a / sp.sqrt(3)) == 0\nr = G[1]                                  # distance from G to side BC (on the x-axis)\nassert sp.simplify(r - a / (2 * sp.sqrt(3))) == 0\nassert sp.simplify(R - 2 * r) == 0 and sp.simplify(h - (R + r)) == 0\n\n# chord = radius subtends 60 degrees: chord = 2 R sin(theta/2)\nRr, th = sp.symbols(\"R theta\", positive=True)\nsols = sp.solve(sp.Eq(2 * Rr * sp.sin(th / 2), Rr), th)\nassert sp.pi / 3 in sols and all(s >= sp.pi / 3 for s in sols)\n\n# worked example: radius 7, PQ = QR = 7 -> angle POR = 120\nPR = 2 * 7 * sp.sin(sp.pi / 3)\nopts = {\"A\": 28 / sp.sqrt(3), \"B\": 14 / sp.sqrt(3), \"C\": 21 / sp.sqrt(3), \"D\": 7 / sp.sqrt(3)}\nassert [k for k, v in opts.items() if sp.simplify(v - PR) == 0] == [\"C\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:15+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.pythagoras",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Pythagoras theorem",
+  "statement": "c^2=a^2+b^2;\\ 45\\text{-}45\\text{-}90 \\text{ sides } 1:1:\\sqrt2",
+  "conditions": [],
+  "derivation": [
+   "Four copies of the right triangle placed in a square of side $a+b$ leave a tilted square of side $c$ in the middle.",
+   "Big square: $(a+b)^2=4\\cdot\\frac{ab}{2}+c^2$.",
+   "$a^2+2ab+b^2=2ab+c^2 \\Rightarrow c^2=a^2+b^2$.",
+   "Isosceles right triangle: $c^2=a^2+a^2$, so $c=a\\sqrt2$.",
+   "Converse: if $a^2+b^2=c^2$ the angle opposite $c$ is $90^\\circ$."
+  ],
+  "visual_proof": "Four copies of the triangle inside a square of side a + b leave a central square of area c²; rearranged they leave squares a² and b² instead.",
+  "shortcut": "Triplets: $3,4,5$; $5,12,13$; $8,15,17$; $7,24,25$; $9,40,41$ and their multiples.",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q06",
+   "answer": "D",
+   "steps": [
+    "$PQ=PR$, so the altitude $PT$ bisects $QR$ ([[f:geometry.isosceles-triangle]]).",
+    "$QT=\\sqrt{17^2-15^2}=\\sqrt{64}=8$ (triplet 8, 15, 17).",
+    "$QR=2\\times8=16$ cm (D)."
+   ]
+  },
+  "common_traps": [
+   "Stopping at QT = 8 (option A) and forgetting QR = 2 × QT.",
+   "Adding squares when the hypotenuse is known: √(17² + 15²) is not a leg.",
+   "In the converse test, the largest number must be c: check 5² + 12² = 13², not 5² + 13²."
+  ],
+  "related_ids": [
+   "geometry.isosceles-triangle",
+   "geometry.altitude-on-hypotenuse",
+   "trigonometry.right-triangle-ratios"
+  ],
+  "diagram": {
+   "alt_text": "Isosceles triangle PQR with PQ = PR = 17, altitude PT = 15 meeting QR at right angles, QT = TR = 8.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "Q": [
+      -8,
+      0
+     ],
+     "R": [
+      8,
+      0
+     ],
+     "T": [
+      0,
+      0
+     ],
+     "P": [
+      0,
+      15
+     ]
+    },
+    "segments": [
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "Q",
+      "R"
+     ],
+     [
+      "R",
+      "P"
+     ],
+     [
+      "P",
+      "T"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "T",
+      "from": "R",
+      "to": "P",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       -5,
+       8
+      ],
+      "text": "17"
+     },
+     {
+      "at": [
+       5,
+       8
+      ],
+      "text": "17"
+     },
+     {
+      "at": [
+       0.8,
+       7
+      ],
+      "text": "15"
+     },
+     {
+      "at": [
+       -4,
+       -0.8
+      ],
+      "text": "8"
+     },
+     {
+      "at": [
+       4,
+       -0.8
+      ],
+      "text": "8"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b = sp.symbols(\"a b\", positive=True)\nC, A, B = sp.Matrix([0, 0]), sp.Matrix([b, 0]), sp.Matrix([0, a])     # right angle at C\nc2 = (A - B).dot(A - B)\nassert sp.simplify(c2 - (a**2 + b**2)) == 0\n# 45-45-90: legs a, a -> hypotenuse a*sqrt2\nassert sp.simplify(sp.sqrt(c2.subs(b, a)) - sp.sqrt(2) * a) == 0\n# converse: a^2 + b^2 = c^2 gives a right angle (cos C = 0 by the cosine rule)\nx, y, z = sp.symbols(\"x y z\", positive=True)\ncosC = (x**2 + y**2 - z**2) / (2 * x * y)\nassert sp.simplify(cosC.subs(z, sp.sqrt(x**2 + y**2))) == 0\n\n# worked example: PQ = PR = 17, PT = 15, PT perpendicular to QR\nQT = sp.sqrt(17**2 - 15**2)\nassert QT == 8 and 2 * QT == 16          # option D\n# the set question: only {5,12,13} satisfies the converse\nsets = {\"A\": (5, 10, 12), \"B\": (3, 4, 6), \"C\": (5, 12, 13), \"D\": (8, 15, 16)}\nassert [k for k, (p, q, r) in sets.items() if p * p + q * q == r * r] == [\"C\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:16+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.triangle-inequality",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Triangle inequality",
+  "statement": "|b-c|<a<b+c",
+  "conditions": [
+   "a, b, c > 0",
+   "\\text{equality } a=b+c \\text{ or } a=|b-c| \\text{ means the points are collinear: no triangle}"
+  ],
+  "derivation": [
+   "The straight segment is the shortest path between two points, so $a<b+c$.",
+   "Apply the same to side $b$: $b<a+c$, so $a>b-c$; with side $c$: $a>c-b$.",
+   "Together: $|b-c|<a<b+c$.",
+   "At $a=b+c$ the third vertex lies on the segment: the triangle flattens into a line."
+  ],
+  "visual_proof": "Hinge sides b and c at a vertex: closing the hinge shrinks the third side towards |b - c|, opening it flat stretches it towards b + c, and neither end is a real triangle.",
+  "shortcut": "Integer third side with sides $p<q$: values $q-p+1,\\dots,p+q-1$, count $=2p-1$. Each side $<$ half the perimeter.",
+  "worked_example": {
+   "question_key": "2024-09-17_1600_Q04",
+   "answer": "A",
+   "steps": [
+    "$12-6<x<12+6 \\Rightarrow 6<x<18$.",
+    "Integers $x=7,8,\\dots,17$.",
+    "Count $=17-7+1=11$ (A); check $2p-1=2\\times6-1=11$."
+   ]
+  },
+  "common_traps": [
+   "Using ≤ instead of <: counting 6 and 18 gives 13.",
+   "Counting 17 - 7 = 10 (option C) instead of 17 - 7 + 1 = 11.",
+   "Testing a smaller side against the other two proves nothing: test the largest side against the sum of the other two."
+  ],
+  "related_ids": [
+   "geometry.pythagoras",
+   "geometry.triangle-angle-sum",
+   "mensuration.heron-formula"
+  ],
+  "diagram": {
+   "alt_text": "Triangle with sides 6 and 12 hinged at a vertex and third side x; labels show 6 < x < 18.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "B": [
+      0,
+      0
+     ],
+     "C": [
+      12,
+      0
+     ],
+     "A": [
+      3.33,
+      4.99
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "A"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       1.2,
+       2.8
+      ],
+      "text": "6"
+     },
+     {
+      "at": [
+       6,
+       -0.8
+      ],
+      "text": "12"
+     },
+     {
+      "at": [
+       8,
+       3
+      ],
+      "text": "x"
+     },
+     {
+      "at": [
+       6,
+       6.2
+      ],
+      "text": "12 − 6 < x < 12 + 6"
+     }
+    ],
+    "to_scale": false
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef exists(a, b, c):\n    # a triangle with these sides exists iff the cosine rule gives -1 < cos A < 1\n    cosA = (b * b + c * c - a * a) / (2 * b * c)\n    return -1 < cosA < 1\n\nn = 0\nfor _ in range(3000):\n    a, b, c = (F(random.randint(1, 400), random.randint(1, 20)) for _ in range(3))\n    assert exists(a, b, c) == (abs(b - c) < a < b + c)\n    assert (abs(b - c) < a < b + c) == (a < b + c and b < c + a and c < a + b)\n    n += 1\n\n# boundaries: a = b + c and a = |b - c| are degenerate (collinear points, no triangle)\nfor _ in range(200):\n    b, c = F(random.randint(1, 100)), F(random.randint(1, 100))\n    assert not exists(b + c, b, c)                 # cos A = -1: A is a straight angle\n    if b != c:\n        assert not exists(abs(b - c), b, c)        # cos A = +1\n    assert exists(b + c - F(1, 1000), b, c)\n# worked example: sides 6, 12, x -> 6 < x < 18\nxs = [x for x in range(1, 40) if exists(F(x), F(6), F(12))]\nassert xs == list(range(7, 18)) and len(xs) == 11   # option A\n# 11 + 13 = 24: X, Y, Z collinear\nassert not exists(F(24), F(11), F(13))\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:16+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.altitude-on-hypotenuse",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Altitude on the hypotenuse",
+  "statement": "h=\\frac{ab}{c};\\ h^2=pq \\text{ (segments of the hypotenuse)}",
+  "conditions": [],
+  "derivation": [
+   "Area two ways: $\\frac12ab=\\frac12ch$, so $h=\\frac{ab}{c}$.",
+   "The altitude splits the triangle into two triangles similar to it and to each other (AA).",
+   "In the two small triangles: $\\frac{h}{p}=\\frac{q}{h}$, so $h^2=pq$.",
+   "Same similarity gives each leg: $b^2=pc$, $a^2=qc$."
+  ],
+  "visual_proof": "The altitude from the right angle cuts the triangle into two smaller copies of itself; matching their sides gives h² = pq.",
+  "shortcut": "Altitude $=$ geometric mean of the two hypotenuse pieces: $h=\\sqrt{pq}$.",
+  "worked_example": {
+   "question_key": "2024-09-17_1230_Q11",
+   "answer": "B",
+   "steps": [
+    "$AM=18-6=12$ cm.",
+    "$CM^2=AM\\cdot BM=12\\times6=72$.",
+    "$CM=\\sqrt{72}=6\\sqrt2$ cm (B)."
+   ]
+  },
+  "common_traps": [
+   "Using the whole hypotenuse AB in place of AM: √(18 × 6) = 6√3, not CM.",
+   "Using the arithmetic mean (12 + 6)/2 = 9 instead of √(12 × 6).",
+   "Mixing up the leg rule: BC² = BM × AB, not BM × AM."
+  ],
+  "related_ids": [
+   "geometry.pythagoras",
+   "geometry.similar-triangles",
+   "mensuration.triangle-area"
+  ],
+  "diagram": {
+   "alt_text": "Right triangle ABC with the right angle at C, hypotenuse AB = 18, and altitude CM to AB with AM = 12, BM = 6 and CM = 6√2.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "B": [
+      18,
+      0
+     ],
+     "M": [
+      12,
+      0
+     ],
+     "C": [
+      12,
+      8.49
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "A"
+     ],
+     [
+      "C",
+      "M"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "C",
+      "from": "A",
+      "to": "B",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "M",
+      "from": "B",
+      "to": "C",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       6,
+       -0.9
+      ],
+      "text": "12"
+     },
+     {
+      "at": [
+       15,
+       -0.9
+      ],
+      "text": "6"
+     },
+     {
+      "at": [
+       12.9,
+       4.2
+      ],
+      "text": "6√2"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na, b = sp.symbols(\"a b\", positive=True)\nC, A, B = sp.Matrix([0, 0]), sp.Matrix([b, 0]), sp.Matrix([0, a])   # right angle at C, BC = a, CA = b\nc = sp.sqrt(a**2 + b**2)\nt = sp.symbols(\"t\")\nM = A + t * (B - A)\ntm = sp.solve(sp.Eq((M - C).dot(B - A), 0), t)[0]\nM = M.subs(t, tm)                          # foot of the perpendicular from C\nh = sp.sqrt(sp.simplify((M - C).dot(M - C)))\nassert sp.simplify(h - a * b / c) == 0\np = sp.sqrt(sp.simplify((A - M).dot(A - M)))   # AM\nq = sp.sqrt(sp.simplify((B - M).dot(B - M)))   # BM\nassert sp.simplify(h**2 - p * q) == 0\nassert sp.simplify(p + q - c) == 0\nassert sp.simplify(b**2 - p * c) == 0 and sp.simplify(a**2 - q * c) == 0   # leg^2 = adjacent segment x hypotenuse\n\n# worked example: AB = 18, BM = 6\nCM = sp.sqrt((18 - 6) * 6)\nassert sp.simplify(CM - 6 * sp.sqrt(2)) == 0          # option B\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:16+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.angle-bisector-theorem",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Angle bisector theorem",
+  "statement": "\\frac{BD}{DC}=\\frac{AB}{AC}",
+  "conditions": [],
+  "derivation": [
+   "$AD$ bisects $\\angle A$ and meets $BC$ at $D$.",
+   "$\\triangle ABD$ and $\\triangle ACD$ share the height from $A$, so $\\frac{[ABD]}{[ACD]}=\\frac{BD}{DC}$.",
+   "With $\\frac12\\cdot\\text{side}\\cdot AD\\sin\\frac A2$: $\\frac{[ABD]}{[ACD]}=\\frac{AB}{AC}$.",
+   "Equate: $\\frac{BD}{DC}=\\frac{AB}{AC}$."
+  ],
+  "visual_proof": "The bisector foot D is equally far from AB and AC, so the two parts of the triangle have areas in the ratio AB : AC, and with a common apex these areas are also in the ratio BD : DC.",
+  "shortcut": "$BD=\\frac{AB}{AB+AC}\\cdot BC$, $DC=\\frac{AC}{AB+AC}\\cdot BC$.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_Q04",
+   "answer": "B",
+   "steps": [
+    "$EN:NF=DE:DF=36:40=9:10$.",
+    "$NF=\\frac{10}{19}\\times38=20$ cm (B)."
+   ]
+  },
+  "common_traps": [
+   "Swapping the sides: NF goes with DF (the adjacent side), not DE; the swap gives 18 (option A).",
+   "Assuming the bisector hits the midpoint: 19 is not true unless DE = DF.",
+   "Using the ratio of the angles instead of the sides."
+  ],
+  "related_ids": [
+   "geometry.incentre-angle",
+   "geometry.similar-triangles",
+   "geometry.median-apollonius"
+  ],
+  "diagram": {
+   "alt_text": "Triangle DEF with DE = 36, DF = 40, EF = 38; the bisector of angle D meets EF at N, with EN = 18 and NF = 20.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "E": [
+      0,
+      0
+     ],
+     "F": [
+      9.5,
+      0
+     ],
+     "D": [
+      3.75,
+      8.18
+     ],
+     "N": [
+      4.5,
+      0
+     ]
+    },
+    "segments": [
+     [
+      "D",
+      "E"
+     ],
+     [
+      "E",
+      "F"
+     ],
+     [
+      "F",
+      "D"
+     ],
+     [
+      "D",
+      "N"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "D",
+      "from": "E",
+      "to": "N",
+      "label": "θ",
+      "right": false
+     },
+     {
+      "at": "D",
+      "from": "N",
+      "to": "F",
+      "label": "θ",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       1.2,
+       4.4
+      ],
+      "text": "36"
+     },
+     {
+      "at": [
+       7.4,
+       4.4
+      ],
+      "text": "40"
+     },
+     {
+      "at": [
+       2.25,
+       -0.8
+      ],
+      "text": "18"
+     },
+     {
+      "at": [
+       7,
+       -0.8
+      ],
+      "text": "20"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nb, c = sp.symbols(\"b c\", positive=True)\nth = sp.symbols(\"theta\", positive=True)\nA = sp.Matrix([0, 0])\nB = sp.Matrix([c, 0])                                  # AB = c\nC = sp.Matrix([b * sp.cos(th), b * sp.sin(th)])        # AC = b, angle A = theta\nu = sp.Matrix([1, 0]) + sp.Matrix([sp.cos(th), sp.sin(th)])   # bisector direction\ns, t = sp.symbols(\"s t\")\nsol = sp.solve(list(s * u - (B + t * (C - B))), [s, t], dict=True)[0]\nD = B + sol[t] * (C - B)\n# BD/DC = t/(1-t) on BC\nassert sp.simplify(sol[t] / (1 - sol[t]) - c / b) == 0\n\n# worked example: DE = 36, DF = 40, EF = 38\nNF = sp.Rational(38 * 40, 36 + 40)\nassert NF == 20                                         # option B\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:17+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.incentre-angle",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Angle at the incentre",
+  "statement": "\\angle BIC=90^\\circ+\\frac{\\angle A}2",
+  "conditions": [],
+  "derivation": [
+   "$I$ is where the bisectors of $\\angle B$ and $\\angle C$ meet.",
+   "In $\\triangle BIC$: $\\angle BIC=180^\\circ-\\frac B2-\\frac C2$.",
+   "$\\frac{B+C}{2}=\\frac{180^\\circ-A}{2}=90^\\circ-\\frac A2$.",
+   "$\\angle BIC=180^\\circ-90^\\circ+\\frac A2=90^\\circ+\\frac A2$."
+  ],
+  "visual_proof": "Triangle BIC keeps only half of angles B and C; the missing halves add to 90° - A/2, which the angle at I picks up.",
+  "shortcut": "Incentre $90^\\circ+\\frac A2$; excentre $90^\\circ-\\frac A2$; orthocentre $180^\\circ-A$; circumcentre $2A$.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_Q13",
+   "answer": "C",
+   "steps": [
+    "$O$ is the incentre: $\\angle QOR=90^\\circ+\\frac P2$.",
+    "$107=90+\\frac P2 \\Rightarrow \\frac P2=17^\\circ$.",
+    "$\\angle P=34^\\circ$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Stopping at P/2 = 17° (option D).",
+   "Using 180° - 107° = 73° as if O were the orthocentre.",
+   "Using the external-bisector formula 90° - A/2 and getting a negative angle."
+  ],
+  "related_ids": [
+   "geometry.angle-bisector-theorem",
+   "geometry.triangle-angle-sum",
+   "geometry.central-angle-theorem"
+  ],
+  "diagram": {
+   "alt_text": "Triangle PQR with angle P = 34°. The bisectors of angles Q and R meet at the incentre O, and angle QOR = 107°.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "Q": [
+      0,
+      0
+     ],
+     "R": [
+      6,
+      0
+     ],
+     "P": [
+      3.19,
+      9.81
+     ],
+     "O": [
+      3.05,
+      2.22
+     ]
+    },
+    "segments": [
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "Q",
+      "R"
+     ],
+     [
+      "R",
+      "P"
+     ],
+     [
+      "Q",
+      "O"
+     ],
+     [
+      "R",
+      "O"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "P",
+      "from": "Q",
+      "to": "R",
+      "label": "34°",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "Q",
+      "to": "R",
+      "label": "107°",
+      "right": false
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math, random\nrandom.seed(0)\n\ndef angle(at, p, q):\n    v1 = (p[0] - at[0], p[1] - at[1]); v2 = (q[0] - at[0], q[1] - at[1])\n    cs = (v1[0] * v2[0] + v1[1] * v2[1]) / (math.hypot(*v1) * math.hypot(*v2))\n    return math.degrees(math.acos(max(-1.0, min(1.0, cs))))\n\nfor _ in range(2000):\n    A, B, C = [(random.uniform(-10, 10), random.uniform(-10, 10)) for _ in range(3)]\n    if abs((B[0]-A[0])*(C[1]-A[1]) - (C[0]-A[0])*(B[1]-A[1])) < 1e-2:\n        continue\n    a, b, c = math.dist(B, C), math.dist(C, A), math.dist(A, B)\n    I = tuple((a * A[i] + b * B[i] + c * C[i]) / (a + b + c) for i in range(2))\n    # I lies on the bisectors of B and C\n    assert math.isclose(angle(B, A, I), angle(B, I, C), abs_tol=1e-6)\n    assert math.isclose(angle(C, A, I), angle(C, I, B), abs_tol=1e-6)\n    assert math.isclose(angle(I, B, C), 90 + angle(A, B, C) / 2, abs_tol=1e-6)\n\n# worked example: angle QOR = 107\nP = 2 * (107 - 90)\nassert P == 34                                    # option C\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:17+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.median-apollonius",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Medians and Apollonius theorem",
+  "statement": "AB^2+AC^2=2(AD^2+BD^2);\\ \\text{centroid divides each median } 2:1",
+  "conditions": [],
+  "derivation": [
+   "$D$ is the midpoint of $BC$; put $D$ at the origin, $B=(-m,0)$, $C=(m,0)$, $A=(x,y)$.",
+   "$AB^2+AC^2=(x+m)^2+y^2+(x-m)^2+y^2=2(x^2+y^2)+2m^2$.",
+   "$x^2+y^2=AD^2$ and $m^2=BD^2$, so $AB^2+AC^2=2(AD^2+BD^2)$.",
+   "Median length: $m_a^2=\\frac{2b^2+2c^2-a^2}{4}$.",
+   "Centroid $G=\\frac{A+B+C}{3}$ lies on $AD$ with $AG:GD=2:1$."
+  ],
+  "visual_proof": "Mirror the triangle in D to get a parallelogram ABA'C: its diagonals are 2AD and BC, and the sum of the squares of a parallelogram's diagonals equals the sum of the squares of its four sides.",
+  "shortcut": "Equal medians $\\Leftrightarrow$ equal opposite sides; three equal medians $\\Rightarrow$ equilateral.",
+  "worked_example": {
+   "question_key": "2024-09-23_1230_Q06",
+   "answer": "D",
+   "steps": [
+    "$m_a^2-m_b^2=\\frac{(2b^2+2c^2-a^2)-(2c^2+2a^2-b^2)}{4}=\\frac34(b^2-a^2)$.",
+    "$m_a=m_b \\Rightarrow a=b$; likewise $m_b=m_c \\Rightarrow b=c$.",
+    "$a=b=c$: equilateral (D)."
+   ]
+  },
+  "common_traps": [
+   "Using BC² instead of BD² = (BC/2)² inside the bracket.",
+   "Dropping the factor 2 on the right side.",
+   "Reversing the centroid ratio: the longer part (2) is from the vertex, AG = 2/3 of AD."
+  ],
+  "related_ids": [
+   "geometry.midpoint-bpt",
+   "geometry.equilateral-triangle",
+   "geometry.pythagoras"
+  ],
+  "diagram": {
+   "alt_text": "Triangle ABC with median AD to the midpoint D of BC and centroid G on AD, AG : GD = 2 : 1.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      1,
+      4
+     ],
+     "B": [
+      0,
+      0
+     ],
+     "C": [
+      6,
+      0
+     ],
+     "D": [
+      3,
+      0
+     ],
+     "G": [
+      2.33,
+      1.33
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "A"
+     ],
+     [
+      "A",
+      "D"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       1.4,
+       0.5
+      ],
+      "text": "BD = DC"
+     },
+     {
+      "at": [
+       2.1,
+       2.9
+      ],
+      "text": "2"
+     },
+     {
+      "at": [
+       2.9,
+       0.8
+      ],
+      "text": "1"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nx1, y1, x2, y2, x3, y3 = sp.symbols(\"x1 y1 x2 y2 x3 y3\", real=True)\nA, B, C = sp.Matrix([x1, y1]), sp.Matrix([x2, y2]), sp.Matrix([x3, y3])\nsq = lambda v: v.dot(v)\nD = (B + C) / 2\nassert sp.expand(sq(A - B) + sq(A - C) - 2 * (sq(A - D) + sq(B - D))) == 0\nG = (A + B + C) / 3\nassert sp.simplify(G - A - sp.Rational(2, 3) * (D - A)) == sp.zeros(2, 1)       # AG : GD = 2 : 1\na2, b2, c2 = sq(B - C), sq(C - A), sq(A - B)\nassert sp.expand(sq(A - D) - (2 * b2 + 2 * c2 - a2) / 4) == 0                    # median length\n\n# worked example: equal medians -> equilateral\na, b, c = sp.symbols(\"a b c\", positive=True)\nma2 = (2 * b**2 + 2 * c**2 - a**2) / 4\nmb2 = (2 * c**2 + 2 * a**2 - b**2) / 4\nmc2 = (2 * a**2 + 2 * b**2 - c**2) / 4\nassert sp.factor(ma2 - mb2) == sp.factor(sp.Rational(3, 4) * (b**2 - a**2))\nassert sp.solve([ma2 - mb2, mb2 - mc2], [a, b], dict=True) == [{a: c, b: c}]   # option D\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:17+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.midpoint-bpt",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Midpoint theorem and BPT",
+  "statement": "DE\\parallel BC \\Rightarrow \\frac{AD}{DB}=\\frac{AE}{EC};\\ \\text{midpoint join}\\parallel\\text{third side}=\\tfrac12\\text{ of it}",
+  "conditions": [],
+  "derivation": [
+   "$DE\\parallel BC$ makes $\\triangle ADE\\sim\\triangle ABC$ (corresponding angles).",
+   "So $\\frac{AD}{AB}=\\frac{AE}{AC}=\\frac{DE}{BC}$ ([[f:geometry.similar-triangles]]).",
+   "Subtract from 1: $\\frac{DB}{AB}=\\frac{EC}{AC}$; divide the two: $\\frac{AD}{DB}=\\frac{AE}{EC}$.",
+   "Midpoints: $\\frac{AD}{AB}=\\frac12$, so $DE\\parallel BC$ and $DE=\\frac12BC$.",
+   "Converse: equal ratios $\\frac{AD}{DB}=\\frac{AE}{EC}$ force $DE\\parallel BC$."
+  ],
+  "visual_proof": "The line joining the midpoints of two sides cuts off a half-size copy of the triangle, so its base is half the third side and parallel to it.",
+  "shortcut": "The three midpoint joins split the triangle into 4 congruent triangles, each $\\frac14$ of the area; the medial triangle has half the perimeter.",
+  "worked_example": {
+   "question_key": "2024-09-25_1600_Q25",
+   "answer": "C",
+   "steps": [
+    "$S$, $T$ are midpoints of $PQ$, $PR$, so $ST\\parallel QR$.",
+    "$ST=\\frac12QR=\\frac12\\times12=6$ cm (C)."
+   ]
+  },
+  "common_traps": [
+   "Writing AD/AB = AE/EC: mixing a part-to-whole ratio with a part-to-part ratio.",
+   "Halving the area as well as the side: the medial triangle has 1/4 of the area, not 1/2.",
+   "Applying the theorem when DE is not parallel to BC."
+  ],
+  "related_ids": [
+   "geometry.similar-triangles",
+   "geometry.median-apollonius",
+   "geometry.congruence-criteria"
+  ],
+  "diagram": {
+   "alt_text": "Triangle PQR with S and T the midpoints of PQ and PR. ST is parallel to QR; QR = 12 and ST = 6.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "P": [
+      4,
+      8
+     ],
+     "Q": [
+      0,
+      0
+     ],
+     "R": [
+      12,
+      0
+     ],
+     "S": [
+      2,
+      4
+     ],
+     "T": [
+      8,
+      4
+     ]
+    },
+    "segments": [
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "Q",
+      "R"
+     ],
+     [
+      "R",
+      "P"
+     ],
+     [
+      "S",
+      "T"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       6,
+       -0.9
+      ],
+      "text": "12"
+     },
+     {
+      "at": [
+       5,
+       4.6
+      ],
+      "text": "6"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nx1, y1, x2, y2, x3, y3 = sp.symbols(\"x1 y1 x2 y2 x3 y3\", real=True)\nt = sp.symbols(\"t\", positive=True)\nA, B, C = sp.Matrix([x1, y1]), sp.Matrix([x2, y2]), sp.Matrix([x3, y3])\nD = A + t * (B - A)\nE = A + t * (C - A)\nassert sp.simplify((E - D) - t * (C - B)) == sp.zeros(2, 1)      # DE parallel to BC, DE = t*BC\n# AD/DB = AE/EC = t/(1-t)\nassert sp.simplify((D - A) - t / (1 - t) * (B - D)) == sp.zeros(2, 1)\nassert sp.simplify((E - A) - t / (1 - t) * (C - E)) == sp.zeros(2, 1)\n# midpoints (t = 1/2): DE parallel to BC and half of it\nDm, Em = (A + B) / 2, (A + C) / 2\nassert sp.simplify(Em - Dm - (C - B) / 2) == sp.zeros(2, 1)\n# converse direction of BPT: if AD/DB = AE/EC = k then DE is parallel to BC\nk = sp.symbols(\"k\", positive=True)\nD2, E2 = (A + k * B) / (1 + k), (A + k * C) / (1 + k)\nassert sp.simplify(E2 - D2 - k / (1 + k) * (C - B)) == sp.zeros(2, 1)\n\n# worked example: QR = 12, S and T midpoints of PQ, PR\nassert sp.Rational(12, 2) == 6                                       # option C\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:18+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.similar-triangles",
+  "topic": "Geometry",
+  "subtopic": "Triangles",
+  "name": "Similar triangles: ratios",
+  "statement": "\\triangle\\sim\\triangle' \\Rightarrow \\frac{\\text{sides}}{\\text{sides}'}=\\frac{\\text{perimeters}}{\\text{perimeters}'}=\\frac{\\text{altitudes}}{\\text{altitudes}'}=k,\\ \\frac{\\text{areas}}{\\text{areas}'}=k^2",
+  "conditions": [],
+  "derivation": [
+   "Similar triangles (AA, SAS or SSS similarity) are scaled copies: every length is multiplied by $k$.",
+   "Perimeter is a sum of sides, so it scales by $k$.",
+   "Altitudes, medians, bisectors and inradius are lengths too: ratio $k$.",
+   "Area $=\\frac12\\times\\text{base}\\times\\text{height}$ picks up $k\\cdot k=k^2$."
+  ],
+  "visual_proof": "Enlarge a triangle by factor k: each side and height stretches by k, and the area grid of unit squares grows by k in both directions, k² in all.",
+  "shortcut": "Area ratio $\\to$ side ratio: take the square root ($\\frac{A_1}{A_2}=\\frac{49}{64}\\Rightarrow k=\\frac78$).",
+  "worked_example": {
+   "question_key": "2024-09-13_1600_Q05",
+   "answer": "B",
+   "steps": [
+    "$\\triangle RST\\sim\\triangle ABC$: $k=\\frac{26}{39}=\\frac23$.",
+    "$RS=k\\cdot AB=\\frac23\\times24=16$ cm (B)."
+   ]
+  },
+  "common_traps": [
+   "Inverting k: 24 × 39/26 = 36 (option D).",
+   "Using k² for sides or k for areas.",
+   "Matching the wrong sides: correspondence follows the order of vertices (RS ↔ AB)."
+  ],
+  "related_ids": [
+   "geometry.midpoint-bpt",
+   "geometry.altitude-on-hypotenuse",
+   "geometry.congruence-criteria"
+  ],
+  "diagram": {
+   "alt_text": "Triangle ABC with AB = 24 and perimeter 39 beside a smaller similar triangle RST with RS = 16 and perimeter 26, scale factor 2/3.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "B": [
+      12,
+      0
+     ],
+     "C": [
+      4.5,
+      6
+     ],
+     "R": [
+      15,
+      0
+     ],
+     "S": [
+      23,
+      0
+     ],
+     "T": [
+      18,
+      4
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "A"
+     ],
+     [
+      "R",
+      "S"
+     ],
+     [
+      "S",
+      "T"
+     ],
+     [
+      "T",
+      "R"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       6,
+       -0.9
+      ],
+      "text": "AB = 24"
+     },
+     {
+      "at": [
+       19,
+       -0.9
+      ],
+      "text": "RS = 16"
+     },
+     {
+      "at": [
+       4.5,
+       7
+      ],
+      "text": "perimeter 39"
+     },
+     {
+      "at": [
+       18,
+       5
+      ],
+      "text": "perimeter 26"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nx1, y1, x2, y2, x3, y3, tx, ty, phi = sp.symbols(\"x1 y1 x2 y2 x3 y3 tx ty phi\", real=True)\nk = sp.symbols(\"k\", positive=True)\nP = [sp.Matrix([x1, y1]), sp.Matrix([x2, y2]), sp.Matrix([x3, y3])]\nRm = sp.Matrix([[sp.cos(phi), -sp.sin(phi)], [sp.sin(phi), sp.cos(phi)]])\nQ = [k * Rm * p + sp.Matrix([tx, ty]) for p in P]     # similar copy, scale factor k\nsq = lambda v: sp.simplify(v.dot(v))\nfor i in range(3):\n    j = (i + 1) % 3\n    assert sp.simplify(sq(Q[i] - Q[j]) - k**2 * sq(P[i] - P[j])) == 0      # each side x k (so perimeter x k)\narea = lambda T: ((T[1][0] - T[0][0]) * (T[2][1] - T[0][1]) - (T[2][0] - T[0][0]) * (T[1][1] - T[0][1])) / 2\nassert sp.simplify(area(Q) - k**2 * area(P)) == 0                            # area x k^2\n# altitude to a side = 2*area/side -> scales by k^2/k = k\nh2 = lambda T: (2 * area(T))**2 / sq(T[1] - T[2])\nassert sp.simplify(h2(Q) - k**2 * h2(P)) == 0\n\n# worked example: perimeters 26 and 39, AB = 24\nRS = sp.Rational(24 * 26, 39)\nassert RS == 16                                                              # option B\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:19+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.congruence-criteria",
+  "topic": "Geometry",
+  "subtopic": "Congruence",
+  "name": "Congruence criteria and CPCT",
+  "statement": "SSS,\\ SAS,\\ ASA,\\ AAS,\\ RHS \\Rightarrow \\text{corresponding parts are equal (CPCT)};\\ SSA, AAA \\text{ are not criteria}",
+  "conditions": [],
+  "derivation": [
+   "SSS: the cosine rule turns three sides into three fixed angles, so the shape is fixed.",
+   "SAS: two sides and the included angle fix the third side (cosine rule).",
+   "ASA / AAS: two angles fix the third ($180^\\circ$ sum); one side then fixes the rest (sine rule).",
+   "RHS: hypotenuse and a leg fix the other leg (Pythagoras).",
+   "SSA fails: the side opposite the angle can swing to two positions; AAA fails: scaling keeps the angles."
+  ],
+  "visual_proof": "For SSA, a circle of radius BC round B cuts the other arm of angle A at two points, giving two different triangles with the same two sides and angle.",
+  "shortcut": "Congruent $\\Rightarrow$ equal area and perimeter; the converse is false.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q05",
+   "answer": "B",
+   "steps": [
+    "Two sides equal and same perimeter: third side $=$ perimeter $-$ the two sides, also equal.",
+    "Three sides equal: congruent by SSS (B).",
+    "A, C, D fail: one side and angle, or the same base and height (so the same area), allow different shapes."
+   ]
+  },
+  "common_traps": [
+   "Treating SSA (two sides and a non-included angle) as SAS.",
+   "Treating AAA as a criterion: it gives similar, not congruent, triangles.",
+   "Equal area does not mean congruent: same base and height fit infinitely many triangles."
+  ],
+  "related_ids": [
+   "geometry.similar-triangles",
+   "geometry.isosceles-triangle",
+   "geometry.midpoint-bpt"
+  ],
+  "diagram": {
+   "alt_text": "Why SSA fails: angle A is 30°, AB = 10 and a circle of radius 6 about B cuts the base ray at C1 and C2, giving two different triangles with the same two sides and angle.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "B": [
+      8.66,
+      5
+     ],
+     "C1": [
+      5.34,
+      0
+     ],
+     "C2": [
+      11.98,
+      0
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "A",
+      "C2"
+     ],
+     [
+      "B",
+      "C1"
+     ],
+     [
+      "B",
+      "C2"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "B",
+      "radius": 6
+     }
+    ],
+    "angles": [
+     {
+      "at": "A",
+      "from": "C2",
+      "to": "B",
+      "label": "30°",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       3.8,
+       3.2
+      ],
+      "text": "10"
+     },
+     {
+      "at": [
+       6.4,
+       2.2
+      ],
+      "text": "6"
+     },
+     {
+      "at": [
+       10.9,
+       2.2
+      ],
+      "text": "6"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "import math, random\nrandom.seed(0)\n\ndef tri(a, b, c):\n    \"\"\"canonical triangle from sides: B at origin, C on x-axis (cosine rule).\"\"\"\n    x = (c * c + a * a - b * b) / (2 * a)\n    return [(0.0, 0.0), (a, 0.0), (x, math.sqrt(c * c - x * x))]\n\ndef sides(T):\n    A, B, C = T[2], T[0], T[1]\n    return sorted([math.dist(B, C), math.dist(C, A), math.dist(A, B)])\n\ndef same(T1, T2):\n    return all(math.isclose(p, q, rel_tol=1e-9) for p, q in zip(sides(T1), sides(T2)))\n\nfor _ in range(1000):\n    a, b, c = (random.uniform(1, 10) for _ in range(3))\n    if not (abs(b - c) < a < b + c):\n        continue\n    A = math.acos((b * b + c * c - a * a) / (2 * b * c)); B = math.acos((a * a + c * c - b * b) / (2 * a * c))\n    # SSS: the sides fix every angle (cosine rule), so the shape is fixed\n    # SAS: b, c, A fix a\n    assert math.isclose(math.sqrt(b * b + c * c - 2 * b * c * math.cos(A)), a, rel_tol=1e-9)\n    # ASA / AAS: two angles fix the third, one side then fixes all (sine rule)\n    C = math.pi - A - B\n    assert math.isclose(a * math.sin(B) / math.sin(A), b, rel_tol=1e-9)\n    assert math.isclose(a * math.sin(C) / math.sin(A), c, rel_tol=1e-9)\n    # AAA fails: scaling keeps all angles but changes sides\n    assert not same(tri(a, b, c), tri(2 * a, 2 * b, 2 * c))\n# RHS: hypotenuse and one leg fix the other leg\nfor _ in range(200):\n    h, l = random.uniform(5, 10), random.uniform(1, 4.9)\n    assert math.isclose(math.sqrt(h * h - l * l) ** 2 + l * l, h * h)\n# SSA fails: angle 30 deg at A, AB = 10, BC = 6 -> two different triangles\nBx, By = 10 * math.cos(math.radians(30)), 10 * math.sin(math.radians(30))\nxs = [Bx - math.sqrt(36 - By * By), Bx + math.sqrt(36 - By * By)]\nT1 = [(0, 0), (Bx, By), (xs[0], 0)]; T2 = [(0, 0), (Bx, By), (xs[1], 0)]\nassert all(math.isclose(math.dist(T[1], T[2]), 6) for T in (T1, T2))\nassert not same([T1[1], T1[2], T1[0]], [T2[1], T2[2], T2[0]])\n\n# worked example options, each tested with a construction\n# A: one side and one angle equal -> right triangles 3-4-5 and 3-5-sqrt34 share leg 3 and the 90 deg angle\noptA = same(tri(3, 4, 5), tri(3, 5, math.sqrt(34)))\n# B: two equal sides p, q and equal perimeter P -> third side P - p - q is forced -> SSS\np, q, P = 5.0, 7.0, 20.0\noptB = same(tri(p, q, P - p - q), tri(q, P - p - q, p))\n# C and D: same base and height (hence same area) -> apex can slide along a parallel line\nU = [(0, 0), (6, 0), (1, 4)]; V = [(0, 0), (6, 0), (4, 4)]\narea = lambda T: abs((T[1][0] - T[0][0]) * (T[2][1] - T[0][1]) - (T[2][0] - T[0][0]) * (T[1][1] - T[0][1])) / 2\nassert area(U) == area(V)\noptC = optD = same(U, V)\nverdict = {\"A\": optA, \"B\": optB, \"C\": optC, \"D\": optD}\nassert [k for k, v in verdict.items() if v] == [\"B\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:21+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.circle-basics",
+  "topic": "Geometry",
+  "subtopic": "Circles: chords & angles",
+  "name": "Circle basics",
+  "statement": "\\text{one circle through 3 non-collinear points; diameter is the longest chord; equal chords} \\iff \\text{equal arcs}",
+  "conditions": [
+   "the three points are not collinear (collinear points lie on no circle)"
+  ],
+  "derivation": [
+   "A point equidistant from $A$ and $B$ lies on the perpendicular bisector of $AB$.",
+   "For non-collinear $A, B, C$ the perpendicular bisectors of $AB$ and $BC$ are not parallel, so they meet in exactly one point $O$: the only centre, radius $OA$.",
+   "A chord at distance $d$ from the centre has length $2\\sqrt{r^2-d^2}$ ([[f:geometry.chord-perpendicular-from-centre]]), largest at $d=0$: the diameter $2r$.",
+   "A chord with central angle $\\theta$ has length $2r\\sin\\frac{\\theta}{2}$, which rises steadily for $0^\\circ<\\theta\\le180^\\circ$: equal arcs $\\iff$ equal central angles $\\iff$ equal chords.",
+   "A chord extended both ways is a secant (meets the circle twice); a line meeting it once is a tangent."
+  ],
+  "visual_proof": "Equal chords AB and CD joined to the centre give congruent isosceles triangles OAB and OCD (SSS), so their central angles, and hence their arcs, are equal.",
+  "shortcut": "Longest chord = diameter $2r$, at distance $0$ from the centre; congruent arcs $\\Rightarrow$ chords in ratio $1:1$.",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q07",
+   "answer": "C",
+   "steps": [
+    "Congruent arcs $PAQ$ and $RBS$ subtend equal central angles $\\theta$.",
+    "$PQ = 2r\\sin\\frac{\\theta}{2} = RS$.",
+    "$PQ : RS = 1 : 1$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Treating the arc ratio and chord ratio as different for congruent arcs: equal arcs always give $1:1$.",
+   "Giving the radius as the distance of the longest chord from the centre: the diameter passes through the centre, so the distance is $0$.",
+   "Calling an extended chord a tangent or a diameter: it meets the circle twice, so it is a secant.",
+   "Drawing a circle through three collinear points: none exists."
+  ],
+  "related_ids": [
+   "geometry.chord-perpendicular-from-centre",
+   "geometry.central-angle-theorem",
+   "mensuration.arc-length"
+  ],
+  "diagram": {
+   "alt_text": "Circle with centre O and two equal chords AB and CD; radii OA, OB, OC, OD show equal central angles of 90 degrees each, and diameter EF through O is the longest chord.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      -2.598,
+      1.5
+     ],
+     "B": [
+      1.5,
+      2.598
+     ],
+     "C": [
+      -1.5,
+      -2.598
+     ],
+     "D": [
+      2.598,
+      -1.5
+     ],
+     "E": [
+      -2.898,
+      -0.776
+     ],
+     "F": [
+      2.898,
+      0.776
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "C",
+      "D"
+     ],
+     [
+      "O",
+      "A"
+     ],
+     [
+      "O",
+      "B"
+     ],
+     [
+      "O",
+      "C"
+     ],
+     [
+      "O",
+      "D"
+     ],
+     [
+      "E",
+      "F"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "B",
+      "to": "A",
+      "label": "90°",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "C",
+      "to": "D",
+      "label": "90°",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       1.1,
+       -0.6
+      ],
+      "text": "diameter EF = 2r"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef circumcentre(A, B, C):\n    # O equidistant from A, B, C: two linear equations from the perpendicular bisectors\n    a1, b1 = 2 * (B[0] - A[0]), 2 * (B[1] - A[1])\n    c1 = B[0] ** 2 + B[1] ** 2 - A[0] ** 2 - A[1] ** 2\n    a2, b2 = 2 * (C[0] - B[0]), 2 * (C[1] - B[1])\n    c2 = C[0] ** 2 + C[1] ** 2 - B[0] ** 2 - B[1] ** 2\n    det = a1 * b2 - a2 * b1\n    if det == 0:\n        return None\n    return (F(c1 * b2 - c2 * b1, det), F(a1 * c2 - a2 * c1, det))\n\ndef d2(P, Q):\n    return (P[0] - Q[0]) ** 2 + (P[1] - Q[1]) ** 2\n\nn = 0\nwhile n < 1500:\n    A, B, C = [(random.randint(-50, 50), random.randint(-50, 50)) for _ in range(3)]\n    cross = (B[0] - A[0]) * (C[1] - A[1]) - (B[1] - A[1]) * (C[0] - A[0])\n    if cross == 0:\n        continue\n    O = circumcentre(A, B, C)\n    assert O is not None                      # non-collinear: exactly one centre\n    assert d2(O, A) == d2(O, B) == d2(O, C)\n    # chord at distance d is 2*sqrt(r^2-d^2) <= 2r, equality only at d = 0 (diameter)\n    r = random.uniform(0.5, 20)\n    d = random.uniform(0, r * 0.999)\n    assert 2 * math.sqrt(r * r - d * d) <= 2 * r\n    assert math.isclose(2 * math.sqrt(r * r - 0), 2 * r)\n    # chord = 2 r sin(theta/2) is strictly increasing on (0, pi]: equal chords <=> equal arcs\n    t1, t2 = sorted(random.uniform(0.01, math.pi) for _ in range(2))\n    c1, c2 = 2 * r * math.sin(t1 / 2), 2 * r * math.sin(t2 / 2)\n    assert (c1 < c2) == (t1 < t2) or math.isclose(t1, t2)\n    # chord from coordinates equals 2 r sin(theta/2)\n    a = random.uniform(0, 2 * math.pi)\n    P = (r * math.cos(a), r * math.sin(a)); Q = (r * math.cos(a + t1), r * math.sin(a + t1))\n    assert math.isclose(math.dist(P, Q), c1, rel_tol=1e-9)\n    n += 1\n# worked example: congruent arcs -> equal chords, ratio 1 : 1\nt = 1.234\nassert math.isclose(2 * 7 * math.sin(t / 2) / (2 * 7 * math.sin(t / 2)), 1)\n# boundary: three collinear points have no circle through them\nassert circumcentre((0, 0), (2, 3), (4, 6)) is None\nassert circumcentre((0, 0), (2, 3), (4, 7)) is not None\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:21+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.chord-perpendicular-from-centre",
+  "topic": "Geometry",
+  "subtopic": "Circles: chords & angles",
+  "name": "Perpendicular from centre bisects a chord",
+  "statement": "\\left(\\frac{\\text{chord}}2\\right)^2+d^2=r^2;\\ \\text{common chord} \\perp \\text{line of centres and bisected by it}",
+  "conditions": [
+   "$0 \\le d < r$ (at $d = r$ the line only touches: chord length $0$)"
+  ],
+  "derivation": [
+   "Join $O$ to the chord ends $A, B$: $OA = OB = r$, so $\\triangle OAB$ is isosceles.",
+   "The perpendicular $OM$ from $O$ to $AB$ is the altitude of an isosceles triangle, so $M$ is the midpoint of $AB$.",
+   "Right triangle $OMA$: $AM^2 + OM^2 = OA^2$, i.e. $\\left(\\frac{\\text{chord}}{2}\\right)^2 + d^2 = r^2$.",
+   "Two circles meeting at $P, Q$: each centre is equidistant from $P$ and $Q$, so both centres lie on the perpendicular bisector of $PQ$. The line of centres is $\\perp PQ$ and bisects it."
+  ],
+  "visual_proof": "Drop OM perpendicular to AB: right triangle OMA has legs half-chord and d, hypotenuse r.",
+  "shortcut": "Half-chord $=\\sqrt{r^2-d^2}$; two parallel chords: distances from $O$ subtract when on the same side, add when on opposite sides.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q04",
+   "answer": "D",
+   "steps": [
+    "$r^2 = 5^2 + d_1^2 = 12^2 + d_2^2$, so $d_1^2 - d_2^2 = 119$.",
+    "Same side: $d_1 - d_2 = PQ = 7$, so $d_1 + d_2 = \\frac{119}{7} = 17$.",
+    "$d_1 = 12$, $r^2 = 25 + 144 = 169$, $r = 13$.",
+    "Diameter $= 26$ cm (D)."
+   ]
+  },
+  "common_traps": [
+   "Using the full chord instead of half: $\\sqrt{50^2+21^2}$ instead of $\\sqrt{25^2+21^2}=\\sqrt{1066}$.",
+   "Mixing up sides: chords on the same side have $d_1 - d_2 =$ gap; on opposite sides $d_1 + d_2 =$ gap.",
+   "Stopping at the radius ($13$, option B) when the diameter ($26$) is asked."
+  ],
+  "related_ids": [
+   "geometry.circle-basics",
+   "geometry.pythagoras",
+   "geometry.tangent-radius"
+  ],
+  "diagram": {
+   "alt_text": "Circle of radius 13 with centre O and two parallel chords on the same side: AB = 10 at distance OP = 12 and CD = 24 at distance OQ = 5, so PQ = 7; OA = OD = 13.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      -5,
+      12
+     ],
+     "B": [
+      5,
+      12
+     ],
+     "P": [
+      0,
+      12
+     ],
+     "C": [
+      -12,
+      5
+     ],
+     "D": [
+      12,
+      5
+     ],
+     "Q": [
+      0,
+      5
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "C",
+      "D"
+     ],
+     [
+      "O",
+      "P"
+     ],
+     [
+      "O",
+      "A"
+     ],
+     [
+      "O",
+      "D"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 13
+     }
+    ],
+    "angles": [
+     {
+      "at": "P",
+      "from": "B",
+      "to": "O",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "Q",
+      "from": "D",
+      "to": "O",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       2.5,
+       12.8
+      ],
+      "text": "5"
+     },
+     {
+      "at": [
+       6,
+       5.8
+      ],
+      "text": "12"
+     },
+     {
+      "at": [
+       -3.4,
+       6.5
+      ],
+      "text": "13"
+     },
+     {
+      "at": [
+       0.6,
+       8.5
+      ],
+      "text": "PQ = 7"
+     },
+     {
+      "at": [
+       0.6,
+       2.5
+      ],
+      "text": "5"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport sympy as sp\n\nr, a, b, e, r1, r2 = sp.symbols('r a b e r1 r2', positive=True)\nA = sp.Matrix([r * sp.cos(a), r * sp.sin(a)])\nB = sp.Matrix([r * sp.cos(b), r * sp.sin(b)])\nM = (A + B) / 2\nassert sp.simplify(M.dot(B - A)) == 0                      # OM is perpendicular to AB\nassert sp.simplify((A - M).dot(A - M) + M.dot(M) - r**2) == 0  # (chord/2)^2 + d^2 = r^2\n# common chord of circles centred (0,0) radius r1 and (e,0) radius r2\nx0 = (e**2 + r1**2 - r2**2) / (2 * e)\ny0 = sp.sqrt(r1**2 - x0**2)\nP, Q = sp.Matrix([x0, y0]), sp.Matrix([x0, -y0])\nfor X in (P, Q):\n    assert sp.simplify(X.dot(X) - r1**2) == 0\n    assert sp.simplify((X[0] - e)**2 + X[1]**2 - r2**2) == 0\nassert sp.simplify((P - Q).dot(sp.Matrix([e, 0]))) == 0    # common chord perpendicular to line of centres\nassert sp.simplify(((P + Q) / 2)[1]) == 0                  # its midpoint lies on the line of centres\n# worked example 2024-09-09_0900_Q04: half chords 5 and 12, same side, gap 7\nd1 = sp.Rational(119, 7)\nd1, d2 = (d1 + 7) / 2, (d1 - 7) / 2\nassert (d1, d2) == (12, 5) and 5**2 + d1**2 == 12**2 + d2**2 == 169\nassert 2 * sp.sqrt(169) == 26\n# 2024-09-17_1230_Q02 (opposite sides): r = 15 gives distances 9 + 12 = 21\nassert sp.sqrt(15**2 - 12**2) + sp.sqrt(15**2 - 9**2) == 21\n# boundary: d = r -> chord length 0 (tangent); d > r -> no real chord\nrr = 7.0\nassert 2 * math.sqrt(rr**2 - rr**2) == 0\nassert rr**2 - (rr + 0.01)**2 < 0\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:21+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.central-angle-theorem",
+  "topic": "Geometry",
+  "subtopic": "Circles: chords & angles",
+  "name": "Angle at centre = twice angle at circumference",
+  "statement": "\\angle AOB=2\\angle ACB;\\ \\text{arc length}\\propto\\text{central angle}",
+  "conditions": [
+   "$C$ on the major arc (same side of $AB$ as $O$); for $C$ on the minor arc, $\\angle ACB = 180^\\circ - \\frac12\\angle AOB$"
+  ],
+  "derivation": [
+   "Join $CO$ and extend it to $D$. $OA = OC$, so $\\angle OCA = \\angle OAC = x$.",
+   "Exterior angle of $\\triangle OAC$: $\\angle AOD = 2x$. Likewise $OB = OC$ gives $\\angle BOD = 2y$ with $y = \\angle OCB$.",
+   "Add: $\\angle AOB = 2x + 2y = 2\\angle ACB$.",
+   "Every $C$ on the same arc gives the same angle: angles in the same segment are equal.",
+   "Arc length $= r\\theta$ ($\\theta$ in radians), so arcs are in the ratio of their central angles."
+  ],
+  "visual_proof": "The diameter through C splits the figure into two isosceles triangles; each exterior angle at O is twice the base angle at C.",
+  "shortcut": "Inscribed angle $= \\frac12$ central angle on the same arc; angles in the same segment are equal; arcs split $360^\\circ$ in the ratio of their lengths.",
+  "worked_example": {
+   "question_key": "2024-09-24_1230_Q24",
+   "answer": "D",
+   "steps": [
+    "Arc $PQ$ subtends $\\angle POQ = 80^\\circ$ at the centre.",
+    "$R$ on the major arc: $\\angle PRQ = \\frac12\\times80^\\circ = 40^\\circ$.",
+    "$S$ is in the same segment, so $\\angle PSQ = 40^\\circ$: 40° and 40° (D)."
+   ]
+  },
+  "common_traps": [
+   "Doubling instead of halving: $160^\\circ$ for the inscribed angle.",
+   "Using the half rule for a point on the minor arc: there the angle is $180^\\circ - 40^\\circ = 140^\\circ$.",
+   "Expecting different angles at $R$ and $S$ on the same arc: they are equal.",
+   "In a cyclic quadrilateral, doubling the wrong vertex: $\\angle QOS = 2\\angle QPS = 2(180^\\circ - 26x)$, not $2\\times26x$."
+  ],
+  "related_ids": [
+   "geometry.angle-in-semicircle",
+   "geometry.cyclic-quadrilateral",
+   "geometry.alternate-segment",
+   "mensuration.arc-length"
+  ],
+  "diagram": {
+   "alt_text": "Circle with centre O; chord PQ subtends 80 degrees at O. Points R and S on the major arc each see PQ at 40 degrees.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "P": [
+      -1.928,
+      -2.298
+     ],
+     "Q": [
+      1.928,
+      -2.298
+     ],
+     "R": [
+      0.0,
+      3.0
+     ],
+     "S": [
+      -2.598,
+      1.5
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "P"
+     ],
+     [
+      "O",
+      "Q"
+     ],
+     [
+      "R",
+      "P"
+     ],
+     [
+      "R",
+      "Q"
+     ],
+     [
+      "S",
+      "P"
+     ],
+     [
+      "S",
+      "Q"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "P",
+      "to": "Q",
+      "label": "80°",
+      "right": false
+     },
+     {
+      "at": "R",
+      "from": "P",
+      "to": "Q",
+      "label": "40°",
+      "right": false
+     },
+     {
+      "at": "S",
+      "from": "P",
+      "to": "Q",
+      "label": "40°",
+      "right": false
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport random\nrandom.seed(0)\n\ndef pt(t, r=1.0):\n    return (r * math.cos(t), r * math.sin(t))\n\ndef ang(V, X, Y):\n    ux, uy = X[0] - V[0], X[1] - V[1]\n    vx, vy = Y[0] - V[0], Y[1] - V[1]\n    return math.degrees(math.acos(max(-1, min(1, (ux * vx + uy * vy) / (math.hypot(ux, uy) * math.hypot(vx, vy))))))\n\nn = 0\nfor _ in range(1500):\n    r = random.uniform(0.5, 10)\n    a = random.uniform(0, 2 * math.pi)\n    th = random.uniform(0.05, 2 * math.pi - 0.05)   # arc A->B (ccw), central angle of that arc\n    A, B = pt(a, r), pt(a + th, r)\n    # C on the other arc (not containing the ccw arc A->B)\n    C = pt(a + th + random.uniform(0.01, 0.99) * (2 * math.pi - th), r)\n    central = math.degrees(th)                        # angle subtended at O by arc AB (may be reflex)\n    assert math.isclose(ang(C, A, B), central / 2, abs_tol=1e-7)\n    # arc length proportional to central angle\n    assert math.isclose(r * th / (2 * math.pi * r), central / 360)\n    n += 1\n# worked example 2024-09-24_1230_Q24: 80 at centre, R and S on the major arc -> 40 and 40\nA, B = pt(0), pt(math.radians(80))\nfor t in (150, 230, 300):\n    assert math.isclose(ang(pt(math.radians(t)), A, B), 40, abs_tol=1e-9)\n# 2024-09-25_1600_Q17: 20x = 2(180 - 26x) -> x = 5\nassert 20 * 5 == 2 * (180 - 26 * 5)\n# boundary: C on the minor arc gives 180 - half the (non-reflex) central angle\nfor t in (10, 40, 70):\n    assert math.isclose(ang(pt(math.radians(t)), A, B), 180 - 40, abs_tol=1e-9)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:22+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.angle-in-semicircle",
+  "topic": "Geometry",
+  "subtopic": "Circles: chords & angles",
+  "name": "Angle in a semicircle",
+  "statement": "\\text{angle in a semicircle}=90^\\circ;\\ \\text{so a right triangle's circumradius}=\\frac{\\text{hypotenuse}}2",
+  "conditions": [],
+  "derivation": [
+   "The diameter $AB$ makes a straight angle, $180^\\circ$, at the centre.",
+   "[[f:geometry.central-angle-theorem]]: the angle at any $C$ on the circle is $\\frac12\\times180^\\circ = 90^\\circ$.",
+   "Conversely, the circle on the hypotenuse of a right triangle as diameter passes through the right-angle vertex.",
+   "So the circumcentre is the midpoint of the hypotenuse: $R = \\frac{\\text{hypotenuse}}{2}$, and the median to the hypotenuse is also $\\frac{\\text{hypotenuse}}{2}$."
+  ],
+  "visual_proof": "OA = OB = OC split triangle ABC into two isosceles triangles with base angles x and y; 2x + 2y = 180°, so the angle at C is x + y = 90°.",
+  "shortcut": "Diameter as a side of an inscribed triangle $\\Rightarrow$ $90^\\circ$ opposite it; right triangle $\\Rightarrow R = \\frac{\\text{hyp}}2$.",
+  "worked_example": {
+   "question_key": "2024-09-23_0900_Q13",
+   "answer": "C",
+   "steps": [
+    "$AB$ is a diameter, so $\\angle ACB = 90^\\circ$.",
+    "$\\sin\\angle BAC = \\frac{BC}{AB} = \\frac{r}{2r} = \\frac12$, so $\\angle BAC = 30^\\circ$ and $\\angle ABC = 60^\\circ$.",
+    "$x = \\frac{60^\\circ}{30^\\circ} = 2$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Putting the right angle at an end of the diameter instead of at the third vertex.",
+   "Taking the hypotenuse as the radius: hypotenuse $100$ gives $R = 50$ and area $3.14\\times2500 = 7850$, not $3.14\\times100^2$.",
+   "Inverting the ratio: $\\frac{\\angle BAC}{\\angle ABC} = 0.5$ instead of $x = 2$."
+  ],
+  "related_ids": [
+   "geometry.central-angle-theorem",
+   "geometry.cyclic-quadrilateral",
+   "geometry.pythagoras",
+   "trigonometry.right-triangle-ratios"
+  ],
+  "diagram": {
+   "alt_text": "Circle with diameter AB and centre O; C on the circle with BC equal to the radius. The angle at C is a right angle, angle A is 30 degrees and angle B is 60 degrees.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      -3,
+      0
+     ],
+     "B": [
+      3,
+      0
+     ],
+     "C": [
+      1.5,
+      2.598
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "A",
+      "C"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "O",
+      "C"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [
+     {
+      "at": "C",
+      "from": "A",
+      "to": "B",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "A",
+      "from": "B",
+      "to": "C",
+      "label": "30°",
+      "right": false
+     },
+     {
+      "at": "B",
+      "from": "C",
+      "to": "A",
+      "label": "60°",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       2.5,
+       1.5
+      ],
+      "text": "r"
+     },
+     {
+      "at": [
+       -1.5,
+       -0.4
+      ],
+      "text": "r"
+     },
+     {
+      "at": [
+       1.5,
+       -0.4
+      ],
+      "text": "r"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport sympy as sp\n\nr, t, a, b = sp.symbols('r t a b', positive=True)\nA, B = sp.Matrix([-r, 0]), sp.Matrix([r, 0])\nC = sp.Matrix([r * sp.cos(t), r * sp.sin(t)])\nassert sp.simplify((A - C).dot(B - C)) == 0          # angle ACB = 90 for any C on the circle\n# right triangle: midpoint of the hypotenuse is equidistant from all three vertices\nP, Q, R = sp.Matrix([0, 0]), sp.Matrix([a, 0]), sp.Matrix([0, b])\nM = (Q + R) / 2\nassert sp.simplify(M.dot(M) - (Q - R).dot(Q - R) / 4) == 0\nassert sp.simplify((M - Q).dot(M - Q) - (Q - R).dot(Q - R) / 4) == 0\n# worked example 2024-09-23_0900_Q13: BC = r, AB = 2r -> angle A = 30, B = 60, x = 2\nA_deg = math.degrees(math.asin(1 / 2))\nassert math.isclose(A_deg, 30) and math.isclose((180 - 90 - A_deg) / A_deg, 2)\n# 2024-09-26_0900_Q03: hypotenuse sqrt(28^2+96^2) = 100, R = 50, area 3.14*2500 = 7850\nassert 28**2 + 96**2 == 100**2 and math.isclose(3.14 * 50**2, 7850)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:22+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.cyclic-quadrilateral",
+  "topic": "Geometry",
+  "subtopic": "Circles: chords & angles",
+  "name": "Cyclic quadrilateral",
+  "statement": "\\angle A+\\angle C=\\angle B+\\angle D=180^\\circ;\\ \\text{exterior angle}=\\text{interior opposite angle}",
+  "conditions": [],
+  "derivation": [
+   "$\\angle A$ stands on arc $BCD$ and $\\angle C$ on arc $DAB$; the two arcs make the whole circle.",
+   "[[f:geometry.central-angle-theorem]]: $\\angle A + \\angle C = \\frac12(\\text{arc }BCD + \\text{arc }DAB) = \\frac12\\times360^\\circ = 180^\\circ$. Same for $\\angle B + \\angle D$.",
+   "Extend $AB$ to $P$: $\\angle CBP = 180^\\circ - \\angle ABC = \\angle ADC$, the interior opposite angle.",
+   "Converse: a quadrilateral whose opposite angles add to $180^\\circ$ is cyclic."
+  ],
+  "visual_proof": "Diagonal BD cuts the circle into two arcs; angle A stands on one, angle C on the other, and the arcs total 360°, so the angles total 180°.",
+  "shortcut": "Opposite angles add to $180^\\circ$; exterior angle = interior opposite angle; the only cyclic parallelogram is a rectangle.",
+  "worked_example": {
+   "question_key": "2024-09-19_1230_Q02",
+   "answer": "D",
+   "steps": [
+    "Opposite angles: $\\angle PQR = 180^\\circ - \\angle PSR = 180^\\circ - 120^\\circ = 60^\\circ$.",
+    "$PQ$ is a diameter, so $\\angle PRQ = 90^\\circ$ ([[f:geometry.angle-in-semicircle]]).",
+    "In $\\triangle PQR$: $\\angle QPR = 180^\\circ - 90^\\circ - 60^\\circ = 30^\\circ$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Making adjacent angles supplementary instead of opposite ones.",
+   "For an exterior angle, answering the adjacent interior angle: $111^\\circ$ instead of $\\angle CBP = 180^\\circ - 111^\\circ = 69^\\circ$.",
+   "Answering $\\angle PQR = 60^\\circ$ (option B) when $\\angle QPR$ is asked."
+  ],
+  "related_ids": [
+   "geometry.central-angle-theorem",
+   "geometry.angle-in-semicircle",
+   "geometry.triangle-angle-sum"
+  ],
+  "diagram": {
+   "alt_text": "Cyclic quadrilateral PQRS in a circle with diameter PQ. Angle PSR is 120 degrees, angle PQR is 60 degrees, angle PRQ is a right angle and angle QPR is 30 degrees.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "P": [
+      -3,
+      0
+     ],
+     "Q": [
+      3,
+      0
+     ],
+     "R": [
+      1.5,
+      2.598
+     ],
+     "S": [
+      -1.5,
+      2.598
+     ]
+    },
+    "segments": [
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "Q",
+      "R"
+     ],
+     [
+      "R",
+      "S"
+     ],
+     [
+      "S",
+      "P"
+     ],
+     [
+      "P",
+      "R"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [
+     {
+      "at": "S",
+      "from": "R",
+      "to": "P",
+      "label": "120°",
+      "right": false
+     },
+     {
+      "at": "Q",
+      "from": "R",
+      "to": "P",
+      "label": "60°",
+      "right": false
+     },
+     {
+      "at": "R",
+      "from": "P",
+      "to": "Q",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "P",
+      "from": "Q",
+      "to": "R",
+      "label": "30°",
+      "right": false
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport random\nrandom.seed(0)\n\ndef ang(V, X, Y):\n    ux, uy = X[0] - V[0], X[1] - V[1]\n    vx, vy = Y[0] - V[0], Y[1] - V[1]\n    return math.degrees(math.acos(max(-1, min(1, (ux * vx + uy * vy) / (math.hypot(ux, uy) * math.hypot(vx, vy))))))\n\nn = 0\nfor _ in range(1500):\n    r = random.uniform(0.5, 10)\n    ts = sorted(random.uniform(0, 2 * math.pi) for _ in range(4))\n    if min(b - a for a, b in zip(ts, ts[1:] + [ts[0] + 2 * math.pi])) < 0.02:\n        continue\n    A, B, C, D = [(r * math.cos(t), r * math.sin(t)) for t in ts]\n    a, b, c, d = ang(A, D, B), ang(B, A, C), ang(C, B, D), ang(D, C, A)\n    assert math.isclose(a + c, 180, abs_tol=1e-7) and math.isclose(b + d, 180, abs_tol=1e-7)\n    # exterior angle at B (AB produced to P) equals interior opposite angle D\n    P = (2 * B[0] - A[0], 2 * B[1] - A[1])\n    assert math.isclose(ang(B, C, P), d, abs_tol=1e-7)\n    n += 1\n# worked example 2024-09-19_1230_Q02: PSR = 120 -> PQR = 60, PRQ = 90, QPR = 30\nP, Q = (-1.0, 0.0), (1.0, 0.0)\nR = (math.cos(math.radians(60)), math.sin(math.radians(60)))\nS = (math.cos(math.radians(120)), math.sin(math.radians(120)))\nassert math.isclose(ang(S, P, R), 120, abs_tol=1e-9)\nassert math.isclose(ang(Q, P, R), 60, abs_tol=1e-9)\nassert math.isclose(ang(R, P, Q), 90, abs_tol=1e-9)\nassert math.isclose(ang(P, Q, R), 30, abs_tol=1e-9)\n# 2024-09-26_1230_Q21: arc ABC = 138 -> angle ABC = (360-138)/2 = 111, CBP = 69\nassert 180 - (360 - 138) / 2 == 69\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:22+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.tangent-radius",
+  "topic": "Geometry",
+  "subtopic": "Circles: tangents",
+  "name": "Tangent perpendicular to radius",
+  "statement": "OT\\perp PT;\\ \\text{angle between two tangents from } P=180^\\circ-\\angle AOB",
+  "conditions": [
+   "$P$ outside the circle ($OP > r$); at $OP = r$ the two tangents coincide"
+  ],
+  "derivation": [
+   "Every point of the tangent other than $T$ lies outside the circle, so it is farther from $O$ than $T$ is.",
+   "$OT$ is the shortest segment from $O$ to the line, and the shortest segment is the perpendicular: $OT \\perp PT$.",
+   "Tangents $PA, PB$: quadrilateral $OAPB$ has $\\angle A = \\angle B = 90^\\circ$.",
+   "Angle sum $360^\\circ$: $\\angle APB + \\angle AOB = 180^\\circ$.",
+   "$OP$ bisects both angles ([[f:geometry.tangent-length]]), so $\\angle AOP = 90^\\circ - \\frac12\\angle APB$."
+  ],
+  "visual_proof": "Kite OAPB has right angles at the two points of contact, so the angles at P and O fill the remaining 180°.",
+  "shortcut": "$\\angle APB = 180^\\circ - \\angle AOB$; $\\angle POA = 90^\\circ - \\frac12\\angle APB$; chord of the outer circle touching the inner concentric circle $= 2\\sqrt{R^2 - r^2}$.",
+  "worked_example": {
+   "question_key": "2024-09-17_0900_Q16",
+   "answer": "B",
+   "steps": [
+    "$OP \\perp AP$ and $OQ \\perp AQ$: $\\angle OPA = \\angle OQA = 90^\\circ$.",
+    "Quadrilateral $APOQ$: $\\angle POQ = 360^\\circ - 90^\\circ - 90^\\circ - 40^\\circ$.",
+    "$\\angle POQ = 140^\\circ$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Treating $\\angle POQ$ as $2\\angle PAQ$ ($80^\\circ$): $A$ is outside the circle, so the central-angle rule does not apply.",
+   "Forgetting that $OP$ halves the angle: tangents at $60^\\circ$ give $\\angle POA = 90^\\circ - 30^\\circ = 60^\\circ$, not $30^\\circ$.",
+   "Concentric circles: giving the half-chord ($\\sqrt{26^2-10^2} = 24$) instead of the chord ($48$)."
+  ],
+  "related_ids": [
+   "geometry.tangent-length",
+   "geometry.alternate-segment",
+   "geometry.chord-perpendicular-from-centre"
+  ],
+  "diagram": {
+   "alt_text": "Circle with centre O and external point A; tangents AP and AQ touch at P and Q with right angles between each radius and tangent. Angle PAQ is 40 degrees and angle POQ is 140 degrees.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      8.771,
+      0
+     ],
+     "P": [
+      1.026,
+      2.819
+     ],
+     "Q": [
+      1.026,
+      -2.819
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "P"
+     ],
+     [
+      "O",
+      "Q"
+     ],
+     [
+      "A",
+      "P"
+     ],
+     [
+      "A",
+      "Q"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [
+     {
+      "at": "P",
+      "from": "O",
+      "to": "A",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "Q",
+      "from": "A",
+      "to": "O",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "A",
+      "from": "P",
+      "to": "Q",
+      "label": "40°",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "Q",
+      "to": "P",
+      "label": "140°",
+      "right": false
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport random\nimport sympy as sp\nrandom.seed(0)\n\nr, t = sp.symbols('r t', positive=True)\nT = sp.Matrix([r * sp.cos(t), r * sp.sin(t)])\nu = sp.Matrix([-sp.sin(t), sp.cos(t)])                        # tangent direction at T\nassert sp.simplify(T.dot(u)) == 0                             # OT perpendicular to tangent\ns = sp.symbols('s', real=True)\nX = T + s * u\nassert sp.simplify(X.dot(X) - r**2 - s**2) == 0               # every other point of the tangent is outside\n\nn = 0\nfor _ in range(1500):\n    rr = random.uniform(0.5, 10)\n    d = rr * random.uniform(1.001, 20)\n    APB = 2 * math.degrees(math.asin(rr / d))                 # angle between the tangents at P\n    AOB = 2 * math.degrees(math.acos(rr / d))                 # angle between the radii at O\n    assert math.isclose(APB + AOB, 180, abs_tol=1e-9)\n    assert math.isclose(AOB / 2, 90 - APB / 2, abs_tol=1e-9)  # angle POA\n    n += 1\n# worked examples: 2024-09-17_0900_Q16 and 2024-09-09_1230_Q08\nassert 360 - 90 - 90 - 40 == 140\nassert 180 - 90 - 60 / 2 == 60\nassert 2 * math.sqrt(26**2 - 10**2) == 48                     # 2024-09-24_1230_Q07\n# boundary: P on the circle (d = r) -> the two tangents coincide, APB = 180, AOB = 0\nassert math.isclose(2 * math.degrees(math.asin(1.0)), 180) and 2 * math.degrees(math.acos(1.0)) == 0\n# P inside (d < r): r/d > 1, no tangent exists\ntry:\n    math.asin(1.2)\n    raise AssertionError\nexcept ValueError:\n    pass\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:22+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.tangent-length",
+  "topic": "Geometry",
+  "subtopic": "Circles: tangents",
+  "name": "Length of tangent from an external point",
+  "statement": "PT=\\sqrt{d^2-r^2};\\ \\text{the two tangents from } P \\text{ are equal}",
+  "conditions": [
+   "$d > r$ ($P$ outside); $d = r$ gives $PT = 0$, $d < r$ gives no tangent"
+  ],
+  "derivation": [
+   "$OT \\perp PT$ ([[f:geometry.tangent-radius]]), so $\\triangle OTP$ is right-angled at $T$.",
+   "Pythagoras: $PT^2 + r^2 = d^2$, so $PT = \\sqrt{d^2 - r^2}$.",
+   "Tangents $PA, PB$: right triangles $OAP$ and $OBP$ share hypotenuse $OP$ and have $OA = OB = r$ (RHS), so $PA = PB$.",
+   "The same congruence makes $OP$ bisect $\\angle APB$ and $\\angle AOB$."
+  ],
+  "visual_proof": "Kite OAPB: two congruent right triangles placed back to back along OP.",
+  "shortcut": "Spot triples in $(r, PT, d)$: $(8, 15, 17)$, $(24, 32, 40)$, $(5, 12, 13)$; annulus with a tangent half-chord $t$: area $= \\pi(R^2-r^2) = \\pi t^2$.",
+  "worked_example": {
+   "question_key": "2024-09-13_1230_Q07",
+   "answer": "D",
+   "steps": [
+    "$d = 17$, $r = 8$.",
+    "$PT = \\sqrt{17^2 - 8^2} = \\sqrt{289 - 64} = \\sqrt{225}$.",
+    "$PT = 15$ cm (D)."
+   ]
+  },
+  "common_traps": [
+   "Adding the squares: $\\sqrt{17^2 + 8^2} \\approx 18.8$, close to options B and C.",
+   "Giving the radius when the diameter is asked: $\\sqrt{40^2-32^2} = 24$, diameter $48$.",
+   "Putting the diameter in place of $r$ in $\\sqrt{d^2 - r^2}$."
+  ],
+  "related_ids": [
+   "geometry.tangent-radius",
+   "geometry.pythagoras",
+   "geometry.power-of-point",
+   "geometry.common-tangent-length"
+  ],
+  "diagram": {
+   "alt_text": "Circle of radius 8 with centre O and external point P at distance 17; tangents PT and PT' are each 15, with a right angle at T between radius OT and the tangent.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "P": [
+      17,
+      0
+     ],
+     "T": [
+      3.765,
+      7.059
+     ],
+     "T'": [
+      3.765,
+      -7.059
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "T"
+     ],
+     [
+      "P",
+      "T"
+     ],
+     [
+      "O",
+      "P"
+     ],
+     [
+      "P",
+      "T'"
+     ],
+     [
+      "O",
+      "T'"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 8
+     }
+    ],
+    "angles": [
+     {
+      "at": "T",
+      "from": "O",
+      "to": "P",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       1.2,
+       4.2
+      ],
+      "text": "8"
+     },
+     {
+      "at": [
+       11,
+       4.4
+      ],
+      "text": "15"
+     },
+     {
+      "at": [
+       8.5,
+       -1
+      ],
+      "text": "17"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport sympy as sp\n\nr, d = sp.symbols('r d', positive=True)\nO, P = sp.Matrix([0, 0]), sp.Matrix([d, 0])\nfor sgn in (1, -1):\n    T = sp.Matrix([r**2 / d, sgn * r * sp.sqrt(d**2 - r**2) / d])\n    assert sp.simplify(T.dot(T) - r**2) == 0                  # T on the circle\n    assert sp.simplify(T.dot(P - T)) == 0                     # OT perpendicular to PT\n    assert sp.simplify((P - T).dot(P - T) - (d**2 - r**2)) == 0   # PT^2 = d^2 - r^2, same for both tangents\n# worked examples\nassert math.sqrt(17**2 - 8**2) == 15                          # 2024-09-13_1230_Q07\nassert 2 * math.sqrt(40**2 - 32**2) == 48                     # 2024-09-12_1230_Q18\nassert 10**2 == 100                                           # 2024-09-13_1230_Q09: R^2 - r^2 = 10^2\n# boundary: d = r gives PT = 0 (T = P); d < r gives no real tangent\nTb = [x.subs({d: 5, r: 5}) for x in (r**2 / d, r * sp.sqrt(d**2 - r**2) / d)]\nassert Tb == [5, 0]\nassert not sp.sqrt(sp.Integer(4)**2 - 5**2).is_real\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:23+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.alternate-segment",
+  "topic": "Geometry",
+  "subtopic": "Circles: tangents",
+  "name": "Alternate segment theorem",
+  "statement": "\\text{angle between tangent and chord}=\\text{inscribed angle in the alternate segment}",
+  "conditions": [],
+  "derivation": [
+   "Tangent at $A$ makes angle $\\theta$ with chord $AB$. Draw diameter $AD$ (with $D$ on the far side of $AB$) and join $DB$.",
+   "$\\angle DAT = 90^\\circ$ ([[f:geometry.tangent-radius]]), so $\\angle DAB = 90^\\circ - \\theta$.",
+   "$\\angle ABD = 90^\\circ$ ([[f:geometry.angle-in-semicircle]]), so $\\angle ADB = 90^\\circ - \\angle DAB = \\theta$.",
+   "Any $C$ in the same (alternate) segment as $D$ sees $AB$ at the same angle: $\\angle ACB = \\theta$."
+  ],
+  "visual_proof": "The diameter from the point of contact turns the tangent–chord angle into the complement of an angle in a semicircle triangle, which is the angle at the far end of the diameter.",
+  "shortcut": "Tangent–chord angle = angle at the third vertex of the inscribed triangle on that chord = half the arc it cuts off.",
+  "worked_example": {
+   "question_key": "2024-09-25_1600_Q22",
+   "answer": "B",
+   "steps": [
+    "Alternate segment: $\\angle QRP = \\angle TPQ = 55^\\circ$.",
+    "$\\triangle TPR$: $\\angle TPR = 180^\\circ - 27^\\circ - 55^\\circ = 98^\\circ$, so $\\angle QPR = 98^\\circ - 55^\\circ = 43^\\circ$.",
+    "Central angle on chord $QR$ ([[f:geometry.central-angle-theorem]]): $\\angle ROQ = 2\\times43^\\circ = 86^\\circ$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Matching the tangent–chord angle with an angle on the tangent's own side of the chord instead of the alternate segment.",
+   "Equating $\\angle TPQ$ with $\\angle PQR$ (the angle at the chord's end) instead of $\\angle PRQ$ (the far vertex).",
+   "Doubling $55^\\circ$ to get $110^\\circ$: $\\angle ROQ$ stands on chord $QR$, so double $\\angle QPR = 43^\\circ$."
+  ],
+  "related_ids": [
+   "geometry.tangent-radius",
+   "geometry.central-angle-theorem",
+   "geometry.tangent-secant-angle"
+  ],
+  "diagram": {
+   "alt_text": "Circle with centre O, tangent at P meeting secant TQR at T. Angle PTQ is 27 degrees, tangent-chord angle TPQ is 55 degrees and equals angle PRQ in the alternate segment; angle QPR is 43 degrees and angle QOR is 86 degrees.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "P": [
+      -0.0,
+      -3.0
+     ],
+     "Q": [
+      2.819,
+      1.026
+     ],
+     "R": [
+      -0.827,
+      2.884
+     ],
+     "T": [
+      10.719,
+      -3
+     ]
+    },
+    "segments": [
+     [
+      "T",
+      "P"
+     ],
+     [
+      "T",
+      "R"
+     ],
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "P",
+      "R"
+     ],
+     [
+      "O",
+      "Q"
+     ],
+     [
+      "O",
+      "R"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [
+     {
+      "at": "T",
+      "from": "Q",
+      "to": "P",
+      "label": "27°",
+      "right": false
+     },
+     {
+      "at": "P",
+      "from": "T",
+      "to": "Q",
+      "label": "55°",
+      "right": false
+     },
+     {
+      "at": "R",
+      "from": "P",
+      "to": "Q",
+      "label": "55°",
+      "right": false
+     },
+     {
+      "at": "P",
+      "from": "Q",
+      "to": "R",
+      "label": "43°",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "Q",
+      "to": "R",
+      "label": "86°",
+      "right": false
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport random\nrandom.seed(0)\n\ndef ang(V, X, Y):\n    ux, uy = X[0] - V[0], X[1] - V[1]\n    vx, vy = Y[0] - V[0], Y[1] - V[1]\n    return math.degrees(math.acos(max(-1, min(1, (ux * vx + uy * vy) / (math.hypot(ux, uy) * math.hypot(vx, vy))))))\n\ndef cross(o, p, q):\n    return (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0])\n\nn = 0\nfor _ in range(1500):\n    r = random.uniform(0.5, 10)\n    a = random.uniform(0, 2 * math.pi)\n    th = random.uniform(0.05, 2 * math.pi - 0.05)\n    A = (r * math.cos(a), r * math.sin(a))\n    B = (r * math.cos(a + th), r * math.sin(a + th))\n    C_t = a + th + random.uniform(0.02, 0.98) * (2 * math.pi - th)\n    C = (r * math.cos(C_t), r * math.sin(C_t))\n    # tangent ray at A on the side of AB away from C\n    u = (-math.sin(a), math.cos(a))\n    T = (A[0] + u[0], A[1] + u[1])\n    if cross(A, B, T) * cross(A, B, C) > 0:\n        T = (A[0] - u[0], A[1] - u[1])\n    assert cross(A, B, T) * cross(A, B, C) < 0\n    assert math.isclose(ang(A, T, B), ang(C, A, B), abs_tol=1e-7)\n    n += 1\n# worked example 2024-09-25_1600_Q22: QRP = TPQ = 55, TPR = 98, QPR = 43, ROQ = 86\nQRP = 55\nTPR = 180 - 27 - QRP\nassert TPR == 98 and 2 * (TPR - 55) == 86\n# 2024-09-13_1600_Q06: CAB + CBA = ADB = 68 -> ACB = 112\nassert 180 - 68 == 112\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:24+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.common-tangent-length",
+  "topic": "Geometry",
+  "subtopic": "Circles: tangents",
+  "name": "Common tangents and touching circles",
+  "statement": "\\text{direct}=\\sqrt{d^2-(r_1-r_2)^2};\\ \\text{transverse}=\\sqrt{d^2-(r_1+r_2)^2};\\ \\text{touching externally } d=r_1+r_2,\\ \\text{direct}=2\\sqrt{r_1r_2}",
+  "conditions": [
+   "direct tangent: $d > |r_1 - r_2|$ (at $d = |r_1 - r_2|$ the circles touch internally, length $0$)",
+   "transverse tangent: $d \\ge r_1 + r_2$ (at $d = r_1 + r_2$ its length is $0$)"
+  ],
+  "derivation": [
+   "Radii to the points of contact $M, Q$ are both $\\perp$ the tangent ([[f:geometry.tangent-radius]]), so $O_1M \\parallel O_2Q$.",
+   "Direct tangent: shift segment $MQ$ parallel to itself through $O_2$; it meets $O_1M$ at $K$ with $O_1K = r_1 - r_2$ and a right angle at $K$.",
+   "Pythagoras in $\\triangle O_1KO_2$: $MQ^2 = KO_2^2 = d^2 - (r_1 - r_2)^2$.",
+   "Transverse tangent: the radii point to opposite sides, so the leg is $r_1 + r_2$: length $\\sqrt{d^2 - (r_1 + r_2)^2}$.",
+   "Touching externally, the point of contact is on the line of centres, so $d = r_1 + r_2$ and $d^2 - (r_1 - r_2)^2 = 4r_1r_2$: direct $= 2\\sqrt{r_1r_2}$. Touching internally: $d = |r_1 - r_2|$."
+  ],
+  "visual_proof": "Sliding the tangent segment parallel to itself through the smaller centre makes a right triangle with hypotenuse d and legs MQ and r1 − r2.",
+  "shortcut": "Touching circles: direct tangent $= 2\\sqrt{r_1r_2}$; circles touching each other externally: centre distance $= r_1 + r_2$.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q17",
+   "answer": "C",
+   "steps": [
+    "$d = 37$, $r_1 - r_2 = 22 - 10 = 12$.",
+    "$MQ = \\sqrt{37^2 - 12^2} = \\sqrt{1369 - 144} = \\sqrt{1225}$.",
+    "$MQ = 35$ cm (C)."
+   ]
+  },
+  "common_traps": [
+   "Using $r_1 + r_2$ for a direct tangent: $\\sqrt{37^2 - 32^2} = \\sqrt{345}$.",
+   "Adding squares: $\\sqrt{37^2 + 12^2} \\approx 38.9$, near option A (39).",
+   "For circles touching externally, answering $d = 30$ instead of $2\\sqrt{18\\times12} = 12\\sqrt6$."
+  ],
+  "related_ids": [
+   "geometry.tangent-radius",
+   "geometry.tangent-length",
+   "geometry.pythagoras"
+  ],
+  "diagram": {
+   "alt_text": "Two circles with centres O1 (radius 22) and O2 (radius 10), 37 apart. Direct common tangent MQ = 35 with right angles at M and Q; segment O2K parallel to MQ meets O1M at K, with O1K = 12.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O1": [
+      0,
+      0
+     ],
+     "O2": [
+      37,
+      0
+     ],
+     "M": [
+      7.135,
+      20.811
+     ],
+     "Q": [
+      40.243,
+      9.459
+     ],
+     "K": [
+      3.892,
+      11.351
+     ]
+    },
+    "segments": [
+     [
+      "O1",
+      "M"
+     ],
+     [
+      "O2",
+      "Q"
+     ],
+     [
+      "M",
+      "Q"
+     ],
+     [
+      "O1",
+      "O2"
+     ],
+     [
+      "O2",
+      "K"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O1",
+      "radius": 22
+     },
+     {
+      "center": "O2",
+      "radius": 10
+     }
+    ],
+    "angles": [
+     {
+      "at": "M",
+      "from": "O1",
+      "to": "Q",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "Q",
+      "from": "M",
+      "to": "O2",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "K",
+      "from": "O1",
+      "to": "O2",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       24,
+       18
+      ],
+      "text": "35"
+     },
+     {
+      "at": [
+       18.5,
+       -1.8
+      ],
+      "text": "37"
+     },
+     {
+      "at": [
+       0.5,
+       6
+      ],
+      "text": "12"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math\nimport random\nrandom.seed(0)\n\ndef tangent_length(d, r1, r2, transverse):\n    # circles centred (0,0) and (d,0); tangent line n.x = c with |n| = 1, c = r1\n    k = (r1 + r2) if transverse else (r1 - r2)\n    nx = k / d\n    ny = math.sqrt(max(0.0, 1 - nx * nx))\n    M = (r1 * nx, r1 * ny)                                  # contact point on circle 1\n    s = (d * nx - r1)                                       # signed distance of centre 2 from the line\n    assert math.isclose(abs(s), r2, abs_tol=1e-9)\n    Q = (d - s * nx, -s * ny)                               # contact point on circle 2\n    assert math.isclose(math.hypot(Q[0] - d, Q[1]), r2, abs_tol=1e-9)\n    assert math.isclose(math.hypot(*M), r1, abs_tol=1e-9)\n    return math.dist(M, Q)\n\nn = 0\nfor _ in range(1500):\n    r1, r2 = random.uniform(0.5, 20), random.uniform(0.5, 20)\n    d = (r1 + r2) * random.uniform(1.0001, 5)\n    assert math.isclose(tangent_length(d, r1, r2, False), math.sqrt(d * d - (r1 - r2) ** 2), rel_tol=1e-9)\n    assert math.isclose(tangent_length(d, r1, r2, True), math.sqrt(d * d - (r1 + r2) ** 2), rel_tol=1e-6, abs_tol=1e-9)\n    # touching externally: direct tangent = 2 sqrt(r1 r2)\n    assert math.isclose(tangent_length(r1 + r2, r1, r2, False), 2 * math.sqrt(r1 * r2), rel_tol=1e-9)\n    # intersecting circles still have a direct tangent\n    dd = random.uniform(abs(r1 - r2) + 0.01, r1 + r2)\n    assert math.isclose(tangent_length(dd, r1, r2, False), math.sqrt(dd * dd - (r1 - r2) ** 2), rel_tol=1e-7)\n    n += 1\n# worked examples\nassert math.sqrt(37**2 - 12**2) == 35                       # 2024-09-09_0900_Q17\nassert math.isclose(math.sqrt(30**2 - 6**2), 12 * math.sqrt(6))  # 2024-09-10_0900_Q09\nassert (2 + 2)**2 + (1 + 2)**2 == 25                        # 2024-09-13_0900_Q13: r = 2\n# boundaries: transverse tangent shrinks to 0 at d = r1 + r2; direct tangent is 0 at d = |r1 - r2|\nassert math.isclose(tangent_length(8, 5, 3, True), 0, abs_tol=1e-9)\nassert math.isclose(tangent_length(2, 5, 3, False), 0, abs_tol=1e-9)\nassert 7**2 - (5 + 3)**2 < 0 and 1.5**2 - (5 - 3)**2 < 0    # beyond: no such tangent\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:24+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.power-of-point",
+  "topic": "Geometry",
+  "subtopic": "Circles: tangents",
+  "name": "Power of a point (tangent-secant, chords)",
+  "statement": "PA\\cdot PB=PC\\cdot PD=PT^2",
+  "conditions": [
+   "$PT$ exists only for $P$ outside the circle; for $P$ inside, chords $AB$, $CD$ through $P$ give $PA\\cdot PB = PC\\cdot PD = r^2 - OP^2$"
+  ],
+  "derivation": [
+   "Secants $PAB$ and $PCD$ with $A, C$ nearer to $P$: $\\angle PBC = \\angle PDA$, both standing on arc $AC$ ([[f:geometry.central-angle-theorem]]).",
+   "With the common angle at $P$, $\\triangle PBC \\sim \\triangle PDA$ ([[f:geometry.similar-triangles]]).",
+   "Ratios: $\\frac{PB}{PD} = \\frac{PC}{PA}$, so $PA\\cdot PB = PC\\cdot PD$.",
+   "Turn one secant until $C$ and $D$ merge at the contact point $T$: $PC\\cdot PD$ becomes $PT^2$.",
+   "Every such product equals $OP^2 - r^2$ for $P$ outside ([[f:geometry.tangent-length]]) and $r^2 - OP^2$ for $P$ inside."
+  ],
+  "visual_proof": "Two secants from P cut out similar triangles PBC and PDA; the tangent is the limiting secant whose two cut points coincide.",
+  "shortcut": "Outside: near $\\times$ far (whole) $= PT^2 = OP^2 - r^2$; inside: piece $\\times$ piece $= r^2 - OP^2$.",
+  "worked_example": {
+   "question_key": "2024-09-23_1230_Q02",
+   "answer": "C",
+   "steps": [
+    "$XB = XA + AB = 18 + 22 = 40$.",
+    "$XA\\cdot XB = 18\\times40 = 720 = XC\\cdot XD$.",
+    "$XD = \\frac{720}{24} = 30$ cm (C)."
+   ]
+  },
+  "common_traps": [
+   "Using the inside piece: $XA\\cdot AB = 18\\times22$ instead of $XA\\cdot XB$ gives $XD = 16.5$.",
+   "Tangent case: stopping at $AC = \\frac{21^2}{14} = 31.5$ when $BC = AC - AB = 17.5$ is asked.",
+   "Setting $r^2 = RA\\cdot RB = 84$: the product is the power $OR^2 - r^2$, so $r^2 = 324 - 84 = 240$."
+  ],
+  "related_ids": [
+   "geometry.tangent-length",
+   "geometry.similar-triangles",
+   "geometry.tangent-secant-angle"
+  ],
+  "diagram": {
+   "alt_text": "Point X outside a circle with two secants: XAB with XA = 18 and AB = 22, and XCD with XC = 24 and XD = 30, so 18 × 40 = 24 × 30 = 720.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "X": [
+      0,
+      0
+     ],
+     "O": [
+      30.676,
+      0
+     ],
+     "A": [
+      17.017,
+      5.868
+     ],
+     "B": [
+      37.815,
+      13.04
+     ],
+     "C": [
+      21.124,
+      -11.392
+     ],
+     "D": [
+      26.405,
+      -14.239
+     ]
+    },
+    "segments": [
+     [
+      "X",
+      "B"
+     ],
+     [
+      "X",
+      "D"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 14.866
+     }
+    ],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       8,
+       4.5
+      ],
+      "text": "18"
+     },
+     {
+      "at": [
+       27,
+       10.5
+      ],
+      "text": "22"
+     },
+     {
+      "at": [
+       10,
+       -7.5
+      ],
+      "text": "24"
+     },
+     {
+      "at": [
+       24.5,
+       -14.2
+      ],
+      "text": "6"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport random\nimport sympy as sp\nrandom.seed(0)\n\np, r, t, s = sp.symbols('p r t s', real=True)\n# line through P = (p, 0) with direction (cos t, sin t) meets x^2 + y^2 = r^2 where\n# s^2 + 2 p s cos t + p^2 - r^2 = 0; product of the two parameter roots:\nroots = sp.solve(sp.Eq((p + s * sp.cos(t))**2 + (s * sp.sin(t))**2, r**2), s)\nassert len(roots) == 2\nassert sp.simplify(sp.expand(roots[0] * roots[1]) - (p**2 - r**2)) == 0   # independent of the direction t\n\nn = 0\nfor _ in range(1500):\n    rr = random.uniform(0.5, 10)\n    pp = rr * random.choice([random.uniform(0, 0.99), random.uniform(1.01, 5)])\n    prods = []\n    for _ in range(2):\n        tt = random.uniform(0, math.pi)\n        b, c = 2 * pp * math.cos(tt), pp * pp - rr * rr\n        disc = b * b - 4 * c\n        if disc <= 0:\n            continue\n        s1, s2 = (-b - math.sqrt(disc)) / 2, (-b + math.sqrt(disc)) / 2\n        prods.append(abs(s1) * abs(s2))                     # PA * PB as lengths\n    for x in prods:\n        assert math.isclose(x, abs(pp * pp - rr * rr), rel_tol=1e-7, abs_tol=1e-9)\n    if pp > rr:                                             # tangent length squared\n        assert math.isclose(pp * pp - rr * rr, (math.sqrt(pp * pp - rr * rr)) ** 2)\n    n += 1\n# worked examples\nassert 18 * (18 + 22) / 24 == 30                            # 2024-09-23_1230_Q02\nassert 21**2 / 14 - 14 == 17.5                              # 2024-09-19_1600_Q04\nassert 18**2 - 7 * (7 + 5) == 240                           # 2024-09-19_0900_Q15: r^2 = 240\n# boundary: P on the circle -> power 0 (one cut point is P itself, tangent length 0)\nassert sp.simplify(sp.expand(roots[0] * roots[1]).subs(p, r)) == 0\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:24+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.tangent-secant-angle",
+  "topic": "Geometry",
+  "subtopic": "Circles: tangents",
+  "name": "Angle between secants / tangent and secant",
+  "statement": "\\angle P=\\frac12(\\text{far arc}-\\text{near arc})",
+  "conditions": [
+   "$P$ outside the circle (two secants, a tangent and a secant, or two tangents)",
+   "for $P$ inside (two chords crossing): $\\angle P = \\frac12(\\text{sum of the two intercepted arcs})$"
+  ],
+  "derivation": [
+   "Secants $PAB$ and $PCD$ with $A, C$ nearer: far arc $BD$, near arc $AC$. Join $AD$.",
+   "Exterior angle of $\\triangle PAD$ at $A$: $\\angle BAD = \\angle P + \\angle ADC$.",
+   "Inscribed angles ([[f:geometry.central-angle-theorem]]): $\\angle BAD = \\frac12\\text{arc }BD$ and $\\angle ADC = \\frac12\\text{arc }AC$.",
+   "$\\angle P = \\frac12(\\text{arc }BD - \\text{arc }AC)$.",
+   "Tangent at $T$: let $A$ and $B$ merge into $T$ and use [[f:geometry.alternate-segment]] for the tangent–chord angle; the same difference results."
+  ],
+  "visual_proof": "Exterior angle of triangle PAD: the large inscribed angle on the far arc minus the small one on the near arc leaves the angle at P.",
+  "shortcut": "Far arc $=$ near arc $+ 2\\angle P$; two tangents: $\\angle P = 180^\\circ - $ minor arc.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q01",
+   "answer": "C",
+   "steps": [
+    "Tangent–chord: near arc $AC = 2\\angle ACF = 100^\\circ$.",
+    "Far arc $BC = 100^\\circ + 2\\times30^\\circ = 160^\\circ$.",
+    "Arc $AB = 360^\\circ - 100^\\circ - 160^\\circ = 100^\\circ$, so $\\angle AOB = 100^\\circ$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Using half the sum of the arcs (the inside-point rule) for an outside point.",
+   "Swapping the arcs: the near arc is the one facing $P$; far minus near must be positive.",
+   "Answering the inscribed angle $\\angle ACB = 50^\\circ$ instead of the central $\\angle AOB = 100^\\circ$."
+  ],
+  "related_ids": [
+   "geometry.alternate-segment",
+   "geometry.central-angle-theorem",
+   "geometry.power-of-point"
+  ],
+  "diagram": {
+   "alt_text": "Circle with centre O; from external point F a tangent touches at C and a secant meets the circle at A then B. Angle AFC is 30 degrees, angle ACF is 50 degrees, near arc AC is 100 degrees, far arc BC is 160 degrees, and angle AOB is 100 degrees.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      -2.954,
+      0.521
+     ],
+     "B": [
+      1.026,
+      2.819
+     ],
+     "C": [
+      -0.0,
+      -3.0
+     ],
+     "F": [
+      -9.052,
+      -3
+     ]
+    },
+    "segments": [
+     [
+      "F",
+      "C"
+     ],
+     [
+      "F",
+      "B"
+     ],
+     [
+      "A",
+      "C"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "O",
+      "A"
+     ],
+     [
+      "O",
+      "B"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [
+     {
+      "at": "F",
+      "from": "C",
+      "to": "A",
+      "label": "30°",
+      "right": false
+     },
+     {
+      "at": "C",
+      "from": "A",
+      "to": "F",
+      "label": "50°",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "B",
+      "to": "A",
+      "label": "100°",
+      "right": false
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport random\nrandom.seed(0)\nTAU = 2 * math.pi\n\ndef hits(P, u, r):\n    # intersections of P + s u with x^2 + y^2 = r^2, nearer first (s > 0 side only when P outside)\n    b = 2 * (P[0] * u[0] + P[1] * u[1]); c = P[0] ** 2 + P[1] ** 2 - r * r\n    disc = b * b - 4 * c\n    if disc < 0:\n        return None\n    sq = math.sqrt(disc)\n    return [(P[0] + s * u[0], P[1] + s * u[1]) for s in sorted(((-b - sq) / 2, (-b + sq) / 2))]\n\ndef pos(X):\n    return math.atan2(X[1], X[0]) % TAU\n\ndef arc(X, Y, avoid):\n    # angular measure (radians) of the arc X..Y not containing point `avoid`\n    a, b, z = pos(X), pos(Y), pos(avoid)\n    ccw = (b - a) % TAU\n    return ccw if (z - a) % TAU > ccw else TAU - ccw\n\ndef angle(u, v):\n    return math.acos(max(-1, min(1, u[0] * v[0] + u[1] * v[1])))\n\nn = 0\nwhile n < 1500:\n    r = random.uniform(0.5, 5)\n    P = (r * random.uniform(1.05, 6), 0.0)\n    half = math.asin(r / P[0])                       # half-angle of the tangent cone\n    t1, t2 = (math.pi + random.uniform(-half, half) * 0.999 for _ in range(2))\n    if abs(t1 - t2) < 0.01:\n        continue\n    u1, u2 = (math.cos(t1), math.sin(t1)), (math.cos(t2), math.sin(t2))\n    A, B = hits(P, u1, r); C, D = hits(P, u2, r)     # A, C near; B, D far\n    lhs = angle(u1, u2)\n    rhs = (arc(B, D, A) - arc(A, C, B)) / 2\n    assert math.isclose(lhs, rhs, abs_tol=1e-7)\n    # tangent and secant: T is the contact point on the upper tangent\n    ut = (math.cos(math.pi - half), math.sin(math.pi - half))\n    T = (P[0] + P[0] * math.cos(half) * ut[0], P[0] * math.cos(half) * ut[1])\n    assert math.isclose(math.hypot(*T), r, rel_tol=1e-9)\n    lhs_t = angle(ut, u1)\n    rhs_t = (arc(T, B, A) - arc(T, A, B)) / 2\n    assert math.isclose(lhs_t, rhs_t, abs_tol=1e-6)\n    # two tangents: P = 180 - minor arc between contact points\n    T2 = (T[0], -T[1])\n    assert math.isclose(2 * half, math.pi - arc(T, T2, (-r, 0.0)), abs_tol=1e-9)\n    n += 1\n# worked example 2024-09-12_1600_Q01: near arc AC = 100, far arc BC = 160, arc AB = 100\nassert 2 * 50 + 2 * 30 == 160 and 360 - 100 - 160 == 100\n# boundary: P inside (two chords crossing) -> angle = half the SUM of the intercepted arcs\nfor _ in range(300):\n    r = random.uniform(0.5, 5)\n    P = (r * random.uniform(0, 0.95), r * random.uniform(-0.2, 0.2))\n    if math.hypot(*P) >= r * 0.98:\n        continue\n    t1, t2 = random.uniform(0, math.pi), random.uniform(0, math.pi)\n    if abs(t1 - t2) < 0.05:\n        continue\n    u1, u2 = (math.cos(t1), math.sin(t1)), (math.cos(t2), math.sin(t2))\n    A, B = hits(P, u1, r); C, D = hits(P, u2, r)     # A, C on the negative side; B, D on the positive\n    lhs = angle(u1, u2)                              # angle BPD\n    assert math.isclose(lhs, (arc(B, D, A) + arc(A, C, B)) / 2, abs_tol=1e-7)\n    # the outside rule fails here (difference, not sum)\n    assert not math.isclose(lhs, (arc(B, D, A) - arc(A, C, B)) / 2, abs_tol=1e-3) or arc(A, C, B) < 1e-3\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:24+00:00"
+   }
+  }
+ },
+ {
+  "id": "geometry.quadrilateral-diagonals",
+  "topic": "Geometry",
+  "subtopic": "Quadrilaterals",
+  "name": "Diagonals of special quadrilaterals",
+  "statement": "\\text{parallelogram: bisect each other; rhombus/kite: perpendicular; rhombus } d_1^2+d_2^2=4a^2",
+  "conditions": [],
+  "derivation": [
+   "Parallelogram $ABCD$, diagonals meeting at $M$: $\\triangle AMB \\cong \\triangle CMD$ (ASA: $AB = CD$, alternate angles equal), so $AM = MC$ and $BM = MD$.",
+   "Rhombus or kite with $AB = AD$, $CB = CD$: $A$ and $C$ are each equidistant from $B$ and $D$, so both lie on the perpendicular bisector of $BD$: $AC \\perp BD$.",
+   "Rhombus: the diagonals halve each other at right angles, so each side is the hypotenuse of a right triangle with legs $\\frac{d_1}{2}$ and $\\frac{d_2}{2}$.",
+   "$\\left(\\frac{d_1}{2}\\right)^2 + \\left(\\frac{d_2}{2}\\right)^2 = a^2$, i.e. $d_1^2 + d_2^2 = 4a^2$.",
+   "Kite: the diagonal joining the vertices where equal sides meet splits it into two congruent triangles (SSS, [[f:geometry.congruence-criteria]]), so it bisects those two angles."
+  ],
+  "visual_proof": "The rhombus's diagonals cut it into four congruent right triangles, each with legs d1/2 and d2/2 and hypotenuse a.",
+  "shortcut": "Rhombus side $a = \\frac12\\sqrt{d_1^2 + d_2^2}$; a point equidistant from two opposite vertices of a rhombus lies on the other diagonal.",
+  "worked_example": {
+   "question_key": "2024-09-17_1230_Q13",
+   "answer": "C",
+   "steps": [
+    "$OP = OR$ puts $O$ on the perpendicular bisector of diagonal $PR$.",
+    "In a rhombus that bisector is diagonal $QS$, so $O$ lies on $QS$ inside the rhombus.",
+    "$S$, $O$, $Q$ are collinear with $O$ between them: $\\angle SOQ = 180^\\circ$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Assuming any parallelogram has perpendicular or equal diagonals: perpendicular only for a rhombus, equal only for a rectangle.",
+   "Forgetting the halves: $d_1^2 + d_2^2 = a^2$ makes the side twice too long.",
+   "In a kite, using the wrong diagonal as the mirror line: only the one joining the vertices where equal sides meet ($BD$ in $AB = BC$, $AD = DC$) gives $\\angle ABD = \\angle CBD$ and $\\angle ADB = \\angle CDB$."
+  ],
+  "related_ids": [
+   "geometry.congruence-criteria",
+   "geometry.pythagoras",
+   "mensuration.quadrilateral-areas"
+  ],
+  "diagram": {
+   "alt_text": "Rhombus PQRS with diagonals PR = 8 and QS = 6 crossing at right angles at M; each side is 5. A point O on QS is equidistant from P and R.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "P": [
+      -4,
+      0
+     ],
+     "Q": [
+      0,
+      3
+     ],
+     "R": [
+      4,
+      0
+     ],
+     "S": [
+      0,
+      -3
+     ],
+     "M": [
+      0,
+      0
+     ],
+     "O": [
+      0,
+      1.2
+     ]
+    },
+    "segments": [
+     [
+      "P",
+      "Q"
+     ],
+     [
+      "Q",
+      "R"
+     ],
+     [
+      "R",
+      "S"
+     ],
+     [
+      "S",
+      "P"
+     ],
+     [
+      "P",
+      "R"
+     ],
+     [
+      "Q",
+      "S"
+     ],
+     [
+      "O",
+      "P"
+     ],
+     [
+      "O",
+      "R"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "M",
+      "from": "R",
+      "to": "Q",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       -2.6,
+       1.9
+      ],
+      "text": "a = 5"
+     },
+     {
+      "at": [
+       2.2,
+       -0.5
+      ],
+      "text": "d₁/2 = 4"
+     },
+     {
+      "at": [
+       0.25,
+       -1.7
+      ],
+      "text": "d₂/2 = 3"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\n\nx1, y1, x2, y2, a, t = sp.symbols('x1 y1 x2 y2 a t', real=True)\nu, v = sp.Matrix([x1, y1]), sp.Matrix([x2, y2])\nA, B, D = sp.Matrix([0, 0]), u, v\nC = u + v                                                     # parallelogram ABCD\nassert sp.simplify((A + C) / 2 - (B + D) / 2) == sp.zeros(2, 1)   # diagonals bisect each other\n# rhombus: |u| = |v| = a\nu, v = sp.Matrix([a, 0]), sp.Matrix([a * sp.cos(t), a * sp.sin(t)])\nd1, d2 = u + v, v - u\nassert sp.simplify(d1.dot(d2)) == 0                           # perpendicular diagonals\nassert sp.simplify(d1.dot(d1) + d2.dot(d2) - 4 * a**2) == 0   # d1^2 + d2^2 = 4a^2\n# kite (or rhombus): AB = AD and CB = CD force AC perpendicular to BD, for any coordinates\nP = [sp.Matrix(sp.symbols(f'{n}x {n}y', real=True)) for n in 'ABCD']\nA, B, C, D = P\nsq = lambda X: X.dot(X)\nidentity = 2 * (A - C).dot(D - B) - ((sq(A - B) - sq(A - D)) - (sq(C - B) - sq(C - D)))\nassert sp.expand(identity) == 0\n# worked examples\nassert 180 - 54 - 50 == 76                                    # 2024-09-19_1600_Q23\nx, y = (68 - 2) // 3, (33 + 7) // 2\nassert 3 * x + 2 == 68 and 2 * y - 7 == 33 and 2 * x + 3 * y == 104   # 2024-09-25_1230_Q04\n# 2024-09-17_1230_Q13: rhombus P(-4,0) Q(0,3) R(4,0) S(0,-3); O with OP = OR lies on x = 0 (diagonal QS)\nO = sp.Matrix([0, sp.Rational(6, 5)])\nPp, Q, R, S = sp.Matrix([-4, 0]), sp.Matrix([0, 3]), sp.Matrix([4, 0]), sp.Matrix([0, -3])\nassert sq(O - Pp) == sq(O - R)\nassert sp.acos((S - O).dot(Q - O) / sp.sqrt(sq(S - O) * sq(Q - O))) == sp.pi   # angle SOQ = 180\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:24+00:00"
+   }
+  }
+ }
+]

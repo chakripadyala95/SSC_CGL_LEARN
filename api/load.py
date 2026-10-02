@@ -3,7 +3,7 @@
 Usage: python -m api.load [--data-dir PATH]
 
 Reads data/intake_manifest.json (papers), data/questions/questions.jsonl and review_queue.json (extraction),
-and data/solver/verifications/*.jsonl (solver runs). Idempotent: re-running changes nothing unless an input
+data/solver/verifications/*.jsonl (solver runs) and data/review/decisions.jsonl (human review). Idempotent: re-running changes nothing unless an input
 changed. A question whose stem, options or key changed gets a new version; older versions stay for the
 attempts and solver runs that point at them.
 """
@@ -170,7 +170,10 @@ def load_questions(s: Session, records: list[dict], r: Report) -> None:
                 r.add("assets added")
         elif _update(version, {k: q[k] for k in TOPIC_FIELDS}):  # provisional tags change without a new version
             r.add("topic tags updated")
-        if question.current_version_id != version.id:
+        current = question.current_version
+        reviewed_edit = (current is not None and current.content_hash == h and current.key_status == "KEY_CONFIRMED_REVIEW"
+                         and current.official_answer != q["official_answer"])
+        if question.current_version_id != version.id and not reviewed_edit:
             question.current_version_id = version.id
             r.add("current versions moved")
     s.flush()
@@ -248,6 +251,60 @@ def withdraw_verdicts(s: Session, covered: set[int], r: Report) -> None:
     s.flush()
 
 
+REVIEW_OUTCOME = {"approve": "APPROVED", "edit": "EDITED", "reject": "REJECTED"}
+
+
+def _edited_version(s: Session, question: Question, base: QuestionVersion, answer: str, r: Report) -> QuestionVersion:
+    """The same content with a reviewer-corrected key, as its own version (attempts keep pointing at theirs)."""
+    version = s.scalar(select(QuestionVersion).where(
+        QuestionVersion.question_id == question.id, QuestionVersion.content_hash == base.content_hash,
+        QuestionVersion.official_answer == answer))
+    if version is None:
+        skip = {"id", "version", "official_answer", "key_status", "created_at", "question_id"}
+        version = QuestionVersion(
+            question_id=question.id, version=len(question.versions) + 1, official_answer=answer,
+            key_status="KEY_CONFIRMED_REVIEW",
+            **{c.key: getattr(base, c.key) for c in QuestionVersion.__table__.columns if c.key not in skip})
+        s.add(version)
+        s.flush()
+        s.refresh(question)
+        for a in s.scalars(select(QuestionAsset).where(QuestionAsset.question_version_id == base.id)):
+            s.add(QuestionAsset(question_version_id=version.id, kind=a.kind, path=a.path, shows_answer=a.shows_answer))
+        r.add("question versions added")
+    return version
+
+
+def load_decisions(s: Session, decisions: list[dict], r: Report) -> None:
+    """Apply review decisions (approve / edit / reject) made on a specific version of a question."""
+    for d in decisions:
+        question = _question(s, d["paper_id"], d["section"], d["q_no"])
+        if question is None:
+            continue
+        base = s.scalar(select(QuestionVersion).where(
+            QuestionVersion.question_id == question.id, QuestionVersion.content_hash == d["question_version"],
+            QuestionVersion.official_answer == d["official_answer"]))
+        if base is None:  # the question changed after it was reviewed; it stays in the queue
+            r.add("stale review decisions skipped")
+            continue
+        if d["action"] == "reject":
+            if question.status != "REJECTED":
+                question.status = "REJECTED"
+                r.add("questions rejected")
+        else:
+            target = base if d["action"] == "approve" else _edited_version(s, question, base, d["answer"], r)
+            if target.key_status != "KEY_CONFIRMED_REVIEW":
+                target.key_status = "KEY_CONFIRMED_REVIEW"
+                r.add("key statuses set")
+            if question.current_version_id != target.id:
+                question.current_version_id = target.id
+                r.add("current versions moved")
+        for item in s.scalars(select(ReviewItem).where(ReviewItem.question_id == question.id,
+                                                       ReviewItem.status == "OPEN")):
+            item.status = REVIEW_OUTCOME[d["action"]]
+            r.add("review items closed")
+    s.flush()
+
+
 def publish_mocks(s: Session, r: Report) -> None:
     """A section mock is PUBLISHED only when all its questions have a confirmed key."""
     s.expire_all()
@@ -277,6 +334,9 @@ def load_all(s: Session, data_dir: Path) -> Report:
     for path in sorted((data_dir / "solver" / "verifications").glob("*.jsonl")):
         covered |= load_verifications(s, read_jsonl(path), r)
     withdraw_verdicts(s, covered, r)
+    decisions = data_dir / "review" / "decisions.jsonl"
+    if decisions.exists():
+        load_decisions(s, read_jsonl(decisions), r)
     publish_mocks(s, r)
     return r
 
