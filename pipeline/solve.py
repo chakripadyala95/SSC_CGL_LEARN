@@ -10,7 +10,11 @@
       data/solver/summary/<paper>.md.
   python -m pipeline.solve report
       rolls every paper up into data/solver/SUMMARY.md and data/solver/review_queue.json (everything not
-      confirmed: disputed keys, split solvers, missing answers, extraction flags).
+      confirmed: disputed keys, split solvers, missing answers, extraction flags). Reviewed decisions in
+      data/review/decisions.jsonl turn a queued question into KEY_CONFIRMED_REVIEW (approve or edit) or
+      REJECTED, and it also writes data/solver/final_answers.jsonl (the answer each question publishes with).
+  python -m pipeline.solve import-review <dir>
+      reads the review page's exported decision documents (one JSON file each) into data/review/decisions.jsonl.
 
 The aggregator is plain code. It never changes a solver's answer and never looks at a solution to fit the key.
 """
@@ -234,21 +238,82 @@ def render_summary(paper: str, rows: list[dict], summary: dict) -> str:
 
 
 REVIEW_STATUSES = ("KEY_DISPUTED", "SOLVERS_DISAGREE", "UNRESOLVED", "NEEDS_SOLVER", "NO_KEY", "EXTRACTION_REVIEW")
+CONFIRMED = ("KEY_CONFIRMED_CODE", "KEY_CONFIRMED_DUAL", "KEY_CONFIRMED_REVIEW")
+DECISION_ACTIONS = {"approve", "edit", "reject"}
+
+
+def load_questions_all(root: Path) -> dict[tuple[str, str], dict]:
+    path = root / "data" / "questions" / "questions.jsonl"
+    return {(q["paper_id"], solver_id_for(q)): q for q in map(json.loads, path.read_text().splitlines())}
+
+
+def import_review(root: Path, src: Path) -> list[dict]:
+    """Normalise the review page's decision documents into data/review/decisions.jsonl.
+
+    Each decision is pinned to the question_version it was made on, so a later re-extraction of that
+    question puts it back in the queue instead of silently reusing the decision. Reviewer ids are not kept.
+    """
+    questions = load_questions_all(root)
+    out = []
+    for f in sorted(src.glob("*.json")):
+        d = json.loads(f.read_text())
+        q = questions.get((d["paper"], d["question_id"]))
+        if q is None:
+            raise ValueError(f"{f.name}: no question {d['paper']} {d['question_id']}")
+        if d["action"] not in DECISION_ACTIONS:
+            raise ValueError(f"{f.name}: unknown action {d['action']!r}")
+        if d["action"] != "reject" and d.get("answer") not in tuple(LETTERS):
+            raise ValueError(f"{f.name}: answer {d.get('answer')!r} not A-D")
+        if d["action"] == "approve" and d["answer"] != q["official_answer"]:
+            raise ValueError(f"{f.name}: approve must keep the key {q['official_answer']}")
+        out.append({"paper_id": d["paper"], "section": q["section"], "q_no": q["q_no"],
+                     "question_id": d["question_id"], "question_version": question_version(q),
+                     "official_answer": q["official_answer"], "status_before": d.get("status_before"),
+                     "action": d["action"], "answer": d.get("answer") if d["action"] != "reject" else None,
+                     "note": d.get("note") or "", "decided_at": d.get("decided_at")})
+    out.sort(key=lambda r: (r["paper_id"], r["section"], r["q_no"]))
+    dst = root / "data" / "review" / "decisions.jsonl"
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in out))
+    return out
+
+
+def load_decisions(root: Path) -> dict[tuple[str, str], dict]:
+    path = root / "data" / "review" / "decisions.jsonl"
+    if not path.exists():
+        return {}
+    return {(d["paper_id"], d["question_id"]): d for d in map(json.loads, path.read_text().splitlines())}
 
 
 def report(root: Path) -> dict:
-    """Roll up every paper's verification file into data/solver/SUMMARY.md and data/solver/review_queue.json."""
-    questions = {(q["paper_id"], solver_id_for(q)): q
-                 for q in map(json.loads, (root / "data" / "questions" / "questions.jsonl").read_text().splitlines())}
+    """Roll up every paper's verification file into data/solver/SUMMARY.md, data/solver/review_queue.json and
+    data/solver/final_answers.jsonl, applying reviewed decisions to queued questions."""
+    questions = load_questions_all(root)
+    decisions = load_decisions(root)
     rows = []
     for f in sorted((root / "data" / "solver" / "verifications").glob("*.jsonl")):
         rows += [json.loads(line) for line in f.read_text().splitlines() if line.strip()]
-    cols = ["parsed", "KEY_CONFIRMED_CODE", "KEY_CONFIRMED_DUAL", *REVIEW_STATUSES]
+    for r in rows:
+        r["final_answer"] = r["official_answer"] if r["status"] in CONFIRMED else None
+        d = decisions.get((r["paper_id"], r["question_id"]))
+        if r["status"] not in REVIEW_STATUSES or d is None:
+            continue
+        if d["question_version"] != question_version(questions[(r["paper_id"], r["question_id"])]):
+            continue  # the question changed after review: it goes back in the queue
+        r["review"] = d
+        r["status"] = "REJECTED" if d["action"] == "reject" else "KEY_CONFIRMED_REVIEW"
+        r["final_answer"] = d["answer"]
+    cols = ["parsed", *CONFIRMED, *REVIEW_STATUSES, "REJECTED"]
     per_paper: dict[tuple[str, str], Counter] = defaultdict(Counter)
     for r in rows:
         per_paper[(r["paper_id"], r["section"])][r["status"]] += 1
         per_paper[(r["paper_id"], r["section"])]["parsed"] += 1
     total = sum(per_paper.values(), Counter())
+
+    def published(c: Counter) -> bool:
+        return c["parsed"] == 25 and sum(c[s] for s in CONFIRMED) == 25
+
+    n_published = sum(published(c) for c in per_paper.values())
 
     def first_two(r: dict) -> tuple[str | None, str | None]:
         # the two primary solvers (A and B); a third solver only runs where these two split
@@ -259,18 +324,23 @@ def report(root: Path) -> dict:
     pairs = [first_two(r) for r in rows]
     both = [(a, b, r) for (a, b), r in zip(pairs, rows) if a and b]
     agree = [(a, r) for a, b, r in both if a == b]
+    edited = [r for r in rows if r.get("review", {}).get("action") == "edit"]
     lines = ["# Answer verification: all papers", "", "Generated by `python -m pipeline.solve report`.", "",
-             f"- Questions: {len(rows)}; confirmed: {total['KEY_CONFIRMED_CODE'] + total['KEY_CONFIRMED_DUAL']} "
-             f"({total['KEY_CONFIRMED_CODE']} by check code, {total['KEY_CONFIRMED_DUAL']} by two solvers); "
-             f"to review: {sum(total[s] for s in REVIEW_STATUSES)}",
+             f"- Questions: {len(rows)}; confirmed: {sum(total[s] for s in CONFIRMED)} "
+             f"({total['KEY_CONFIRMED_CODE']} by check code, {total['KEY_CONFIRMED_DUAL']} by two solvers, "
+             f"{total['KEY_CONFIRMED_REVIEW']} by review, of which {len(edited)} with a corrected key); "
+             f"rejected: {total['REJECTED']}; to review: {sum(total[s] for s in REVIEW_STATUSES)}",
+             f"- Section mocks published (all 25 confirmed): {n_published}/{len(per_paper)}",
              f"- Solvers A and B agreed on {len(agree)}/{len(both)} questions; where they agreed, "
              f"the sheet's key matched {sum(a == r['official_answer'] for a, r in agree)}/{len(agree)}", "",
-             "| Paper | Section | " + " | ".join(c.replace("KEY_", "").replace("_", " ").lower() for c in cols) + " |",
-             "|---" * (len(cols) + 2) + "|"]
+             "| Paper | Section | " + " | ".join(c.replace("KEY_", "").replace("_", " ").lower() for c in cols)
+             + " | published |",
+             "|---" * (len(cols) + 3) + "|"]
     for paper, section in sorted(per_paper):
-        lines.append(f"| {paper} | {section} | "
-                     + " | ".join(str(per_paper[(paper, section)][c]) for c in cols) + " |")
-    lines.append("| **total** | | " + " | ".join(f"**{total[c]}**" for c in cols) + " |")
+        c = per_paper[(paper, section)]
+        lines.append(f"| {paper} | {section} | " + " | ".join(str(c[k]) for k in cols)
+                     + f" | {'yes' if published(c) else 'no'} |")
+    lines.append("| **total** | | " + " | ".join(f"**{total[c]}**" for c in cols) + f" | **{n_published}** |")
     queue = []
     for r in rows:
         if r["status"] not in REVIEW_STATUSES:
@@ -280,23 +350,40 @@ def report(root: Path) -> dict:
                       "question_id": r["question_id"], "status": r["status"], "official_answer": r["official_answer"],
                       "solver_answers": r["solver_answers"], "extraction_review_reasons": q["review_reasons"],
                       "question_crop": q["question_crop"]})
+    reviewed = [r for r in rows if "review" in r]
+    lines += ["", "## Decided in review", ""]
+    lines += [f"- {r['paper_id']} {r['section']} Q{r['q_no']} ({r['question_id']}): {r['review']['status_before']}, "
+              f"key {r['official_answer']}, solvers {r['solver_answers']} -> {r['review']['action']}"
+              + (f" {r['final_answer']}" if r["final_answer"] else "") for r in reviewed] or ["- none"]
     lines += ["", "## Review queue", ""]
     lines += [f"- {x['paper_id']} {x['section']} Q{x['q_no']} ({x['question_id']}): {x['status']}; "
               f"key {x['official_answer']}, solvers {x['solver_answers']}" for x in queue] or ["- none"]
     (root / "data" / "solver" / "SUMMARY.md").write_text("\n".join(lines) + "\n")
     (root / "data" / "solver" / "review_queue.json").write_text(json.dumps(queue, indent=1, ensure_ascii=False) + "\n")
-    return {"total": total, "queue": queue, "agree": len(agree), "both": len(both)}
+    (root / "data" / "solver" / "final_answers.jsonl").write_text("".join(
+        json.dumps({"paper_id": r["paper_id"], "section": r["section"], "q_no": r["q_no"],
+                    "question_id": r["question_id"], "official_answer": r["official_answer"],
+                    "final_answer": r["final_answer"], "status": r["status"]}) + "\n" for r in rows))
+    return {"total": total, "queue": queue, "agree": len(agree), "both": len(both), "published": n_published}
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("command", choices=["prepare", "aggregate", "report"])
+    ap.add_argument("command", choices=["prepare", "aggregate", "report", "import-review"])
+    ap.add_argument("src", nargs="?", type=Path, help="import-review: directory of exported decision JSON files")
     ap.add_argument("--paper", help="paper_id, e.g. 2024-09-09_0900 (prepare and aggregate)")
     ap.add_argument("--repo-root", type=Path, default=ROOT)
     args = ap.parse_args()
     if args.command == "report":
         res = report(args.repo_root)
-        print(dict(res["total"]), f"A/B agree {res['agree']}/{res['both']}", f"review {len(res['queue'])}")
+        print(dict(res["total"]), f"A/B agree {res['agree']}/{res['both']}", f"review {len(res['queue'])}",
+              f"published {res['published']}")
+        return
+    if args.command == "import-review":
+        if not args.src:
+            ap.error("import-review needs the directory of decision files")
+        decisions = import_review(args.repo_root, args.src)
+        print(Counter(d["action"] for d in decisions))
         return
     if not args.paper:
         ap.error("--paper is required for prepare and aggregate")

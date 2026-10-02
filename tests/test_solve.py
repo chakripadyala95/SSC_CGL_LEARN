@@ -53,4 +53,52 @@ def test_report_rolls_up_and_queues_unconfirmed(tmp_path):
     res = report(tmp_path)
     assert res["agree"] == res["both"] == 2
     assert [q["question_id"] for q in res["queue"]] == ["2"]
-    assert "| p | QUANT | 2 | 1 | 0 | 1 |" in (tmp_path / "data" / "solver" / "SUMMARY.md").read_text()
+    assert "| p | QUANT | 2 | 1 | 0 | 0 | 1 |" in (tmp_path / "data" / "solver" / "SUMMARY.md").read_text()
+
+
+def _review_fixture(tmp_path, action, answer):
+    import json
+    (tmp_path / "data" / "questions").mkdir(parents=True)
+    (tmp_path / "data" / "solver" / "verifications").mkdir(parents=True)
+    q = {"paper_id": "p", "ssc_question_id": "7", "section": "QUANT", "q_no": 7, "review_reasons": [],
+         "question_crop": "Q7.png", "stem_text": "s", "stem_image": None, "official_answer": "A",
+         "options": [{"text": t, "image": None} for t in "1234"]}
+    (tmp_path / "data" / "questions" / "questions.jsonl").write_text(json.dumps(q) + "\n")
+    row = {"paper_id": "p", "section": "QUANT", "q_no": 7, "question_id": "7", "official_answer": "A",
+           "status": "KEY_DISPUTED", "solver_answers": {"quant-a": "C", "quant-b": "C"}}
+    (tmp_path / "data" / "solver" / "verifications" / "p.jsonl").write_text(json.dumps(row) + "\n")
+    src = tmp_path / "export"
+    src.mkdir()
+    (src / "7.json").write_text(json.dumps({"paper": "p", "question_id": "7", "action": action, "answer": answer,
+                                            "status_before": "KEY_DISPUTED", "reviewer": "u_x", "note": ""}))
+    return q, src
+
+
+def test_reviewed_edit_confirms_with_corrected_answer(tmp_path):
+    import json
+    from pipeline.solve import import_review, report
+    _, src = _review_fixture(tmp_path, "edit", "C")
+    [d] = import_review(tmp_path, src)
+    assert "reviewer" not in d
+    res = report(tmp_path)
+    assert res["queue"] == [] and res["total"]["KEY_CONFIRMED_REVIEW"] == 1
+    [fa] = map(json.loads, (tmp_path / "data" / "solver" / "final_answers.jsonl").read_text().splitlines())
+    assert (fa["official_answer"], fa["final_answer"], fa["status"]) == ("A", "C", "KEY_CONFIRMED_REVIEW")
+
+
+def test_review_goes_stale_when_question_changes(tmp_path):
+    import json
+    from pipeline.solve import import_review, report
+    q, src = _review_fixture(tmp_path, "approve", "A")
+    import_review(tmp_path, src)
+    q["stem_text"] = "re-extracted"
+    (tmp_path / "data" / "questions" / "questions.jsonl").write_text(json.dumps(q) + "\n")
+    assert [x["question_id"] for x in report(tmp_path)["queue"]] == ["7"]
+
+
+def test_import_rejects_approve_that_changes_key(tmp_path):
+    import pytest
+    from pipeline.solve import import_review
+    _, src = _review_fixture(tmp_path, "approve", "C")
+    with pytest.raises(ValueError):
+        import_review(tmp_path, src)

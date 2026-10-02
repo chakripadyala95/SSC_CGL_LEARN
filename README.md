@@ -52,3 +52,8 @@ Writes one record per Quant and Reasoning question to `data/questions/questions.
   with the key), `KEY_DISPUTED` (solvers agree on another option), or one of the review states.
 - `data/solver/SUMMARY.md` has the per-paper table; `data/solver/review_queue.json` lists every question that
   is not confirmed, for human review.
+- Human review: `python -m pipeline.solve import-review <dir>` reads the review page's exported decision files
+  into `data/review/decisions.jsonl` (approve, edit or reject, pinned to the question version it was made on;
+  reviewer ids are not kept). `report` then marks those questions `KEY_CONFIRMED_REVIEW` or `REJECTED`, and
+  writes `data/solver/final_answers.jsonl`: the sheet's key next to the answer each question publishes with.
+  A section mock is published once all 25 of its questions are `KEY_CONFIRMED_*`.
