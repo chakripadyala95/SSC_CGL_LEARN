@@ -1,0 +1,1149 @@
+{
+ "section": "REASONING",
+ "status": "PROPOSED",
+ "topics": [
+  {
+   "topic": "Analogy",
+   "slug": "analogy",
+   "subtopics": [
+    {
+     "name": "Word analogy",
+     "question_types": [
+      "word pair relation",
+      "synonym/antonym",
+      "country-river / item-category",
+      "Hindi word pair"
+     ],
+     "question_count": 29
+    },
+    {
+     "name": "Number pair analogy",
+     "question_types": [
+      "number to number via arithmetic rule",
+      "square/cube based pair",
+      "add/multiply constant"
+     ],
+     "question_count": 41
+    },
+    {
+     "name": "Number set analogy",
+     "question_types": [
+      "same operation across number triads",
+      "triad product/sum rule"
+     ],
+     "question_count": 42
+    },
+    {
+     "name": "Letter-cluster analogy",
+     "question_types": [
+      "letter-cluster shift",
+      "opposite-letter pair",
+      "rearranged cluster"
+     ],
+     "question_count": 19
+    }
+   ],
+   "question_count": 131
+  },
+  {
+   "topic": "Classification",
+   "slug": "classification",
+   "subtopics": [
+    {
+     "name": "Letter-cluster odd one out",
+     "question_types": [
+      "odd letter cluster by gaps",
+      "odd letter cluster by position"
+     ],
+     "question_count": 27
+    },
+    {
+     "name": "Number pair/triad odd one out",
+     "question_types": [
+      "odd number pair",
+      "odd number triad",
+      "ratio/n(n+1) rule"
+     ],
+     "question_count": 25
+    },
+    {
+     "name": "Number odd one out",
+     "question_types": [
+      "odd number by property",
+      "prime odd one out"
+     ],
+     "question_count": 5
+    },
+    {
+     "name": "Word odd one out",
+     "question_types": [
+      "odd word",
+      "odd word pair"
+     ],
+     "question_count": 5
+    }
+   ],
+   "question_count": 62
+  },
+  {
+   "topic": "Series",
+   "slug": "series",
+   "subtopics": [
+    {
+     "name": "Number series",
+     "question_types": [
+      "missing/next term",
+      "wrong term",
+      "difference-based series",
+      "prime/square series"
+     ],
+     "question_count": 30
+    },
+    {
+     "name": "Letter-cluster series",
+     "question_types": [
+      "next letter cluster",
+      "position-wise letter steps"
+     ],
+     "question_count": 30
+    },
+    {
+     "name": "Alphanumeric series",
+     "question_types": [
+      "letter-number cluster series",
+      "split letter and number patterns"
+     ],
+     "question_count": 13
+    },
+    {
+     "name": "Repeating-block letter series",
+     "question_types": [
+      "fill blanks with repeating block",
+      "letter blocks in blanks"
+     ],
+     "question_count": 33
+    }
+   ],
+   "question_count": 106
+  },
+  {
+   "topic": "Coding-Decoding",
+   "slug": "coding",
+   "subtopics": [
+    {
+     "name": "Letter shift coding",
+     "question_types": [
+      "letter-to-letter shift",
+      "reverse then shift",
+      "vowel/consonant shift"
+     ],
+     "question_count": 22
+    },
+    {
+     "name": "Letter-to-number coding",
+     "question_types": [
+      "letter position values",
+      "sum of positions",
+      "reverse alphabet positions"
+     ],
+     "question_count": 16
+    },
+    {
+     "name": "Common element coding",
+     "question_types": [
+      "sentence code, find word code",
+      "code by common elements"
+     ],
+     "question_count": 25
+    },
+    {
+     "name": "Rearrangement coding",
+     "question_types": [
+      "reverse/rearrange letters",
+      "opposite-letter coding"
+     ],
+     "question_count": 4
+    }
+   ],
+   "question_count": 67
+  },
+  {
+   "topic": "Blood Relations",
+   "slug": "blood-relations",
+   "subtopics": [
+    {
+     "name": "Coded relations",
+     "question_types": [
+      "symbol-coded family relation",
+      "decode symbols then derive relation",
+      "which expression means X"
+     ],
+     "question_count": 28
+    },
+    {
+     "name": "Family tree deduction",
+     "question_types": [
+      "relationship deduction from statements"
+     ],
+     "question_count": 2
+    }
+   ],
+   "question_count": 30
+  },
+  {
+   "topic": "Direction",
+   "slug": "direction",
+   "subtopics": [
+    {
+     "name": "Distance and direction",
+     "question_types": [
+      "net distance from start",
+      "final direction after turns"
+     ],
+     "question_count": 0
+    }
+   ],
+   "question_count": 0
+  },
+  {
+   "topic": "Ranking/Order",
+   "slug": "ranking",
+   "subtopics": [
+    {
+     "name": "Position in row",
+     "question_types": [
+      "rank from both ends",
+      "total persons in row"
+     ],
+     "question_count": 0
+    },
+    {
+     "name": "Comparison order",
+     "question_types": [
+      "tallest/heaviest from comparisons"
+     ],
+     "question_count": 0
+    }
+   ],
+   "question_count": 0
+  },
+  {
+   "topic": "Syllogism",
+   "slug": "syllogism",
+   "subtopics": [
+    {
+     "name": "Statements and conclusions",
+     "question_types": [
+      "three statements, conclusions",
+      "possible-case Venn analysis"
+     ],
+     "question_count": 33
+    }
+   ],
+   "question_count": 33
+  },
+  {
+   "topic": "Venn",
+   "slug": "venn",
+   "subtopics": [
+    {
+     "name": "Venn region reading",
+     "question_types": [
+      "count in a region",
+      "sum of overlap regions",
+      "identify region"
+     ],
+     "question_count": 12
+    },
+    {
+     "name": "Venn diagram selection",
+     "question_types": [
+      "best diagram for classes"
+     ],
+     "question_count": 0
+    }
+   ],
+   "question_count": 12
+  },
+  {
+   "topic": "Puzzles/Seating",
+   "slug": "seating",
+   "subtopics": [
+    {
+     "name": "Linear seating",
+     "question_types": [
+      "who sits where in a row"
+     ],
+     "question_count": 0
+    },
+    {
+     "name": "Circular seating",
+     "question_types": [
+      "who sits opposite/next"
+     ],
+     "question_count": 0
+    }
+   ],
+   "question_count": 0
+  },
+  {
+   "topic": "Mathematical Operations",
+   "slug": "math-operations",
+   "subtopics": [
+    {
+     "name": "Sign interchange",
+     "question_types": [
+      "evaluate after interchanging signs",
+      "symbol substitution then BODMAS"
+     ],
+     "question_count": 51
+    },
+    {
+     "name": "Number/sign swap to balance",
+     "question_types": [
+      "which swap makes equation correct",
+      "fill signs"
+     ],
+     "question_count": 9
+    }
+   ],
+   "question_count": 60
+  },
+  {
+   "topic": "Missing Number",
+   "slug": "missing-number",
+   "subtopics": [
+    {
+     "name": "Number set relation",
+     "question_types": [
+      "same operation across number sets"
+     ],
+     "question_count": 8
+    }
+   ],
+   "question_count": 8
+  },
+  {
+   "topic": "Matrix",
+   "slug": "matrix",
+   "subtopics": [
+    {
+     "name": "Number matrix",
+     "question_types": [
+      "row/column rule missing number"
+     ],
+     "question_count": 0
+    }
+   ],
+   "question_count": 0
+  },
+  {
+   "topic": "Figure-based",
+   "slug": "figure",
+   "subtopics": [
+    {
+     "name": "Figure series",
+     "question_types": [
+      "complete figure series",
+      "element movement/rotation",
+      "position permutation",
+      "figure analogy"
+     ],
+     "question_count": 58
+    },
+    {
+     "name": "Mirror image",
+     "question_types": [
+      "mirror image about line MN",
+      "vertical mirror image"
+     ],
+     "question_count": 37
+    },
+    {
+     "name": "Water image",
+     "question_types": [
+      "water image of figure/word"
+     ],
+     "question_count": 0
+    },
+    {
+     "name": "Paper folding/cutting",
+     "question_types": [
+      "unfold punched/cut paper",
+      "transparent sheet fold"
+     ],
+     "question_count": 31
+    },
+    {
+     "name": "Embedded figure",
+     "question_types": [
+      "find figure hidden in option"
+     ],
+     "question_count": 12
+    },
+    {
+     "name": "Pattern completion",
+     "question_types": [
+      "complete the figure pattern",
+      "symmetry completion"
+     ],
+     "question_count": 6
+    }
+   ],
+   "question_count": 144
+  },
+  {
+   "topic": "Dice/Cube",
+   "slug": "dice",
+   "subtopics": [
+    {
+     "name": "Dice positions",
+     "question_types": [
+      "opposite face from two/three dice positions",
+      "adjacent faces",
+      "cyclic order"
+     ],
+     "question_count": 33
+    },
+    {
+     "name": "Cube net",
+     "question_types": [
+      "opposite faces from unfolded cube"
+     ],
+     "question_count": 2
+    },
+    {
+     "name": "Cube cutting",
+     "question_types": [
+      "painted cube counts"
+     ],
+     "question_count": 0
+    }
+   ],
+   "question_count": 35
+  },
+  {
+   "topic": "Alphabet/Word order",
+   "slug": "alphabet",
+   "subtopics": [
+    {
+     "name": "Letter sorting in word",
+     "question_types": [
+      "unchanged positions after sorting",
+      "letters between after sorting",
+      "gap count after sorting"
+     ],
+     "question_count": 32
+    },
+    {
+     "name": "Dictionary order",
+     "question_types": [
+      "arrange words alphabetically"
+     ],
+     "question_count": 0
+    }
+   ],
+   "question_count": 32
+  },
+  {
+   "topic": "Counting Figures",
+   "slug": "counting",
+   "subtopics": [
+    {
+     "name": "Triangles",
+     "question_types": [
+      "count triangles in figure"
+     ],
+     "question_count": 18
+    },
+    {
+     "name": "Squares/rectangles",
+     "question_types": [
+      "count squares in figure"
+     ],
+     "question_count": 5
+    },
+    {
+     "name": "Other shapes",
+     "question_types": [
+      "count lines/semicircles/shapes"
+     ],
+     "question_count": 7
+    }
+   ],
+   "question_count": 30
+  }
+ ],
+ "entries": [
+  {
+   "id": "analogy.word-relation",
+   "topic": "Analogy",
+   "subtopic": "Word analogy",
+   "name": "Word-pair relationship",
+   "statement": "Name the exact relation in the given pair (synonym, antonym, worker-tool, country-river, item-category) and pick the option pair with the same relation.",
+   "visual": false,
+   "seen": true,
+   "question_count": 29
+  },
+  {
+   "id": "analogy.number-arithmetic-rule",
+   "topic": "Analogy",
+   "subtopic": "Number pair analogy",
+   "name": "Number pair arithmetic rule",
+   "statement": "Find the linear rule linking the pair (a x k, a + k, a x k +/- c, digit operations) and test it on every option.",
+   "visual": false,
+   "seen": true,
+   "question_count": 49
+  },
+  {
+   "id": "analogy.number-power-rule",
+   "topic": "Analogy",
+   "subtopic": "Number pair analogy",
+   "name": "Square/cube based number rule",
+   "statement": "Check whether one number is a square, cube, root or n^2 +/- c / n^3 +/- c of the other before trying linear rules.",
+   "visual": false,
+   "seen": true,
+   "question_count": 11
+  },
+  {
+   "id": "analogy.number-set-rule",
+   "topic": "Analogy",
+   "subtopic": "Number set analogy",
+   "name": "Number triad operation rule",
+   "statement": "Derive the operation that turns the outer numbers of a triad into the middle/last one (product, sum x k, (a x b) + c) and apply it to the set; never split numbers into digits unless told.",
+   "visual": false,
+   "seen": true,
+   "question_count": 26
+  },
+  {
+   "id": "analogy.letter-cluster-shift",
+   "topic": "Analogy",
+   "subtopic": "Letter-cluster analogy",
+   "name": "Letter-cluster position shift",
+   "statement": "Write the alphabet position of each letter, compute the +/- shift per position (constant, alternating or increasing) and apply the same shifts to the target cluster.",
+   "visual": false,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "classification.letter-gap-pattern",
+   "topic": "Classification",
+   "subtopic": "Letter-cluster odd one out",
+   "name": "Letter-cluster gap pattern",
+   "statement": "Write the gaps between consecutive letters of each cluster (e.g. +2,+3) and pick the cluster whose gap pattern differs.",
+   "visual": false,
+   "seen": true,
+   "question_count": 27
+  },
+  {
+   "id": "classification.number-pair-rule",
+   "topic": "Classification",
+   "subtopic": "Number pair/triad odd one out",
+   "name": "Number pair odd-one-out rule",
+   "statement": "Find the rule linking the two numbers of each pair (multiple, square, n(n+1), ratio, prime gap) and pick the pair that breaks it.",
+   "visual": false,
+   "seen": true,
+   "question_count": 18
+  },
+  {
+   "id": "classification.number-triad-rule",
+   "topic": "Classification",
+   "subtopic": "Number pair/triad odd one out",
+   "name": "Number triad odd-one-out rule",
+   "statement": "Find the operation shared by the triads (product, sum x k, a + b = c) and pick the triad that fails it.",
+   "visual": false,
+   "seen": true,
+   "question_count": 9
+  },
+  {
+   "id": "classification.number-property",
+   "topic": "Classification",
+   "subtopic": "Number odd one out",
+   "name": "Number property check",
+   "statement": "Test each number for a common property (prime, perfect square/cube, divisibility, digit sum) and pick the one without it.",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "classification.word-category",
+   "topic": "Classification",
+   "subtopic": "Word odd one out",
+   "name": "Word category membership",
+   "statement": "Put each word (or word pair) into its category or relation and pick the one that belongs to a different category.",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "series.repeating-block",
+   "topic": "Series",
+   "subtopic": "Repeating-block letter series",
+   "name": "Repeating block fill-in",
+   "statement": "Guess the block length from the blank count and the letter count, write the series in blocks of that length and fill the blanks so every block is identical.",
+   "visual": false,
+   "seen": true,
+   "question_count": 33
+  },
+  {
+   "id": "series.letter-position-steps",
+   "topic": "Series",
+   "subtopic": "Letter-cluster series",
+   "name": "Position-wise letter steps",
+   "statement": "Track each letter position of the clusters separately and find the +/- step of each position across terms.",
+   "visual": false,
+   "seen": true,
+   "question_count": 35
+  },
+  {
+   "id": "series.alphanumeric-split",
+   "topic": "Series",
+   "subtopic": "Alphanumeric series",
+   "name": "Split letter and number streams",
+   "statement": "Separate the letters and the numbers of each term into their own series and solve each one independently.",
+   "visual": false,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "series.first-differences",
+   "topic": "Series",
+   "subtopic": "Number series",
+   "name": "First differences",
+   "statement": "Write the differences of consecutive terms and look for a constant, arithmetic or repeating pattern.",
+   "visual": false,
+   "seen": true,
+   "question_count": 19
+  },
+  {
+   "id": "series.second-differences",
+   "topic": "Series",
+   "subtopic": "Number series",
+   "name": "Second-order differences",
+   "statement": "If the first differences are not constant, take differences again; a constant or odd-number second difference fixes the next term.",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "series.prime-pattern",
+   "topic": "Series",
+   "subtopic": "Number series",
+   "name": "Prime-number pattern",
+   "statement": "Check whether the terms or their differences are consecutive primes (2, 3, 5, 7, 11, 13 ...).",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "series.square-cube-pattern",
+   "topic": "Series",
+   "subtopic": "Number series",
+   "name": "Squares and cubes pattern",
+   "statement": "Compare terms or differences with n^2, n^3 or n^2 +/- n before trying other rules.",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "series.multiply-add",
+   "topic": "Series",
+   "subtopic": "Number series",
+   "name": "Multiply then add pattern",
+   "statement": "Check ratios of consecutive terms; if near-constant, test term x k +/- c (c constant or increasing n).",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "series.alternating",
+   "topic": "Series",
+   "subtopic": "Number series",
+   "name": "Alternating two-series pattern",
+   "statement": "Split odd and even positioned terms (or alternate operations) and solve each sub-series separately.",
+   "visual": false,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "coding.letter-position-shift",
+   "topic": "Coding-Decoding",
+   "subtopic": "Letter shift coding",
+   "name": "Letter position shift",
+   "statement": "Compare word and code letter by letter by alphabet position to find a constant, alternating or increasing shift, then apply it.",
+   "visual": false,
+   "seen": true,
+   "question_count": 29
+  },
+  {
+   "id": "coding.reverse-then-shift",
+   "topic": "Coding-Decoding",
+   "subtopic": "Letter shift coding",
+   "name": "Reverse then shift",
+   "statement": "If no direct shift fits, reverse the word first and then look for the per-letter shift.",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "coding.vowel-consonant-shift",
+   "topic": "Coding-Decoding",
+   "subtopic": "Letter shift coding",
+   "name": "Vowel/consonant rule",
+   "statement": "Check whether vowels and consonants follow different rules (e.g. only consonants shift, vowels change to next vowel).",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "coding.letter-rearrangement",
+   "topic": "Coding-Decoding",
+   "subtopic": "Rearrangement coding",
+   "name": "Letter rearrangement",
+   "statement": "Code letters are the same as the word's but reordered (reversed, halves swapped, adjacent pairs swapped); map positions and apply.",
+   "visual": false,
+   "seen": true,
+   "question_count": 9
+  },
+  {
+   "id": "coding.common-element-elimination",
+   "topic": "Coding-Decoding",
+   "subtopic": "Common element coding",
+   "name": "Common element elimination",
+   "statement": "Compare two coded sentences: the word common to both has the code common to both; eliminate to isolate the asked word.",
+   "visual": false,
+   "seen": true,
+   "question_count": 25
+  },
+  {
+   "id": "coding.letter-position-value",
+   "topic": "Coding-Decoding",
+   "subtopic": "Letter-to-number coding",
+   "name": "Letter position values",
+   "statement": "Replace each letter by its alphabet position (A=1 ... Z=26), possibly +/- a constant, and read the code.",
+   "visual": false,
+   "seen": true,
+   "question_count": 10
+  },
+  {
+   "id": "coding.position-sum-rule",
+   "topic": "Coding-Decoding",
+   "subtopic": "Letter-to-number coding",
+   "name": "Sum/count of letter values",
+   "statement": "Code = sum of letter positions, possibly multiplied or offset by the number of letters; test sum, sum x n and sum +/- n.",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "coding.reverse-alphabet-position",
+   "topic": "Coding-Decoding",
+   "subtopic": "Letter-to-number coding",
+   "name": "Reverse alphabet positions",
+   "statement": "Use reverse positions (Z=1 ... A=26, i.e. 27 minus position) for each letter, singly or summed.",
+   "visual": false,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "blood-relations.symbol-decoding",
+   "topic": "Blood Relations",
+   "subtopic": "Coded relations",
+   "name": "Decode symbol relations",
+   "statement": "Translate each symbol into a relation, draw it on a family tree with gender marks, and read the relation between the end persons.",
+   "visual": true,
+   "seen": true,
+   "question_count": 28
+  },
+  {
+   "id": "blood-relations.family-tree",
+   "topic": "Blood Relations",
+   "subtopic": "Family tree deduction",
+   "name": "Family tree diagram",
+   "statement": "Draw generations as rows, mark + / - for gender and = for couples, then trace the path between the two persons.",
+   "visual": true,
+   "seen": true,
+   "question_count": 14
+  },
+  {
+   "id": "blood-relations.pointing-statements",
+   "topic": "Blood Relations",
+   "subtopic": "Family tree deduction",
+   "name": "Pointing/introduction statements",
+   "statement": "Start from the end of the sentence ('my father's only son' = me) and work back to the speaker.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "direction.net-displacement",
+   "topic": "Direction",
+   "subtopic": "Distance and direction",
+   "name": "Net displacement",
+   "statement": "Add up north-south and east-west moves separately; shortest distance = sqrt(NS^2 + EW^2) and direction from the signs.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "direction.turn-tracking",
+   "topic": "Direction",
+   "subtopic": "Distance and direction",
+   "name": "Turn tracking",
+   "statement": "Right turn = 90 deg clockwise, left = 90 deg anticlockwise; track facing direction after each turn on a compass grid.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "ranking.position-both-ends",
+   "topic": "Ranking/Order",
+   "subtopic": "Position in row",
+   "name": "Rank from both ends",
+   "statement": "Total = rank from left + rank from right - 1; persons between A and B = |difference of positions| - 1.",
+   "visual": false,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "ranking.comparison-chain",
+   "topic": "Ranking/Order",
+   "subtopic": "Comparison order",
+   "name": "Comparison chain",
+   "statement": "Write all comparisons as one ordered chain (A > B > C) and read the extreme or middle element.",
+   "visual": false,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "syllogism.venn-cases",
+   "topic": "Syllogism",
+   "subtopic": "Statements and conclusions",
+   "name": "Venn possible cases",
+   "statement": "Draw the minimal Venn diagram satisfying all statements, then accept a conclusion only if it holds in every possible case.",
+   "visual": true,
+   "seen": true,
+   "question_count": 33
+  },
+  {
+   "id": "syllogism.either-or",
+   "topic": "Syllogism",
+   "subtopic": "Statements and conclusions",
+   "name": "Either-or complementary pair",
+   "statement": "When two conclusions about the same pair are individually uncertain but one must be true (Some/No), answer 'either I or II follows'.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "venn.region-reading",
+   "topic": "Venn",
+   "subtopic": "Venn region reading",
+   "name": "Venn region reading",
+   "statement": "Identify the region inside exactly the required shapes and outside the excluded ones, then read or add the numbers in those regions.",
+   "visual": true,
+   "seen": true,
+   "question_count": 12
+  },
+  {
+   "id": "venn.best-fit-diagram",
+   "topic": "Venn",
+   "subtopic": "Venn diagram selection",
+   "name": "Best-fit Venn diagram",
+   "statement": "Decide for each pair of classes whether one contains the other, they overlap, or are disjoint, then choose the diagram matching all pairs.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "seating.linear-arrangement",
+   "topic": "Puzzles/Seating",
+   "subtopic": "Linear seating",
+   "name": "Linear seating arrangement",
+   "statement": "Fix the person with the most definite clue first, draw blanks for seats, and place the rest clue by clue noting the facing direction.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "seating.circular-arrangement",
+   "topic": "Puzzles/Seating",
+   "subtopic": "Circular seating",
+   "name": "Circular seating arrangement",
+   "statement": "Fix one person, remember left/right flips for people facing the centre, and place others relative to fixed seats.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "math-operations.sign-interchange",
+   "topic": "Mathematical Operations",
+   "subtopic": "Sign interchange",
+   "name": "Sign/symbol interchange",
+   "statement": "Rewrite the expression with the interchanged or substituted signs before evaluating anything.",
+   "visual": false,
+   "seen": true,
+   "question_count": 51
+  },
+  {
+   "id": "math-operations.bodmas",
+   "topic": "Mathematical Operations",
+   "subtopic": "Sign interchange",
+   "name": "BODMAS evaluation",
+   "statement": "Evaluate brackets, then division and multiplication left to right, then addition and subtraction left to right.",
+   "visual": false,
+   "seen": true,
+   "question_count": 59
+  },
+  {
+   "id": "math-operations.swap-to-balance",
+   "topic": "Mathematical Operations",
+   "subtopic": "Number/sign swap to balance",
+   "name": "Swap trial to balance equation",
+   "statement": "Apply each option's swap (two numbers or two signs) and check which makes LHS = RHS; start with options that fix the size mismatch.",
+   "visual": false,
+   "seen": true,
+   "question_count": 9
+  },
+  {
+   "id": "missing-number.set-operation-rule",
+   "topic": "Missing Number",
+   "subtopic": "Number set relation",
+   "name": "Same operation across sets",
+   "statement": "Find one operation that turns the given numbers into the result in every complete set and apply it to the incomplete set.",
+   "visual": false,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "matrix.row-column-rule",
+   "topic": "Matrix",
+   "subtopic": "Number matrix",
+   "name": "Row/column rule",
+   "statement": "Test the same operation along every row (then every column) of the grid to find the missing cell.",
+   "visual": false,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "figure.element-tracking",
+   "topic": "Figure-based",
+   "subtopic": "Figure series",
+   "name": "Element tracking across frames",
+   "statement": "Follow one element at a time through the frames (path, step size, direction) and predict its next position.",
+   "visual": true,
+   "seen": true,
+   "question_count": 23
+  },
+  {
+   "id": "figure.rotation-step",
+   "topic": "Figure-based",
+   "subtopic": "Figure series",
+   "name": "Fixed-angle rotation",
+   "statement": "Measure the rotation of each element per frame (45/90/135 deg, clockwise or anticlockwise) and continue it.",
+   "visual": true,
+   "seen": true,
+   "question_count": 19
+  },
+  {
+   "id": "figure.element-count-change",
+   "topic": "Figure-based",
+   "subtopic": "Figure series",
+   "name": "Element addition/removal",
+   "statement": "Count elements (lines, dots, shapes) in each frame and continue the add/remove pattern.",
+   "visual": true,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "figure.position-permutation",
+   "topic": "Figure-based",
+   "subtopic": "Figure series",
+   "name": "Position permutation of symbols",
+   "statement": "Number the positions in the frame and record where each symbol moves; repeat the same permutation for the next frame.",
+   "visual": true,
+   "seen": true,
+   "question_count": 10
+  },
+  {
+   "id": "figure.mirror-image",
+   "topic": "Figure-based",
+   "subtopic": "Mirror image",
+   "name": "Mirror image about a line",
+   "statement": "Flip every part across the mirror line: for a vertical mirror left and right swap, top and bottom stay; for a horizontal mirror the reverse.",
+   "visual": true,
+   "seen": true,
+   "question_count": 40
+  },
+  {
+   "id": "figure.water-image",
+   "topic": "Figure-based",
+   "subtopic": "Water image",
+   "name": "Water image",
+   "statement": "Water reflection flips top and bottom while left and right stay the same.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "figure.paper-fold-unfold",
+   "topic": "Figure-based",
+   "subtopic": "Paper folding/cutting",
+   "name": "Paper fold and unfold",
+   "statement": "Unfold one step at a time, mirroring every hole or cut across each fold line in reverse order of folding.",
+   "visual": true,
+   "seen": true,
+   "question_count": 28
+  },
+  {
+   "id": "figure.transparent-sheet-fold",
+   "topic": "Figure-based",
+   "subtopic": "Paper folding/cutting",
+   "name": "Transparent sheet fold",
+   "statement": "Reflect the pattern on the folded half across the fold line and superimpose it on the other half.",
+   "visual": true,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "figure.embedded-figure",
+   "topic": "Figure-based",
+   "subtopic": "Embedded figure",
+   "name": "Embedded figure trace",
+   "statement": "Pick the most distinctive corner or line of the target shape and trace it in each option, keeping size and orientation fixed.",
+   "visual": true,
+   "seen": true,
+   "question_count": 12
+  },
+  {
+   "id": "figure.pattern-completion",
+   "topic": "Figure-based",
+   "subtopic": "Pattern completion",
+   "name": "Symmetry pattern completion",
+   "statement": "Use the figure's line(s) of symmetry to reconstruct the missing quarter from the opposite quarter.",
+   "visual": true,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "dice.common-face-opposite",
+   "topic": "Dice/Cube",
+   "subtopic": "Dice positions",
+   "name": "Common face rule",
+   "statement": "With a face common to two dice views, read the remaining faces in the same clockwise order from it; faces in the same position are opposite.",
+   "visual": true,
+   "seen": true,
+   "question_count": 21
+  },
+  {
+   "id": "dice.adjacency-elimination",
+   "topic": "Dice/Cube",
+   "subtopic": "Dice positions",
+   "name": "Adjacent-face elimination",
+   "statement": "All faces seen together with a face are adjacent to it; the one face never seen with it is its opposite.",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "dice.cyclic-order",
+   "topic": "Dice/Cube",
+   "subtopic": "Dice positions",
+   "name": "Cyclic order of faces",
+   "statement": "Write the three visible faces in clockwise order for each view and align the views on a shared face to fix the rest.",
+   "visual": true,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "dice.cube-net-opposites",
+   "topic": "Dice/Cube",
+   "subtopic": "Cube net",
+   "name": "Cube net opposite faces",
+   "statement": "In an unfolded net, faces separated by exactly one face in a straight line are opposite; adjacent squares cannot be opposite.",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "dice.painted-cube-count",
+   "topic": "Dice/Cube",
+   "subtopic": "Cube cutting",
+   "name": "Painted cube counting",
+   "statement": "For an n x n x n cube painted on all faces: 3 faces = 8, 2 faces = 12(n-2), 1 face = 6(n-2)^2, none = (n-2)^3.",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "alphabet.sorted-position-compare",
+   "topic": "Alphabet/Word order",
+   "subtopic": "Letter sorting in word",
+   "name": "Sort and compare positions",
+   "statement": "Write the word and its alphabetically sorted version one above the other and compare position by position.",
+   "visual": false,
+   "seen": true,
+   "question_count": 30
+  },
+  {
+   "id": "alphabet.letters-between",
+   "topic": "Alphabet/Word order",
+   "subtopic": "Letter sorting in word",
+   "name": "Letters between / gap count",
+   "statement": "Use alphabet positions (EJOTY anchors: 5, 10, 15, 20, 25) to count letters between two letters: gap = |p1 - p2| - 1.",
+   "visual": false,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "alphabet.opposite-letter",
+   "topic": "Alphabet/Word order",
+   "subtopic": "Letter sorting in word",
+   "name": "Opposite letter pairs",
+   "statement": "Opposite letter of a letter at position p is at 27 - p (A-Z, B-Y, C-X ...).",
+   "visual": false,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "alphabet.dictionary-order",
+   "topic": "Alphabet/Word order",
+   "subtopic": "Dictionary order",
+   "name": "Dictionary order",
+   "statement": "Compare words letter by letter from the left; the first differing letter decides the order.",
+   "visual": false,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "counting.triangles",
+   "topic": "Counting Figures",
+   "subtopic": "Triangles",
+   "name": "Systematic triangle count",
+   "statement": "Label all points and count triangles by size or by base line (a line cut into n segments with an apex gives n(n+1)/2), so none is missed.",
+   "visual": true,
+   "seen": true,
+   "question_count": 18
+  },
+  {
+   "id": "counting.squares",
+   "topic": "Counting Figures",
+   "subtopic": "Squares/rectangles",
+   "name": "Square count by size",
+   "statement": "Count squares size by size; an n x n grid has sum of k^2 for k = 1..n squares.",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "counting.lines-shapes",
+   "topic": "Counting Figures",
+   "subtopic": "Other shapes",
+   "name": "Line and shape enumeration",
+   "statement": "Label points and list each straight line or shape once by its end points, grouping by direction or size.",
+   "visual": true,
+   "seen": true,
+   "question_count": 7
+  }
+ ]
+}

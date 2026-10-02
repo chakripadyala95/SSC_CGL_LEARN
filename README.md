@@ -88,3 +88,10 @@ make test             # needs the database for tests/test_api.py (skipped when u
 
 API: `/mocks`, `/mocks/{id}/questions` (published mocks only, no key, blind crops only), `/admin/mocks/{id}/questions`
 and `/admin/questions/{id}` (key, both extraction reads, solver runs), `/admin/review-queue`, `/exam-pattern`, `/papers`.
+
+## Phase 3a: Taxonomy and formula/method IDs
+
+`data/taxonomy/quant.json` and `reasoning.json` hold the proposed topic tree and the formula/method library IDs
+(`<topic-slug>.<slug>`, never changed once published). `python -m pipeline.taxonomy check` validates them and
+`python -m pipeline.taxonomy render` writes `TAXONOMY.md`. `data/taxonomy/discovery/` keeps the first labelling
+pass that the counts come from; these are draft tags, not the Phase 3c tags.
