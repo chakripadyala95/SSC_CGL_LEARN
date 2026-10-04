@@ -1,0 +1,247 @@
+{
+ "Algebra": {
+  "sampled": 6,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Alphabet/Word order": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Analogy": {
+  "sampled": 14,
+  "checked": 14,
+  "agree": 14,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Average": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Blood Relations": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Classification": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 6,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Coding-Decoding": {
+  "sampled": 7,
+  "checked": 7,
+  "agree": 7,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Counting Figures": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Data Interpretation": {
+  "sampled": 8,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Dice/Cube": {
+  "sampled": 4,
+  "checked": 4,
+  "agree": 3,
+  "rate": 0.75,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-13_1600_R11",
+    "agree": false,
+    "first": {
+     "topic": "Dice/Cube",
+     "subtopic": "Dice positions",
+     "formula_ids": [
+      "dice.cyclic-order",
+      "dice.common-face-opposite"
+     ]
+    },
+    "second": {
+     "topic": "Dice/Cube",
+     "subtopic": "Dice positions",
+     "formula_ids": [
+      "dice.common-face-opposite",
+      "dice.adjacency-elimination"
+     ]
+    }
+   }
+  ]
+ },
+ "Figure-based": {
+  "sampled": 14,
+  "checked": 14,
+  "agree": 14,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Geometry": {
+  "sampled": 6,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Mathematical Operations": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 6,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Mensuration": {
+  "sampled": 4,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Mixture & Alligation": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Number System": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Percentage": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Profit & Loss": {
+  "sampled": 4,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Ratio & Proportion": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "SI/CI": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Series": {
+  "sampled": 10,
+  "checked": 10,
+  "agree": 10,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Simplification": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Statistics": {
+  "sampled": 1,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Syllogism": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Time & Work": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Time-Speed-Distance": {
+  "sampled": 3,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Trigonometry": {
+  "sampled": 6,
+  "checked": 0,
+  "agree": 0,
+  "rate": null,
+  "passes": false,
+  "disagreements": []
+ },
+ "Venn": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ }
+}

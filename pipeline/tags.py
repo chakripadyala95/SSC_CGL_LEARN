@@ -10,15 +10,17 @@ Tags are proposed by an LLM tagger (pipeline/prompts/tagger_v1.md). A blind seco
 of every topic; a topic below 95% agreement is retagged. Two taggers agree on a question when they give the same
 topic and subtopic and the second tagger's ids include the first tagger's primary id.
 Near-duplicates use a local open-source embedding model (fastembed, BAAI/bge-small-en-v1.5); a question whose
-text is near-identical to a question in an earlier shift, with the same subtopic, gets `duplicate_of` so
-analytics count the pattern once.
+text is near-identical to a question in an earlier shift, with the same subtopic, a near-identical stem string and
+at least 3 of the same 4 options, gets `duplicate_of` so analytics count it once.
 """
 
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 import random
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -32,6 +34,8 @@ SAMPLE_RATE = 0.10
 MIN_SAMPLE = 3
 AGREEMENT_BAR = 0.95
 DUP_THRESHOLD = 0.95
+OPTION_OVERLAP = 0.6  # 3 of 4 options shared
+STEM_RATIO = 0.97  # character-level, so a changed number or name still counts as a different question
 EMBED_MODEL = "BAAI/bge-small-en-v1.5"
 
 
@@ -112,9 +116,9 @@ def sample(root: Path, seed: int = 0) -> dict[str, list[str]]:
     by_topic = defaultdict(list)
     for k, t in sorted(load_tags(root).items()):
         by_topic[t["topic"]].append(k)
-    rng = random.Random(seed)
-    picked = {topic: sorted(rng.sample(keys, min(len(keys), max(MIN_SAMPLE, round(len(keys) * SAMPLE_RATE)))))
-              for topic, keys in sorted(by_topic.items())}
+    picked = {topic: sorted(random.Random(f"{seed}:{topic}").sample(
+                  keys, min(len(keys), max(MIN_SAMPLE, round(len(keys) * SAMPLE_RATE)))))
+              for topic, keys in sorted(by_topic.items())}  # seeded per topic: one topic's retag leaves others' samples alone
     path = root / "data" / "tags" / "qa_sample.json"
     path.write_text(json.dumps(picked, indent=1) + "\n")
     return picked
@@ -148,6 +152,22 @@ def question_text(q: dict) -> str:
     return f"{q['stem_text']} || {opts}".strip()
 
 
+def option_set(q: dict) -> set[str]:
+    return {" ".join((o["text"] or "").lower().split()) for o in q["options"] if (o["text"] or "").strip()}
+
+
+def stem_ratio(a: dict, b: dict) -> float:
+    return difflib.SequenceMatcher(None, " ".join(a["stem_text"].split()), " ".join(b["stem_text"].split())).ratio()
+
+
+def same_options(a: dict, b: dict) -> bool:
+    """SSC reuses boilerplate stems ("Pick the odd one out ...", "A + B means ..."), so similar text alone is
+    not a repeat. A repeated question also offers (nearly) the same options; a template with new numbers or
+    letters does not."""
+    oa, ob = option_set(a), option_set(b)
+    return bool(oa and ob) and len(oa & ob) / len(oa | ob) >= OPTION_OVERLAP
+
+
 def dedupe(root: Path, threshold: float = DUP_THRESHOLD) -> list[dict]:
     import numpy as np
     from fastembed import TextEmbedding
@@ -165,7 +185,9 @@ def dedupe(root: Path, threshold: float = DUP_THRESHOLD) -> list[dict]:
             other = keys[j]
             if other.rsplit("_", 1)[0] == k.rsplit("_", 1)[0] or other[-3] != k[-3]:
                 continue  # same shift, or other section
-            if sims[i, j] >= threshold and tags[other]["subtopic"] == tags[k]["subtopic"]:
+            if (sims[i, j] >= threshold and tags[other]["subtopic"] == tags[k]["subtopic"]
+                    and same_options(questions[k], questions[other])
+                    and stem_ratio(questions[k], questions[other]) >= STEM_RATIO):
                 if best is None or sims[i, j] > sims[i, best]:
                     best = j
         if best is not None:
