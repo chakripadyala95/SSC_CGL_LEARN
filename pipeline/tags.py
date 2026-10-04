@@ -112,14 +112,18 @@ def load_tags(root: Path) -> dict[str, dict]:
     return {t["key"]: t for t in map(json.loads, tags_path(root).read_text().splitlines())}
 
 
-def sample(root: Path, seed: int = 0) -> dict[str, list[str]]:
+def sample(root: Path, seed: int = 0, topics: list[str] | None = None) -> dict[str, list[str]]:
+    """10% per topic (at least 3). With `topics`, redraw only those (after a retag) and keep the rest."""
+    path = root / "data" / "tags" / "qa_sample.json"
+    old = json.loads(path.read_text()) if topics and path.exists() else {}
     by_topic = defaultdict(list)
     for k, t in sorted(load_tags(root).items()):
         by_topic[t["topic"]].append(k)
     picked = {topic: sorted(random.Random(f"{seed}:{topic}").sample(
                   keys, min(len(keys), max(MIN_SAMPLE, round(len(keys) * SAMPLE_RATE)))))
-              for topic, keys in sorted(by_topic.items())}  # seeded per topic: one topic's retag leaves others' samples alone
-    path = root / "data" / "tags" / "qa_sample.json"
+              for topic, keys in sorted(by_topic.items())
+              if not topics or topic in topics}  # seeded per topic: a retag leaves other topics' samples alone
+    picked = {**old, **picked}
     path.write_text(json.dumps(picked, indent=1) + "\n")
     return picked
 
@@ -254,6 +258,8 @@ def main() -> None:
     ap.add_argument("command", choices=["merge", "sample", "agreement", "dedupe", "coverage"])
     ap.add_argument("src", nargs="?", type=Path)
     ap.add_argument("--repo-root", type=Path, default=ROOT)
+    ap.add_argument("--seed", type=int, default=0, help="sample: seed for a fresh draw after a retag")
+    ap.add_argument("--topic", action="append", help="sample: redraw only these topics")
     args = ap.parse_args()
     root = args.repo_root
     if args.command in ("merge", "agreement") and not args.src:
@@ -264,7 +270,7 @@ def main() -> None:
             print(f"{k}: {'; '.join(e)}")
         print(f"tagged {res['tagged']}, problems {len(res['problems'])}")
     elif args.command == "sample":
-        picked = sample(root)
+        picked = sample(root, args.seed, args.topic)
         print(f"{sum(map(len, picked.values()))} questions across {len(picked)} topics")
     elif args.command == "agreement":
         for topic, v in agreement(root, args.src).items():
