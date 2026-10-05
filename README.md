@@ -68,6 +68,9 @@ PostgreSQL + FastAPI (`api/`) + Next.js (`web/`). The loader reads what the pipe
 | `data/questions/questions.jsonl` | `mocks` (a QUANT and a REASONING mock per paper), `questions`, `question_versions`, `question_assets` |
 | `data/questions/review_queue.json` | `review_queue` (source `extract`) |
 | `data/solver/verifications/*.jsonl` | `answer_verifications`, the version's `key_status`, and `review_queue` (source `solver`) for keys not confirmed |
+| `data/review/decisions.jsonl` | reviewed keys (`KEY_CONFIRMED_REVIEW`; an edited key is a new version) and rejected questions |
+| `data/library/<section>/*.json` | `formulas` (the formula and method library) |
+| `data/tags/questions.jsonl` | `question_tags` (topic, subtopic, question type, difficulty, time, repeat mark) and `question_formulas` |
 
 A question whose stem, options or key changes gets a new version; solver runs attach to the version they solved
 (same hash as `pipeline.solve.question_version`). A section mock becomes `PUBLISHED` only when all 25 current
@@ -87,7 +90,12 @@ make test             # needs the database for tests/test_api.py (skipped when u
 `pipeline.extract` regenerates.
 
 API: `/mocks`, `/mocks/{id}/questions` (published mocks only, no key, blind crops only), `/admin/mocks/{id}/questions`
-and `/admin/questions/{id}` (key, both extraction reads, solver runs), `/admin/review-queue`, `/exam-pattern`, `/papers`.
+and `/admin/questions/{id}` (key, both extraction reads, solver runs), `/admin/review-queue`, `/exam-pattern`, `/papers`,
+`/index/tree` and `/index/questions` (the tagged bank: filters, full-text search, no key),
+`/study/questions/{id}` (answer and working, only for a verified key), `/formulas` and `/formulas/{id}`.
+
+Web: `/` section mocks, `/questions` question index, `/questions/{id}` a question with its verified answer,
+`/formulas/{topic-slug}` a topic's formulas and methods.
 
 ## Phase 3a: Taxonomy and formula/method IDs
 
@@ -105,3 +113,19 @@ answers against `data/solver/final_answers.jsonl`, diagrams with alt text). `ver
 isolated interpreter (SymPy identities, shortcuts on 1,000+ random inputs, boundary tests, reasoning methods on
 their worked example) and stores the result on the entry; `manual` entries go to review. `render` writes the
 printable cheat sheets to `docs/cheatsheets/`.
+
+## Phase 3c: Tags and question index
+
+`python -m pipeline.tags merge data/tags/runs` combines the tagger outputs (`tags_*.jsonl`, later files win, so a
+retag overrides) into `data/tags/questions.jsonl`: topic, subtopic, question type, formula IDs (primary first),
+shortcut, difficulty, expected time and `has_visual` for all 1,500 questions. Prompts: `pipeline/prompts/tagger_v1.md`,
+then `tagger_v2.md` and `tagger_v3.md` with decision rules added after each sample check.
+
+- `sample --seed N --topic T` draws a 10% sample per topic (at least 3), seeded per topic so a retag only redraws
+  that topic; `agreement data/tags/runs/qa` compares a blind second tagger on it and writes `data/tags/qa.json`
+  (rounds kept as `qa_round1..3.json`). Agreement = same topic and subtopic, and the second tagger lists the first
+  tagger's primary ID. A topic below 95% is retagged.
+- `dedupe` marks a question as `duplicate_of` an earlier shift's question only when the local embedding
+  (fastembed, BAAI/bge-small-en-v1.5) similarity is at least 0.95, the subtopic matches, the option sets mostly
+  match and the stems are near-identical. SSC reuses templates with new numbers, so none are marked.
+- `coverage` writes `COVERAGE_TAGS.md`, the Phase 3c gate report.

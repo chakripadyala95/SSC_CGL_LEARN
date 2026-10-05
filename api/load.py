@@ -3,7 +3,8 @@
 Usage: python -m api.load [--data-dir PATH]
 
 Reads data/intake_manifest.json (papers), data/questions/questions.jsonl and review_queue.json (extraction),
-data/solver/verifications/*.jsonl (solver runs) and data/review/decisions.jsonl (human review). Idempotent: re-running changes nothing unless an input
+data/solver/verifications/*.jsonl (solver runs), data/review/decisions.jsonl (human review), data/library/ (formulas
+and methods) and data/tags/questions.jsonl (question tags). Idempotent: re-running changes nothing unless an input
 changed. A question whose stem, options or key changed gets a new version; older versions stay for the
 attempts and solver runs that point at them.
 """
@@ -29,10 +30,13 @@ from api.models import (
     SECTIONS,
     AnswerVerification,
     ExamPattern,
+    Formula,
     Mock,
     Paper,
     Question,
     QuestionAsset,
+    QuestionFormula,
+    QuestionTag,
     QuestionVersion,
     ReviewItem,
 )
@@ -319,6 +323,62 @@ def publish_mocks(s: Session, r: Report) -> None:
             r.add(f"mocks set {status}")
 
 
+SECTION_DIRS = {"quant": "QUANT", "reasoning": "REASONING"}
+TAG_FIELDS = ("topic", "subtopic", "question_type", "shortcut_used", "difficulty", "expected_time_sec", "has_visual",
+              "tagger", "prompt_version")
+
+
+def load_formulas(s: Session, library_dir: Path, r: Report) -> None:
+    for folder, section in SECTION_DIRS.items():
+        for path in sorted((library_dir / folder).glob("*.json")):
+            for e in json.loads(path.read_text()):
+                values = dict(section=section, topic=e["topic"], topic_slug=e["id"].split(".")[0],
+                              subtopic=e["subtopic"], name=e["name"], statement=e["statement"],
+                              shortcut=e["shortcut"],
+                              verification_status=(e["verification"].get("result") or {}).get("status", "UNVERIFIED"),
+                              entry=e)
+                formula = s.get(Formula, e["id"])
+                if formula is None:
+                    s.add(Formula(id=e["id"], **values))
+                    r.add("formulas added")
+                elif _update(formula, values):
+                    r.add("formulas updated")
+    s.flush()
+
+
+def _question_by_key(s: Session, key: str) -> Question | None:
+    """'2024-09-09_0900_Q04' -> the question (Q = Quant, R = Reasoning)."""
+    pid, slot = key.rsplit("_", 1)
+    return _question(s, pid, {"Q": "QUANT", "R": "REASONING"}[slot[0]], int(slot[1:]))
+
+
+def load_tags(s: Session, tags: list[dict], r: Report) -> None:
+    for t in tags:
+        question = _question_by_key(s, t["key"])
+        if question is None:
+            continue
+        dup = _question_by_key(s, t["duplicate_of"]) if t.get("duplicate_of") else None
+        values = {**{k: t[k] for k in TAG_FIELDS}, "duplicate_of_id": dup.id if dup else None}
+        tag = s.get(QuestionTag, question.id)
+        if tag is None:
+            tag = QuestionTag(question_id=question.id, **values)
+            s.add(tag)
+            r.add("question tags added")
+        elif _update(tag, values):
+            r.add("question tags updated")
+        s.flush()
+        links = [(fid, rank) for rank, fid in enumerate(t["formula_ids"])]
+        old = s.scalars(select(QuestionFormula).where(QuestionFormula.question_id == question.id)
+                        .order_by(QuestionFormula.rank)).all()
+        if [(f.formula_id, f.rank) for f in old] != links:
+            for f in old:
+                s.delete(f)
+            s.flush()
+            s.add_all(QuestionFormula(question_id=question.id, formula_id=fid, rank=rank) for fid, rank in links)
+            r.add("question formula links set")
+    s.flush()
+
+
 def load_all(s: Session, data_dir: Path) -> Report:
     r = Report()
     load_exam_pattern(s, r)
@@ -338,6 +398,11 @@ def load_all(s: Session, data_dir: Path) -> Report:
     if decisions.exists():
         load_decisions(s, read_jsonl(decisions), r)
     publish_mocks(s, r)
+    if (data_dir / "library").exists():
+        load_formulas(s, data_dir / "library", r)
+    tags = data_dir / "tags" / "questions.jsonl"
+    if tags.exists():
+        load_tags(s, read_jsonl(tags), r)
     return r
 
 
