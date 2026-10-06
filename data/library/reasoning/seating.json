@@ -1,0 +1,110 @@
+[
+ {
+  "id": "seating.linear-arrangement",
+  "topic": "Puzzles/Seating",
+  "subtopic": "Linear seating",
+  "name": "Linear seating arrangement",
+  "statement": "\\text{Fix the most definite clue first, draw the seats, place the rest clue by clue, and flip left/right for people facing south.}",
+  "conditions": [],
+  "derivation": [
+   "Draw the seats as blanks numbered left to right (as the sitters face north).",
+   "Place definite clues first: 'R sits in the middle', 'T sits at an end'.",
+   "Add relative clues next ('P immediately left of R'); branch into cases when a clue allows two seats.",
+   "Kill cases using negative clues ('Q is not next to P') until one arrangement is left.",
+   "For people facing south, their left is your right on the paper."
+  ],
+  "visual_proof": "A row of five boxes facing north, filled in clue order: R in the middle, P left of R, T at the end, Q away from P, S in the last gap.",
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Using your own left for a sitter facing south.",
+   "Reading 'immediately left' as 'somewhere to the left'.",
+   "Not checking the second case of a two-way clue (T at either end).",
+   "Answering before every clue has been used."
+  ],
+  "related_ids": [
+   "seating.circular-arrangement",
+   "ranking.position-both-ends",
+   "ranking.comparison-chain"
+  ],
+  "diagram": {
+   "alt_text": "Five seats in a row facing north, left to right: S, P, R, Q, T. S sits at the extreme left.",
+   "spec": {
+    "type": "seating",
+    "layout": "linear",
+    "facing": "north",
+    "seats": [
+     "S",
+     "P",
+     "R",
+     "Q",
+     "T"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import permutations\n\ndef arrangements(people, clues):\n    \"\"\"Rows facing north, seats listed left to right (the sitters' own left).\"\"\"\n    return [row for row in permutations(people) if all(c(row) for c in clues)]\n\npos = lambda row, x: row.index(x)\n# Constructed: P, Q, R, S, T sit in a row facing north.\nclues = [\n    lambda r: pos(r, \"R\") == 2,                          # R sits in the middle\n    lambda r: pos(r, \"P\") == pos(r, \"R\") - 1,            # P is immediately left of R\n    lambda r: pos(r, \"T\") in (0, 4),                     # T sits at an end\n    lambda r: abs(pos(r, \"Q\") - pos(r, \"P\")) > 1,        # Q is not next to P\n    lambda r: pos(r, \"S\") < pos(r, \"T\"),                 # S is somewhere left of T\n]\nres = arrangements(\"PQRST\", clues)\nassert res == [tuple(\"SPRQT\")], res\noptions = {\"A\": \"P\", \"B\": \"T\", \"C\": \"S\", \"D\": \"Q\"}\nassert [k for k, v in options.items() if v == res[0][0]] == [\"C\"]       # extreme left: S\n\n# Facing south flips left and right: 'P immediately left of R' then means P is one seat east of R.\ndef left_of(row, a, b, facing):\n    return pos(row, a) == pos(row, b) + (-1 if facing == \"north\" else 1)\nrow = tuple(\"SPRQT\")                                     # written west to east\nassert left_of(row, \"P\", \"R\", \"north\") and not left_of(row, \"P\", \"R\", \"south\")\nassert left_of(row, \"Q\", \"R\", \"south\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ },
+ {
+  "id": "seating.circular-arrangement",
+  "topic": "Puzzles/Seating",
+  "subtopic": "Circular seating",
+  "name": "Circular seating arrangement",
+  "statement": "\\text{Fix one person, then place the rest relative to fixed seats; facing the centre, right = anticlockwise, facing outward it flips.}",
+  "conditions": [],
+  "derivation": [
+   "Fix any one person's seat; rotations of the whole table are the same arrangement.",
+   "Facing the centre: the person to your right is the next seat anticlockwise; to your left, clockwise.",
+   "Facing outward the two sides swap; opposite seats are the same either way.",
+   "With $n$ seats, 'opposite' means $n/2$ places away (even $n$).",
+   "Place definite clues, branch for two-way clues, and eliminate with negative clues."
+  ],
+  "visual_proof": "A round table with A fixed at the bottom; everyone faces inward, so moving anticlockwise is moving to each person's right.",
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Using right = clockwise for people facing the centre.",
+   "Not flipping left/right for people facing outward.",
+   "Counting 'second to the left' as two seats from your own seat on the paper, not the sitter's left.",
+   "Fixing two people independently and counting a rotation as a new arrangement."
+  ],
+  "related_ids": [
+   "seating.linear-arrangement",
+   "direction.turn-tracking"
+  ],
+  "diagram": {
+   "alt_text": "Six people round a table facing the centre, in anticlockwise order A, B, C, D, E, F. B is on A's right, D is opposite A, C is on D's left, and C is second to the left of E.",
+   "spec": {
+    "type": "seating",
+    "layout": "circle",
+    "facing": "centre",
+    "seats": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "F"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import permutations\n\nN = 6\ndef seats(order):\n    \"\"\"order[i] = person in seat i; seats numbered anticlockwise seen from above.\"\"\"\n    return {p: i for i, p in enumerate(order)}\n\ndef right_of(s, x, k=1, facing=\"centre\"):\n    \"\"\"Who sits k places to x's right. Facing the centre, right = anticlockwise; facing out it flips.\"\"\"\n    step = k if facing == \"centre\" else -k\n    return (s[x] + step) % N\n\ndef arrangements(people, clues):\n    first, rest = people[0], people[1:]\n    out = []\n    for p in permutations(rest):                         # fix the first person: no rotations repeated\n        order = (first,) + p\n        s = seats(order)\n        if all(c(s) for c in clues):\n            out.append(order)\n    return out\n\n# Constructed: A-F around a circular table facing the centre.\nclues = [\n    lambda s: s[\"B\"] == right_of(s, \"A\"),                # B is immediately right of A\n    lambda s: s[\"D\"] == right_of(s, \"A\", 3),             # D is opposite A\n    lambda s: s[\"C\"] == right_of(s, \"D\", -1),            # C is immediately left of D\n    lambda s: (s[\"F\"] - s[\"D\"]) % N not in (1, N - 1),   # F is not next to D\n]\nres = arrangements(\"ABCDEF\", clues)\nassert len(res) == 1, res\ns = seats(res[0])\ninv = {v: k for k, v in s.items()}\nsecond_left_of_e = inv[right_of(s, \"E\", -2)]\nassert second_left_of_e == \"C\"\noptions = {\"A\": \"B\", \"B\": \"C\", \"C\": \"F\", \"D\": \"D\"}\nassert [k for k, v in options.items() if v == second_left_of_e] == [\"B\"]\n\n# Facing outward flips the sides: the person on A's right when facing in is on A's left when facing out.\nassert right_of(s, \"A\", 1, \"centre\") == right_of(s, \"A\", -1, \"out\")\n# Opposite seat is the same either way\nassert right_of(s, \"A\", 3, \"centre\") == right_of(s, \"A\", 3, \"out\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:47+00:00"
+   }
+  }
+ }
+]

@@ -1,0 +1,137 @@
+[
+ {
+  "id": "math-operations.sign-interchange",
+  "topic": "Mathematical Operations",
+  "subtopic": "Sign interchange",
+  "name": "Sign/symbol interchange",
+  "statement": "\\text{Rewrite first: swap each pair of signs everywhere, then evaluate by BODMAS.}",
+  "conditions": [],
+  "derivation": [
+   "Note the swaps, e.g. $+\\leftrightarrow-$ and $\\times\\leftrightarrow\\div$.",
+   "Rewrite the whole expression with the new signs, one sign at a time from left to right.",
+   "Evaluate the rewritten expression by BODMAS ([[f:math-operations.bodmas]]).",
+   "Match the value with the options."
+  ],
+  "visual_proof": null,
+  "shortcut": "Do the $\\times$ and $\\div$ parts first and the unit digits of the result often decide the option.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R01",
+   "answer": "D",
+   "steps": [
+    "Swap $+\\leftrightarrow-$, $\\times\\leftrightarrow\\div$: $4515\\div5+431\\times3-821$.",
+    "$4515\\div5=903$, $431\\times3=1293$.",
+    "$903+1293-821=1375$, option D."
+   ]
+  },
+  "common_traps": [
+   "Swapping only one pair and forgetting the other.",
+   "Rewriting correctly but evaluating left to right instead of BODMAS.",
+   "Evaluating the original expression first and then trying to swap signs in the answer."
+  ],
+  "related_ids": [
+   "math-operations.bodmas",
+   "math-operations.swap-to-balance"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nimport re\n\ndef tokens(expr):\n    expr = expr.replace(\"−\", \"-\").replace(\"–\", \"-\").replace(\"x\", \"×\").replace(\"/\", \"÷\")\n    return re.findall(r\"\\d+|[+\\-×÷]\", expr)\n\ndef bodmas(toks):\n    \"\"\"Division and multiplication left to right, then addition and subtraction left to right.\"\"\"\n    out = [F(toks[0])]\n    for op, n in zip(toks[1::2], toks[2::2]):\n        n = F(n)\n        if op == \"×\":\n            out[-1] *= n\n        elif op == \"÷\":\n            out[-1] /= n\n        else:\n            out += [op, n]\n    val = out[0]\n    for op, n in zip(out[1::2], out[2::2]):\n        val = val + n if op == \"+\" else val - n\n    return val\n\ndef swap_signs(toks, pairs):\n    m = {}\n    for a, b in pairs:\n        m[a], m[b] = b, a\n    return [m.get(t, t) for t in toks]\n\ndef solve(expr, pairs, options):\n    val = bodmas(swap_signs(tokens(expr), pairs))\n    return [k for k, v in options.items() if F(v) == val]\n\nPM = [(\"+\", \"-\"), (\"×\", \"÷\")]\n# worked example 2024-09-09_0900_R01\nassert bodmas(swap_signs(tokens(\"4515 × 5 – 431 ÷ 3 + 821\"), PM)) == 1375\nassert solve(\"4515 × 5 – 431 ÷ 3 + 821\", PM, {\"A\": 1335, \"B\": 1775, \"C\": 1575, \"D\": 1375}) == [\"D\"]\nassert solve(\"5 – 4 ÷ 9 + 80 × 10\", PM, {\"A\": 31, \"B\": 33, \"C\": 35, \"D\": 30}) == [\"B\"]\nassert solve(\"1604 × 4 – 525 ÷ 5 + 73\", PM, {\"A\": 2953, \"B\": 2935, \"C\": 2539, \"D\": 2395}) == [\"A\"]\n# evaluating without swapping gives a non-option\nassert bodmas(tokens(\"4515 × 5 – 431 ÷ 3 + 821\")) not in (1335, 1775, 1575, 1375)\n# constructed: only + and x swapped\nassert solve(\"6 + 4 × 2\", [(\"+\", \"×\")], {\"A\": 26, \"B\": 20, \"C\": 14, \"D\": 32}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "math-operations.bodmas",
+  "topic": "Mathematical Operations",
+  "subtopic": "Sign interchange",
+  "name": "BODMAS evaluation",
+  "statement": "\\text{Brackets}\\to\\text{Of}\\to(\\div,\\times\\ \\text{left to right})\\to(+,-\\ \\text{left to right})",
+  "conditions": [],
+  "derivation": [
+   "Simplify anything inside brackets first.",
+   "Scan left to right and do every $\\div$ and $\\times$ in the order met: they have equal rank.",
+   "Scan again left to right and do every $+$ and $-$ in the order met: they also have equal rank.",
+   "The single number left is the value."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R08",
+   "answer": "B",
+   "steps": [
+    "After the swap: $5+4\\times9-80\\div10$.",
+    "$4\\times9=36$, $80\\div10=8$.",
+    "$5+36-8=33$, option B."
+   ]
+  },
+  "common_traps": [
+   "Going strictly left to right: $(5+4)\\times9=81$, then $(81-80)\\div10=0.1$.",
+   "Doing all $\\times$ before $\\div$: $12\\div4\\times4$ becomes $12\\div16$ instead of 12.",
+   "Doing $+$ before $-$: $20-5+3$ becomes $20-8=12$ instead of 18."
+  ],
+  "related_ids": [
+   "simplification.bodmas",
+   "math-operations.sign-interchange"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nimport re\n\ndef tokens(expr):\n    expr = expr.replace(\"−\", \"-\").replace(\"–\", \"-\").replace(\"x\", \"×\").replace(\"/\", \"÷\")\n    return re.findall(r\"\\d+|[+\\-×÷]\", expr)\n\ndef bodmas(toks):\n    \"\"\"Division and multiplication left to right, then addition and subtraction left to right.\"\"\"\n    out = [F(toks[0])]\n    for op, n in zip(toks[1::2], toks[2::2]):\n        n = F(n)\n        if op == \"×\":\n            out[-1] *= n\n        elif op == \"÷\":\n            out[-1] /= n\n        else:\n            out += [op, n]\n    val = out[0]\n    for op, n in zip(out[1::2], out[2::2]):\n        val = val + n if op == \"+\" else val - n\n    return val\n\ndef swap_signs(toks, pairs):\n    m = {}\n    for a, b in pairs:\n        m[a], m[b] = b, a\n    return [m.get(t, t) for t in toks]\n\ndef left_to_right(toks):\n    val = F(toks[0])\n    for op, n in zip(toks[1::2], toks[2::2]):\n        n = F(n)\n        val = {\"+\": val + n, \"-\": val - n, \"×\": val * n, \"÷\": val / n}[op]\n    return val\n\n# worked example 2024-09-09_0900_R08: after the swap, 5 + 4 x 9 - 80 / 10\nopts = {\"A\": 31, \"B\": 33, \"C\": 35, \"D\": 30}\nv = bodmas(tokens(\"5 + 4 × 9 - 80 ÷ 10\"))\nassert v == 33 and [k for k, o in opts.items() if o == v] == [\"B\"]\nassert left_to_right(tokens(\"5 + 4 × 9 - 80 ÷ 10\")) == F(1, 10)   # the trap\n# 2024-09-18_1600_R08 after swapping 25 and 5\nassert bodmas(tokens(\"19 + 125 ÷ 5 - 100 ÷ 25 + 4 × 3\")) == 52\n# division before multiplication when it comes first: 12 / 4 x 4 = 12, not 12 / 16\nassert bodmas(tokens(\"12 ÷ 4 × 4\")) == 12\n# subtraction left to right: 20 - 5 + 3 = 18, not 12\nassert bodmas(tokens(\"20 - 5 + 3\")) == 18\n# cross-check against Python's own precedence on random expressions\nimport random\nrandom.seed(0)\nfor _ in range(500):\n    toks = [str(random.randint(1, 50))]\n    for _ in range(random.randint(1, 5)):\n        toks += [random.choice(\"+-×÷\"), str(random.randint(1, 50))]\n    py = \"\".join({\"×\": \"*\", \"÷\": \"/\"}.get(t, t) if not t.isdigit() else f\"F({t})\" for t in toks)\n    assert bodmas(toks) == eval(py)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "math-operations.swap-to-balance",
+  "topic": "Mathematical Operations",
+  "subtopic": "Number/sign swap to balance",
+  "name": "Swap trial to balance equation",
+  "statement": "\\text{For each option: apply the swap, evaluate LHS by BODMAS, keep the option with LHS = RHS.}",
+  "conditions": [],
+  "derivation": [
+   "Evaluate the LHS as given; the gap from the RHS shows what must change.",
+   "Rank options: a swap that moves a large number into a $\\times$ or out of a $\\div$ changes the value most.",
+   "Apply one option's swap to the whole expression and evaluate by BODMAS.",
+   "Stop at the option that gives LHS = RHS; a quick check of one other option guards against slips."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-10_0900_R16",
+   "answer": "D",
+   "steps": [
+    "As given: $18-23\\times455\\div7+28 = 18-1495+28$, far below 377: a $\\times$ must move to the front.",
+    "Swap $-$ and $\\times$: $18\\times23-455\\div7+28$.",
+    "$414-65+28=377$, option D."
+   ]
+  },
+  "common_traps": [
+   "Swapping the signs only at one place when the sign appears twice.",
+   "Swapping digits of a number instead of whole numbers (13 to 31) when numbers are to be swapped.",
+   "Evaluating each trial left to right instead of BODMAS, which can make a wrong option look right."
+  ],
+  "related_ids": [
+   "math-operations.bodmas",
+   "math-operations.sign-interchange"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nimport re\n\ndef tokens(expr):\n    expr = expr.replace(\"−\", \"-\").replace(\"–\", \"-\").replace(\"x\", \"×\").replace(\"/\", \"÷\")\n    return re.findall(r\"\\d+|[+\\-×÷]\", expr)\n\ndef bodmas(toks):\n    \"\"\"Division and multiplication left to right, then addition and subtraction left to right.\"\"\"\n    out = [F(toks[0])]\n    for op, n in zip(toks[1::2], toks[2::2]):\n        n = F(n)\n        if op == \"×\":\n            out[-1] *= n\n        elif op == \"÷\":\n            out[-1] /= n\n        else:\n            out += [op, n]\n    val = out[0]\n    for op, n in zip(out[1::2], out[2::2]):\n        val = val + n if op == \"+\" else val - n\n    return val\n\ndef swap_signs(toks, pairs):\n    m = {}\n    for a, b in pairs:\n        m[a], m[b] = b, a\n    return [m.get(t, t) for t in toks]\n\ndef swap_numbers(toks, a, b):\n    m = {a: b, b: a}\n    return [m.get(t, t) for t in toks]\n\ndef balanced(toks, rhs):\n    return bodmas(toks) == rhs\n\ndef solve_numbers(expr, rhs, options):\n    t = tokens(expr)\n    return [k for k, (a, b) in options.items() if balanced(swap_numbers(t, a, b), rhs)]\n\ndef solve_signs(expr, rhs, options):\n    t = tokens(expr)\n    return [k for k, (a, b) in options.items() if balanced(swap_signs(t, [(a, b)]), rhs)]\n\nM, D = \"×\", \"÷\"\n# worked example 2024-09-10_0900_R16: 18 - 23 x 455 / 7 + 28 = 377\ne = \"18 − 23 × 455 ÷ 7 + 28\"\nassert bodmas(tokens(e)) != 377\nassert solve_signs(e, 377, {\"A\": (D, \"-\"), \"B\": (\"-\", \"+\"), \"C\": (\"+\", M), \"D\": (\"-\", M)}) == [\"D\"]\n# 2024-09-09_1600_R07 (numbers)\ne = \"24 ÷ 3 – 4 × 2 + 6 × 5 +12\"\nassert bodmas(tokens(e)) == 42\nassert solve_numbers(e, 50, {\"A\": (\"4\", \"3\"), \"B\": (\"5\", \"4\"), \"C\": (\"3\", \"2\"), \"D\": (\"24\", \"12\")}) == [\"D\"]\n# 2024-09-12_1230_R13 (signs)\ne = \"12 + 12 − 4 × 4 ÷ 2\"\nassert solve_signs(e, 22, {\"A\": (\"-\", \"+\"), \"B\": (\"+\", D), \"C\": (D, \"-\"), \"D\": (M, \"-\")}) == [\"C\"]\n# 2024-09-18_1600_R08 (numbers)\ne = \"19 + 125 ÷ 25 – 100 ÷ 5 + 4 × 3\"\nassert solve_numbers(e, 52, {\"A\": (\"125\", \"100\"), \"B\": (\"25\", \"5\"), \"C\": (\"19\", \"4\"), \"D\": (\"4\", \"5\")}) == [\"B\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

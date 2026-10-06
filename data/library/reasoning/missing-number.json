@@ -1,0 +1,48 @@
+[
+ {
+  "id": "missing-number.set-operation-rule",
+  "topic": "Missing Number",
+  "subtopic": "Number set relation",
+  "name": "Same operation across sets",
+  "statement": "\\text{Find the rule } f \\text{ with } f(\\text{given}) = \\text{result in every complete set; apply } f \\text{ to the open set.}",
+  "conditions": [],
+  "derivation": [
+   "Start with the complete set that has the smallest numbers.",
+   "Try the usual operations in order: sum or difference with a constant, product, product divided by a constant, squares, $\\times k\\pm c$.",
+   "Keep a rule only if it gives the result in every complete set.",
+   "For a chain (a - b - c - d) find one operation per step that fits both given chains, then test each option step by step."
+  ],
+  "visual_proof": null,
+  "shortcut": "Compare results with products and sums first: $\\frac{ab}{c}$ or $ab - c$ being a small whole number usually shows the rule.",
+  "worked_example": {
+   "question_key": "2024-09-25_1230_R09",
+   "answer": "C",
+   "steps": [
+    "$8\\to33\\to66\\to81$: $+25$, $\\times2$, $+15$.",
+    "$11\\to36\\to72\\to87$: $+25$, $\\times2$, $+15$; the rule fits both.",
+    "$15+25=40$, $40\\times2=80$, $80+15=95$: option C."
+   ]
+  },
+  "common_traps": [
+   "Fitting a rule to one set only; it often fails on the second set.",
+   "Splitting numbers into digits when the note forbids it.",
+   "Accepting an option that fits the first steps but not the last (B: $86+15\\neq100$)."
+  ],
+  "related_ids": [
+   "analogy.number-set-rule",
+   "classification.number-triad-rule",
+   "matrix.row-column-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\n\n# candidate rules for a triad (a, b) -> c\nTRIAD_RULES = {}\nfor k in range(1, 11):\n    TRIAD_RULES[f\"a*b/{k}\"] = lambda a, b, k=k: F(a * b, k)\n    TRIAD_RULES[f\"(a+b)*{k}\"] = lambda a, b, k=k: (a + b) * k\n    TRIAD_RULES[f\"(a-b)*{k}\"] = lambda a, b, k=k: (a - b) * k\nfor k in range(-20, 21):\n    TRIAD_RULES[f\"a*b+{k}\"] = lambda a, b, k=k: a * b + k\n    TRIAD_RULES[f\"a+b+{k}\"] = lambda a, b, k=k: a + b + k\n    TRIAD_RULES[f\"a^2+b+{k}\"] = lambda a, b, k=k: a * a + b + k\n\ndef triad_rules(sets):\n    return [n for n, f in TRIAD_RULES.items() if all(f(a, b) == c for a, b, c in sets)]\n\n# candidate single steps for a chain x -> y\nSTEP_OPS = [(\"+\", k) for k in range(-50, 51)] + [(\"*\", k) for k in range(2, 6)]\n\ndef step(op, x):\n    return x + op[1] if op[0] == \"+\" else x * op[1]\n\ndef chain_rules(chains):\n    \"\"\"For each step position, the operations that fit every given chain.\"\"\"\n    n = len(chains[0]) - 1\n    return [[op for op in STEP_OPS if all(step(op, c[i]) == c[i + 1] for c in chains)] for i in range(n)]\n\ndef chain_fits(rule, chain):\n    return all(any(step(op, chain[i]) == chain[i + 1] for op in ops) for i, ops in enumerate(rule))\n\n# worked example 2024-09-25_1230_R09: +25, x2, +15\nrule = chain_rules([(8, 33, 66, 81), (11, 36, 72, 87)])\nassert (\"+\", 25) in rule[0] and (\"*\", 2) in rule[1] and (\"+\", 15) in rule[2]\nopts = {\"A\": (21, 46, 82, 107), \"B\": (18, 43, 86, 100), \"C\": (15, 40, 80, 95), \"D\": (6, 31, 62, 97)}\nassert [k for k, c in opts.items() if chain_fits(rule, c)] == [\"C\"]\n# 2024-09-26_0900_R13: +2, -3, +4\nrule = chain_rules([(17, 19, 16, 20), (22, 24, 21, 25)])\nopts = {\"A\": (11, 13, 10, 15), \"B\": (15, 17, 14, 18), \"C\": (18, 20, 16, 14), \"D\": (16, 18, 12, 16)}\nassert [k for k, c in opts.items() if chain_fits(rule, c)] == [\"B\"]\n# 2024-09-25_0900_R02: (a*b)/3\nrules = triad_rules([(24, 15, 120), (21, 19, 133)])\nassert rules == [\"a*b/3\"]\nopts = {\"A\": (31, 9, 96), \"B\": (18, 16, 99), \"C\": (27, 12, 108), \"D\": (33, 10, 170)}\nassert [k for k, s in opts.items() if triad_rules([s]) and set(rules) & set(triad_rules([s]))] == [\"C\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

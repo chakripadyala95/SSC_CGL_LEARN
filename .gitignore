@@ -2,3 +2,5 @@ __pycache__/
 .pytest_cache/
 .venv/
 .env
+data/questions/assets/
+data/solver/work/

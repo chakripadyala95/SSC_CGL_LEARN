@@ -1,0 +1,124 @@
+[
+ {
+  "id": "venn.region-reading",
+  "topic": "Venn",
+  "subtopic": "Venn region reading",
+  "name": "Venn region reading",
+  "statement": "\\text{Mark the regions inside exactly the required shapes and outside the excluded ones, then read or add their numbers.}",
+  "conditions": [],
+  "derivation": [
+   "Name every region by the shapes it lies in (Teacher only, Teacher and Engineer only, all three).",
+   "Translate the question: 'more than one' = regions in 2 or 3 shapes; 'only X' = inside X and no other shape.",
+   "'X but not Y' = every region inside X and outside Y.",
+   "Add the numbers in the chosen regions, and no others."
+  ],
+  "visual_proof": "The three circles cut the plane into seven numbered regions; each question is a union of some of them.",
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_1600_R09",
+   "answer": "A",
+   "steps": [
+    "'More than one post' = regions in two or three circles.",
+    "Two-circle regions: $4 + 6 + 8 = 18$; centre: 3.",
+    "Total $18 + 3 = 21$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Leaving out the centre (all three) for 'more than one': $4+6+8 = 18$ instead of 21.",
+   "Adding every number inside a shape when 'only' was asked.",
+   "Counting the centre twice when adding two overlaps.",
+   "Adding all regions (154) or only the single-post regions (133) when overlaps are asked."
+  ],
+  "related_ids": [
+   "venn.best-fit-diagram",
+   "syllogism.venn-cases"
+  ],
+  "diagram": {
+   "alt_text": "Three overlapping circles Teacher, Engineer, Accountant with region counts: Teacher only 35, Engineer only 42, Accountant only 56, Teacher and Engineer 4, Teacher and Accountant 6, Engineer and Accountant 8, all three 3.",
+   "spec": {
+    "type": "venn",
+    "sets": [
+     "Teacher",
+     "Engineer",
+     "Accountant"
+    ],
+    "regions": {
+     "Teacher": "35",
+     "Engineer": "42",
+     "Accountant": "56",
+     "Teacher&Engineer": "4",
+     "Teacher&Accountant": "6",
+     "Engineer&Accountant": "8",
+     "Teacher&Engineer&Accountant": "3"
+    }
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "def region_sum(regions, inside_count=None, need=(), exclude=()):\n    \"\"\"regions: {frozenset of sets: count}. Sum the regions inside every 'need' set, outside every\n    'exclude' set, and (optionally) inside exactly/at least a number of sets.\"\"\"\n    total = 0\n    for key, v in regions.items():\n        if not set(need) <= key or key & set(exclude):\n            continue\n        if inside_count and not inside_count(len(key)):\n            continue\n        total += v\n    return total\n\nR = lambda *s: frozenset(s)\n# Worked example 2024-09-09_1600_R09 (Teacher, Engineer, Accountant), counts read off the figure\nfig = {R(\"T\"): 35, R(\"E\"): 42, R(\"A\"): 56, R(\"T\", \"E\"): 4, R(\"T\", \"A\"): 6, R(\"E\", \"A\"): 8, R(\"T\", \"E\", \"A\"): 3}\nmore_than_one = region_sum(fig, inside_count=lambda k: k >= 2)\nassert more_than_one == 21\noptions = {\"A\": 21, \"B\": 15, \"C\": 113, \"D\": 18}\nassert [k for k, v in options.items() if v == more_than_one] == [\"A\"]\n# Traps give the wrong options: two-only overlaps 18, leaving out the centre\nassert region_sum(fig, inside_count=lambda k: k == 2) == 18\n# Same figure: exactly one post, teachers who are not accountants, all three\nassert region_sum(fig, inside_count=lambda k: k == 1) == 133\nassert region_sum(fig, need=[\"T\"], exclude=[\"A\"]) == 39\nassert region_sum(fig, need=[\"T\", \"E\", \"A\"]) == 3\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:48+00:00"
+   }
+  }
+ },
+ {
+  "id": "venn.best-fit-diagram",
+  "topic": "Venn",
+  "subtopic": "Venn diagram selection",
+  "name": "Best-fit Venn diagram",
+  "statement": "\\text{For each pair of classes decide: one inside the other, overlap, or disjoint; choose the diagram that shows all pairs that way.}",
+  "conditions": [],
+  "derivation": [
+   "List every pair: three classes give three pairs.",
+   "For each pair ask: is every X a Y (inside), can some be both (overlap), or none (disjoint)?",
+   "Write the pattern, e.g. Mothers inside Women; Doctors overlaps Women; Doctors overlaps Mothers.",
+   "Pick the option whose circles match all three pairs, not just two."
+  ],
+  "visual_proof": "Women as a large circle with Mothers inside it, and Doctors as a circle cutting across both.",
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Drawing Doctors inside Women because many doctors are women; some are men, so they overlap.",
+   "Making Doctors and Mothers disjoint; a mother can be a doctor.",
+   "Matching two pairs and ignoring the third.",
+   "Drawing Dogs and Cats as overlapping inside Animals; no animal is both."
+  ],
+  "related_ids": [
+   "venn.region-reading",
+   "syllogism.venn-cases"
+  ],
+  "diagram": {
+   "alt_text": "Women, Mothers, Doctors: the Mothers circle lies inside Women; the Doctors circle crosses both, so Mothers outside Women is empty.",
+   "spec": {
+    "type": "venn",
+    "sets": [
+     "Women",
+     "Mothers",
+     "Doctors"
+    ],
+    "regions": {
+     "Mothers": "empty",
+     "Mothers&Doctors": "empty",
+     "Women": "possible",
+     "Women&Mothers": "possible",
+     "Women&Doctors": "possible",
+     "Women&Mothers&Doctors": "possible",
+     "Doctors": "possible"
+    }
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import combinations\n\ndef relation(regions, a, b):\n    \"\"\"Pairwise relation shown by a diagram given as the set of its non-empty regions.\"\"\"\n    a_not_b = any(a in r and b not in r for r in regions)\n    b_not_a = any(b in r and a not in r for r in regions)\n    both = any(a in r and b in r for r in regions)\n    if not both:\n        return \"disjoint\"\n    if not a_not_b and not b_not_a:\n        return \"equal\"\n    if not a_not_b:\n        return f\"{a} in {b}\"\n    if not b_not_a:\n        return f\"{b} in {a}\"\n    return \"overlap\"\n\ndef signature(regions, names):\n    return {(a, b): relation(regions, a, b) for a, b in combinations(names, 2)}\n\ndef best_fit(truth, names, diagrams):\n    ok = [k for k, d in diagrams.items() if signature(d, names) == truth]\n    assert len(ok) == 1, ok\n    return ok[0]\n\nF = lambda *s: frozenset(s)\n# Diagrams with circles X, Y, Z, as sets of non-empty regions\ndiagrams = {\n    \"A\": {F(\"X\"), F(\"Y\"), F(\"Z\")},                                              # three separate circles\n    \"B\": {F(\"X\"), F(\"X\", \"Y\"), F(\"X\", \"Z\"), F(\"X\", \"Y\", \"Z\"), F(\"Z\")},          # Y inside X, Z cuts both\n    \"C\": {F(\"X\"), F(\"X\", \"Y\"), F(\"X\", \"Y\", \"Z\")},                               # Z in Y in X\n    \"D\": {F(\"X\"), F(\"Y\"), F(\"Z\"), F(\"X\", \"Y\"), F(\"Y\", \"Z\"), F(\"X\", \"Z\"), F(\"X\", \"Y\", \"Z\")},  # all overlap\n}\n# Constructed: Women (X), Mothers (Y), Doctors (Z)\ntruth = {(\"X\", \"Y\"): \"Y in X\", (\"X\", \"Z\"): \"overlap\", (\"Y\", \"Z\"): \"overlap\"}\nassert best_fit(truth, \"XYZ\", diagrams) == \"B\"\n# Constructed: Animals (X), Dogs (Y), Cats (Z): two separate circles inside one\ndiagrams[\"E\"] = {F(\"X\"), F(\"X\", \"Y\"), F(\"X\", \"Z\")}\ntruth = {(\"X\", \"Y\"): \"Y in X\", (\"X\", \"Z\"): \"Z in X\", (\"Y\", \"Z\"): \"disjoint\"}\nassert best_fit(truth, \"XYZ\", diagrams) == \"E\"\n# Constructed: Vehicles (X), Cars (Y), Electric cars (Z): a nested chain\ntruth = {(\"X\", \"Y\"): \"Y in X\", (\"X\", \"Z\"): \"Z in X\", (\"Y\", \"Z\"): \"Z in Y\"}\nassert best_fit(truth, \"XYZ\", diagrams) == \"C\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:48+00:00"
+   }
+  }
+ }
+]

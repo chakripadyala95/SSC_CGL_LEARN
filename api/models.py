@@ -1,6 +1,7 @@
-"""Database tables for papers, section mocks, versioned questions and answer verification.
+"""Database tables for papers, section mocks, versioned questions, answer verification, the formula and method
+library and question tags.
 
-Later phases add formulas, solutions, diagrams, attempts and analytics tables in their own migrations.
+Later phases add solutions, attempts and analytics tables in their own migrations.
 """
 
 from __future__ import annotations
@@ -197,3 +198,56 @@ class ReviewItem(Base):
     reasons: Mapped[list[str]] = mapped_column(Json)
     status: Mapped[str] = mapped_column(String(16), default="OPEN")  # OPEN | APPROVED | EDITED | REJECTED
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class Formula(Base):
+    """A formula (Quant) or method (Reasoning) library entry from data/library/. IDs never change once published."""
+
+    __tablename__ = "formulas"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)  # percentage.successive-change
+    section: Mapped[str] = mapped_column(String(16))
+    topic: Mapped[str] = mapped_column(Text)
+    topic_slug: Mapped[str] = mapped_column(String(48), index=True)
+    subtopic: Mapped[str] = mapped_column(Text)
+    name: Mapped[str] = mapped_column(Text)
+    statement: Mapped[str] = mapped_column(Text)
+    shortcut: Mapped[str | None] = mapped_column(Text)
+    verification_status: Mapped[str] = mapped_column(String(16))  # PASSED | FAILED | NEEDS_REVIEW
+    entry: Mapped[dict[str, Any]] = mapped_column(Json)  # the full library entry
+
+
+class QuestionTag(Base):
+    """Phase 3c tags for a question (data/tags/questions.jsonl): one row per question, LLM-proposed and
+    sample-checked by a second blind tagger."""
+
+    __tablename__ = "question_tags"
+
+    question_id: Mapped[int] = mapped_column(ForeignKey("questions.id"), primary_key=True)
+    topic: Mapped[str] = mapped_column(Text, index=True)
+    subtopic: Mapped[str] = mapped_column(Text)
+    question_type: Mapped[str] = mapped_column(Text)
+    shortcut_used: Mapped[str] = mapped_column(Text)
+    difficulty: Mapped[int] = mapped_column(Integer)
+    expected_time_sec: Mapped[int] = mapped_column(Integer)
+    has_visual: Mapped[bool] = mapped_column(Boolean)
+    tagger: Mapped[str] = mapped_column(String(32))
+    prompt_version: Mapped[str] = mapped_column(String(32))
+    # A near-identical question from an earlier shift; analytics count the pair once.
+    duplicate_of_id: Mapped[int | None] = mapped_column(ForeignKey("questions.id"))
+
+    formulas: Mapped[list[QuestionFormula]] = relationship(
+        order_by="QuestionFormula.rank", viewonly=True,
+        primaryjoin="QuestionTag.question_id == foreign(QuestionFormula.question_id)")
+
+
+class QuestionFormula(Base):
+    """Formulas or methods a question's fastest solution uses; rank 0 is the primary one."""
+
+    __tablename__ = "question_formulas"
+
+    question_id: Mapped[int] = mapped_column(ForeignKey("questions.id"), primary_key=True)
+    formula_id: Mapped[str] = mapped_column(ForeignKey("formulas.id"), primary_key=True, index=True)
+    rank: Mapped[int] = mapped_column(Integer)
+
+    formula: Mapped[Formula] = relationship()

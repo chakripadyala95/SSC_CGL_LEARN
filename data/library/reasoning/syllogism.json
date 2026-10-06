@@ -1,0 +1,130 @@
+[
+ {
+  "id": "syllogism.venn-cases",
+  "topic": "Syllogism",
+  "subtopic": "Statements and conclusions",
+  "name": "Venn possible cases",
+  "statement": "\\text{Draw every Venn case allowed by the statements; a conclusion follows only if it holds in every case (a 'possibility' if it holds in at least one).}",
+  "conditions": [],
+  "derivation": [
+   "Draw the minimal diagram: All A are B = A inside B; Some A are B = A and B overlap; No A is B = A and B apart.",
+   "Mark the parts that are fixed and the parts that may or may not exist.",
+   "Definite conclusion: true in every case. 'Some B are A' follows from 'All A are B' and from 'Some A are B'.",
+   "Possibility conclusion: true in at least one case and not ruled out by any statement.",
+   "A term not in the statements (postcards) can never give a definite conclusion."
+  ],
+  "visual_proof": "Each statement places one circle inside, across or apart from another; a conclusion is valid when every allowed drawing shows it.",
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R07",
+   "answer": "D",
+   "steps": [
+    "All fans are brown: Fans circle inside Brown, so some brown are fans (I follows).",
+    "Some brown are chairs: the overlap exists both ways, so some chairs are brown (II follows).",
+    "Some chairs are plastic directly contradicts 'No chair is plastic' (III fails).",
+    "Only I and II follow (D)."
+   ]
+  },
+  "common_traps": [
+   "Reading 'All A are B' as 'All B are A'.",
+   "Accepting 'No chair is plastic' when a statement says some chairs are plastic.",
+   "Taking a possibility ('all tears being streams') as false because it is not certain.",
+   "Concluding 'Some A are C' from 'Some A are B' and 'Some B are C' (the overlaps need not meet)."
+  ],
+  "related_ids": [
+   "syllogism.either-or",
+   "venn.best-fit-diagram"
+  ],
+  "diagram": {
+   "alt_text": "Venn diagram of Fans, Brown and Chairs: the parts of Fans outside Brown are empty; Brown and Chairs overlap, and whether that overlap includes fans is open.",
+   "spec": {
+    "type": "venn",
+    "sets": [
+     "Fans",
+     "Brown",
+     "Chairs"
+    ],
+    "regions": {
+     "Fans": "empty",
+     "Fans&Chairs": "empty",
+     "Fans&Brown": "possible",
+     "Fans&Brown&Chairs": "possible",
+     "Brown&Chairs": "possible",
+     "Brown": "possible",
+     "Chairs": "possible"
+    }
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import product\n\ndef models(sets, statements):\n    \"\"\"Every Venn model: each of the 2^n regions empty or non-empty, all classes non-empty.\"\"\"\n    n = len(sets)\n    regions = list(product([0, 1], repeat=n))[1:]           # the outside region is irrelevant\n    idx = {s: i for i, s in enumerate(sets)}\n    for occ in product([0, 1], repeat=len(regions)):\n        live = [r for r, o in zip(regions, occ) if o]\n        if all(any(r[i] for r in live) for i in range(n)) and all(st(live, idx) for st in statements):\n            yield live, idx\n\ndef All(a, b):  return lambda L, I: not any(r[I[a]] and not r[I[b]] for r in L)\ndef Some(a, b): return lambda L, I: any(r[I[a]] and r[I[b]] for r in L)\ndef No(a, b):   return lambda L, I: not any(r[I[a]] and r[I[b]] for r in L)\ndef Not(f):     return lambda L, I: not f(L, I)\n\ndef follows(sets, statements, conclusion, possibility=False):\n    ms = list(models(sets, statements))\n    assert ms, \"statements are inconsistent\"\n    hits = [conclusion(L, I) for L, I in ms]\n    return any(hits) if possibility else all(hits)\n\ndef pick(found, options):\n    ok = [k for k, v in options.items() if v == found]\n    assert len(ok) == 1, (found, ok)\n    return ok[0]\n\n# Worked example 2024-09-09_1230_R07\nS = [\"fan\", \"brown\", \"chair\", \"plastic\"]\nst = [All(\"fan\", \"brown\"), Some(\"brown\", \"chair\"), Some(\"chair\", \"plastic\")]\nc = {\"I\": follows(S, st, Some(\"brown\", \"fan\")),\n     \"II\": follows(S, st, Some(\"chair\", \"brown\")),\n     \"III\": follows(S, st, No(\"chair\", \"plastic\"))}\nassert c == {\"I\": True, \"II\": True, \"III\": False}\nopts = {\"A\": {\"II\", \"III\"}, \"B\": {\"III\"}, \"C\": set(), \"D\": {\"I\", \"II\"}}\nassert pick({k for k, v in c.items() if v}, opts) == \"D\"\n\n# 2024-09-09_0900_R21: 'All tears can never be rivers' = in every case, not all tears are rivers\nS = [\"tear\", \"drop\", \"stream\", \"river\"]\nst = [Some(\"tear\", \"drop\"), Some(\"drop\", \"stream\"), All(\"stream\", \"river\")]\nc = {\"I\": follows(S, st, Not(All(\"tear\", \"river\"))),\n     \"II\": follows(S, st, Some(\"drop\", \"river\")),\n     \"III\": follows(S, st, All(\"tear\", \"stream\"), possibility=True)}\nassert c == {\"I\": False, \"II\": True, \"III\": True}\nopts = {\"A\": {\"I\"}, \"B\": {\"II\", \"III\"}, \"C\": {\"III\"}, \"D\": {\"I\", \"II\"}}\nassert pick({k for k, v in c.items() if v}, opts) == \"B\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:48+00:00"
+   }
+  }
+ },
+ {
+  "id": "syllogism.either-or",
+  "topic": "Syllogism",
+  "subtopic": "Statements and conclusions",
+  "name": "Either-or complementary pair",
+  "statement": "\\text{If two conclusions about the same two classes are each uncertain but exactly one must hold (Some/No or All/Some-not), answer 'either I or II follows'.}",
+  "conditions": [
+   "Neither conclusion follows by itself",
+   "Both conclusions are about the same two classes",
+   "The pair is complementary: Some/No or All/Some-not"
+  ],
+  "derivation": [
+   "Test I and II separately with [[f:syllogism.venn-cases]]; neither may follow by itself.",
+   "Check they share the same subject and predicate (pens and bags in both).",
+   "Check they are complementary: 'Some A are B' / 'No A is B', or 'All A are B' / 'Some A are not B'.",
+   "In every possible diagram one of them is true and the other false, so the answer is 'either I or II'."
+  ],
+  "visual_proof": "With Pens inside Books and Books meeting Bags, the Pens-Bags overlap may or may not exist: one drawing makes 'Some pens are bags' true, the other makes 'No pen is a bag' true.",
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Marking 'either' when one conclusion already follows; then that one alone is the answer.",
+   "Pairing 'Some A are B' with 'Some A are not B': both can be true, so they are not complementary.",
+   "Pairing conclusions about different classes ('Some pens are bags' / 'No book is a bag').",
+   "Marking 'neither follows' when the pair is complementary."
+  ],
+  "related_ids": [
+   "syllogism.venn-cases",
+   "venn.best-fit-diagram"
+  ],
+  "diagram": {
+   "alt_text": "Venn diagram of Pens, Books and Bags: Pens lies inside Books, Books overlaps Bags, and the region shared by Pens and Bags is only possible, so exactly one of 'Some pens are bags' and 'No pen is a bag' holds.",
+   "spec": {
+    "type": "venn",
+    "sets": [
+     "Pens",
+     "Books",
+     "Bags"
+    ],
+    "regions": {
+     "Pens": "empty",
+     "Pens&Bags": "empty",
+     "Pens&Books": "possible",
+     "Pens&Books&Bags": "possible",
+     "Books&Bags": "possible",
+     "Books": "possible",
+     "Bags": "possible"
+    }
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import product\n\ndef models(sets, statements):\n    \"\"\"Every Venn model: each of the 2^n regions empty or non-empty, all classes non-empty.\"\"\"\n    n = len(sets)\n    regions = list(product([0, 1], repeat=n))[1:]           # the outside region is irrelevant\n    idx = {s: i for i, s in enumerate(sets)}\n    for occ in product([0, 1], repeat=len(regions)):\n        live = [r for r, o in zip(regions, occ) if o]\n        if all(any(r[i] for r in live) for i in range(n)) and all(st(live, idx) for st in statements):\n            yield live, idx\n\ndef All(a, b):  return lambda L, I: not any(r[I[a]] and not r[I[b]] for r in L)\ndef Some(a, b): return lambda L, I: any(r[I[a]] and r[I[b]] for r in L)\ndef No(a, b):   return lambda L, I: not any(r[I[a]] and r[I[b]] for r in L)\ndef Not(f):     return lambda L, I: not f(L, I)\n\ndef follows(sets, statements, conclusion, possibility=False):\n    ms = list(models(sets, statements))\n    assert ms, \"statements are inconsistent\"\n    hits = [conclusion(L, I) for L, I in ms]\n    return any(hits) if possibility else all(hits)\n\ndef either_or(sets, st, c1, c2):\n    ms = list(models(sets, st))\n    a = [c1(L, I) for L, I in ms]\n    b = [c2(L, I) for L, I in ms]\n    if all(a) or all(b):\n        return False                       # one follows by itself: not an either-or answer\n    return all(x != y for x, y in zip(a, b))   # exactly one is true in every case\n\n# Constructed: All pens are books. Some books are bags.  I. Some pens are bags.  II. No pen is a bag.\nS = [\"pen\", \"book\", \"bag\"]\nst = [All(\"pen\", \"book\"), Some(\"book\", \"bag\")]\nassert not follows(S, st, Some(\"pen\", \"bag\")) and not follows(S, st, No(\"pen\", \"bag\"))\nassert either_or(S, st, Some(\"pen\", \"bag\"), No(\"pen\", \"bag\"))\nfound = \"either\" if either_or(S, st, Some(\"pen\", \"bag\"), No(\"pen\", \"bag\")) else \"neither\"\noptions = {\"A\": \"only I\", \"B\": \"only II\", \"C\": \"either\", \"D\": \"neither\"}\nassert [k for k, v in options.items() if v == found] == [\"C\"]\n\n# Boundary: when one conclusion follows on its own, the answer is that one, not 'either'.\nst2 = [All(\"pen\", \"book\"), All(\"book\", \"bag\")]\nassert follows(S, st2, Some(\"pen\", \"bag\")) and not either_or(S, st2, Some(\"pen\", \"bag\"), No(\"pen\", \"bag\"))\n# Boundary: the pair must be about the same two classes; Some pens are bags / No book is a bag is no pair.\nassert not either_or(S, st, Some(\"pen\", \"bag\"), No(\"book\", \"bag\"))\n# Boundary: a non-complementary pair (Some / Some-not) can both be true, so no 'either'.\nassert not either_or(S, st, Some(\"pen\", \"bag\"), Not(All(\"pen\", \"bag\")))\n# All / Some-not is the other complementary pair.\nassert either_or(S, st, All(\"pen\", \"bag\"), Not(All(\"pen\", \"bag\")))\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:48+00:00"
+   }
+  }
+ }
+]

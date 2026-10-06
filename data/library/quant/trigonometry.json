@@ -1,0 +1,1280 @@
+[
+ {
+  "id": "trigonometry.pythagorean-identities",
+  "topic": "Trigonometry",
+  "subtopic": "Identities",
+  "name": "Pythagorean identities",
+  "statement": "\\sin^2\\theta+\\cos^2\\theta=1;\\ \\sec^2\\theta-\\tan^2\\theta=1;\\ \\csc^2\\theta-\\cot^2\\theta=1",
+  "conditions": [
+   "$\\cos\\theta\\neq0$ for the sec–tan form ($\\theta\\neq90^\\circ$)",
+   "$\\sin\\theta\\neq0$ for the cosec–cot form ($\\theta\\neq0^\\circ$)"
+  ],
+  "derivation": [
+   "In a right triangle with hypotenuse $H$, perpendicular $P$, base $B$: $P^2+B^2=H^2$.",
+   "Divide by $H^2$: $\\sin^2\\theta+\\cos^2\\theta=1$.",
+   "Divide $\\sin^2\\theta+\\cos^2\\theta=1$ by $\\cos^2\\theta$: $\\tan^2\\theta+1=\\sec^2\\theta$.",
+   "Divide it by $\\sin^2\\theta$ instead: $1+\\cot^2\\theta=\\csc^2\\theta$."
+  ],
+  "visual_proof": "In a right triangle with hypotenuse 1, the legs are sin θ and cos θ, so Pythagoras gives sin²θ + cos²θ = 1.",
+  "shortcut": "Swap on sight: $\\sec^2-1=\\tan^2$, $1+\\cot^2=\\csc^2$, $1-\\sin^2=\\cos^2$; $\\sin^2 x+\\sin^2(90^\\circ-x)=1$.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q22",
+   "answer": "B",
+   "steps": [
+    "$\\sec^2\\theta-1=\\tan^2\\theta$ and $1+\\cot^2\\theta=\\csc^2\\theta$.",
+    "Expression $=\\tan^2\\theta\\cot^2\\theta\\csc^2\\theta=\\csc^2\\theta$.",
+    "$\\csc^2\\theta=(5/3)^2=\\frac{25}{9}$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Writing $\\sec^2\\theta+\\tan^2\\theta=1$ (sign flip) and getting a wrong value.",
+   "Using $\\csc\\theta$ instead of $\\csc^2\\theta$ at the end: gives $5/3$, not $25/9$.",
+   "Squaring $5/3$ the wrong way round ($9/25$) when sin and cosec get mixed up."
+  ],
+  "related_ids": [
+   "trigonometry.conjugate-pairs",
+   "trigonometry.reciprocal-quotient",
+   "trigonometry.right-triangle-ratios",
+   "geometry.pythagoras"
+  ],
+  "diagram": {
+   "alt_text": "Right triangle OMQ with right angle at M, angle θ at O, base OM = 4, perpendicular MQ = 3, hypotenuse OQ = 5, so sin θ = 3/5 and cos θ = 4/5 and (3/5)² + (4/5)² = 1.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "M": [
+      4,
+      0
+     ],
+     "Q": [
+      4,
+      3
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "M"
+     ],
+     [
+      "M",
+      "Q"
+     ],
+     [
+      "O",
+      "Q"
+     ]
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "M",
+      "to": "Q",
+      "label": "θ",
+      "right": false
+     },
+     {
+      "at": "M",
+      "from": "O",
+      "to": "Q",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       2,
+       -0.4
+      ],
+      "text": "B = 4"
+     },
+     {
+      "at": [
+       4.5,
+       1.5
+      ],
+      "text": "P = 3"
+     },
+     {
+      "at": [
+       1.6,
+       1.9
+      ],
+      "text": "H = 5"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nt = sp.symbols('t')\nassert sp.simplify(sp.sin(t)**2 + sp.cos(t)**2 - 1) == 0\nassert sp.simplify(sp.sec(t)**2 - sp.tan(t)**2 - 1) == 0\nassert sp.simplify(sp.csc(t)**2 - sp.cot(t)**2 - 1) == 0\n# worked example: cosec = 5/3 -> sin = 3/5, cos = 4/5 (acute)\ns = sp.Rational(3, 5); c = sp.sqrt(1 - s**2)\nassert c == sp.Rational(4, 5)\nsec, cot, cosec = 1/c, c/s, 1/s\nval = (sec**2 - 1) * cot**2 * (1 + cot**2)\nassert val == sp.Rational(25, 9) and val == cosec**2\n# boundaries: sec/tan undefined where cos = 0, cosec/cot undefined where sin = 0\nassert sp.cos(sp.pi/2) == 0 and sp.sec(sp.pi/2) is sp.zoo and sp.tan(sp.pi/2) is sp.zoo\nassert sp.sin(0) == 0 and sp.csc(0) is sp.zoo and sp.cot(0) is sp.zoo\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.conjugate-pairs",
+  "topic": "Trigonometry",
+  "subtopic": "Identities",
+  "name": "sec + tan and cosec + cot conjugates",
+  "statement": "(\\sec\\theta+\\tan\\theta)(\\sec\\theta-\\tan\\theta)=1;\\ (\\csc\\theta+\\cot\\theta)(\\csc\\theta-\\cot\\theta)=1",
+  "conditions": [
+   "$\\cos\\theta\\neq0$ for the sec–tan pair",
+   "$\\sin\\theta\\neq0$ for the cosec–cot pair"
+  ],
+  "derivation": [
+   "Difference of squares: $(\\sec\\theta+\\tan\\theta)(\\sec\\theta-\\tan\\theta)=\\sec^2\\theta-\\tan^2\\theta$.",
+   "[[f:trigonometry.pythagorean-identities]] makes this $1$.",
+   "Same for $\\csc^2\\theta-\\cot^2\\theta=1$.",
+   "So if $\\sec\\theta+\\tan\\theta=k$, then $\\sec\\theta-\\tan\\theta=\\frac1k$; add and halve: $\\sec\\theta=\\frac12\\left(k+\\frac1k\\right)$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$\\frac{\\csc\\theta+\\cot\\theta}{\\csc\\theta-\\cot\\theta}=(\\csc\\theta+\\cot\\theta)^2=\\frac{1+\\cos\\theta}{1-\\cos\\theta}$; likewise $\\frac{1+\\sin\\theta}{1-\\sin\\theta}=(\\sec\\theta+\\tan\\theta)^2$.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q24",
+   "answer": "C",
+   "steps": [
+    "$\\frac{\\csc A+\\cot A}{\\csc A-\\cot A}$: multiply top and bottom by $\\sin A$ to get $\\frac{1+\\cos A}{1-\\cos A}$.",
+    "$7\\cos A=6$ gives $\\cos A=\\frac67$.",
+    "$\\frac{1+6/7}{1-6/7}=\\frac{13/7}{1/7}=13$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Taking $\\sec\\theta-\\tan\\theta=-k$ instead of $\\frac1k$.",
+   "Flipping the ratio to $\\frac{1-\\cos A}{1+\\cos A}$ and answering $\\frac1{13}$.",
+   "Forgetting that $\\sec\\theta+\\tan\\theta$ and $\\sec\\theta-\\tan\\theta$ are reciprocals, not negatives, so they never sum to 0."
+  ],
+  "related_ids": [
+   "trigonometry.pythagorean-identities",
+   "algebra.difference-of-squares",
+   "trigonometry.multiple-angle"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nt = sp.symbols('t')\nassert sp.simplify((sp.sec(t) + sp.tan(t)) * (sp.sec(t) - sp.tan(t)) - 1) == 0\nassert sp.simplify((sp.csc(t) + sp.cot(t)) * (sp.csc(t) - sp.cot(t)) - 1) == 0\n# consequence used in the shortcut: (cosec + cot)/(cosec - cot) = (cosec + cot)^2 = (1 + cos)/(1 - cos)\nlhs = (sp.csc(t) + sp.cot(t)) / (sp.csc(t) - sp.cot(t))\nassert sp.simplify(lhs - (sp.csc(t) + sp.cot(t))**2) == 0\nassert sp.simplify(lhs - (1 + sp.cos(t)) / (1 - sp.cos(t))) == 0\n# sec + tan = k  ->  sec - tan = 1/k, sec = (k + 1/k)/2\nk = sp.symbols('k', positive=True)\nsec, tan = (k + 1/k)/2, (k - 1/k)/2\nassert sp.simplify(sec**2 - tan**2 - 1) == 0\n# worked example: 7 cos A = 6\nc = sp.Rational(6, 7); s = sp.sqrt(1 - c**2)\nval = (1/s + c/s) / (1/s - c/s)\nassert sp.simplify(val - 13) == 0\n# boundaries: cos = 0 (theta = 90) and sin = 0 (theta = 0) make the terms undefined\nassert sp.sec(sp.pi/2) is sp.zoo and sp.tan(sp.pi/2) is sp.zoo\nassert sp.csc(0) is sp.zoo and sp.cot(0) is sp.zoo\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:41+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.reciprocal-quotient",
+  "topic": "Trigonometry",
+  "subtopic": "Identities",
+  "name": "Reciprocal and quotient identities",
+  "statement": "\\tan\\theta=\\frac{\\sin\\theta}{\\cos\\theta},\\ \\sec\\theta=\\frac1{\\cos\\theta};\\ \\tan\\theta+\\cot\\theta=\\frac1{\\sin\\theta\\cos\\theta}",
+  "conditions": [
+   "$\\cos\\theta\\neq0$ for $\\tan\\theta$, $\\sec\\theta$",
+   "$\\sin\\theta\\neq0$ for $\\cot\\theta$, $\\csc\\theta$"
+  ],
+  "derivation": [
+   "$\\tan\\theta=\\frac PB=\\frac{P/H}{B/H}=\\frac{\\sin\\theta}{\\cos\\theta}$.",
+   "$\\sec\\theta=\\frac HB=\\frac1{\\cos\\theta}$, $\\csc\\theta=\\frac1{\\sin\\theta}$, $\\cot\\theta=\\frac1{\\tan\\theta}$.",
+   "$\\tan\\theta+\\cot\\theta=\\frac{\\sin^2\\theta+\\cos^2\\theta}{\\sin\\theta\\cos\\theta}=\\frac1{\\sin\\theta\\cos\\theta}=\\sec\\theta\\csc\\theta$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Stuck? Rewrite everything in $\\sin$ and $\\cos$; $\\csc\\theta-\\sin\\theta=\\frac{\\cos^2\\theta}{\\sin\\theta}$, $\\sec\\theta-\\cos\\theta=\\frac{\\sin^2\\theta}{\\cos\\theta}$.",
+  "worked_example": {
+   "question_key": "2024-09-25_0900_Q01",
+   "answer": "D",
+   "steps": [
+    "$\\csc\\theta-\\sin\\theta=\\frac{1-\\sin^2\\theta}{\\sin\\theta}=\\frac{\\cos^2\\theta}{\\sin\\theta}$.",
+    "$\\sec\\theta-\\cos\\theta=\\frac{\\sin^2\\theta}{\\cos\\theta}$; $\\tan\\theta+\\cot\\theta=\\frac1{\\sin\\theta\\cos\\theta}$.",
+    "Product $=\\frac{\\cos^2\\theta}{\\sin\\theta}\\cdot\\frac{\\sin^2\\theta}{\\cos\\theta}\\cdot\\frac1{\\sin\\theta\\cos\\theta}=1$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Taking $\\sec\\theta=\\frac1{\\sin\\theta}$ (sec pairs with cos, cosec with sin).",
+   "Writing $\\tan\\theta+\\cot\\theta=1$ instead of $\\frac1{\\sin\\theta\\cos\\theta}$.",
+   "Cancelling a sign and answering $-1$ when $\\csc\\theta-\\sin\\theta$ is read as $\\sin\\theta-\\csc\\theta$."
+  ],
+  "related_ids": [
+   "trigonometry.pythagorean-identities",
+   "trigonometry.reciprocal-sum-two",
+   "trigonometry.divide-by-cos"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nt = sp.symbols('t')\ns, c = sp.sin(t), sp.cos(t)\nassert sp.simplify(sp.tan(t) - s/c) == 0\nassert sp.simplify(sp.sec(t) - 1/c) == 0\nassert sp.simplify(sp.csc(t) - 1/s) == 0\nassert sp.simplify(sp.cot(t) - c/s) == 0\nassert sp.simplify(sp.tan(t) + sp.cot(t) - 1/(s*c)) == 0\nassert sp.simplify((sp.tan(t) + sp.cot(t) - sp.sec(t)*sp.csc(t)).rewrite(sp.cos)) == 0\n# worked example: (cosec - sin)(sec - cos)(tan + cot) = 1\nexpr = (sp.csc(t) - s) * (sp.sec(t) - c) * (sp.tan(t) + sp.cot(t))\nassert sp.simplify((expr - 1).rewrite(sp.cos)) == 0\nassert sp.simplify(sp.csc(t) - s - c**2/s) == 0 and sp.simplify(sp.sec(t) - c - s**2/c) == 0\n# boundaries: cos = 0 or sin = 0 leaves the ratios undefined\nassert sp.tan(sp.pi/2) is sp.zoo and sp.sec(sp.pi/2) is sp.zoo\nassert sp.cot(0) is sp.zoo and sp.csc(0) is sp.zoo\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:42+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.sin-cos-power-sums",
+  "topic": "Trigonometry",
+  "subtopic": "Identities",
+  "name": "Squares and fourth powers of sin and cos",
+  "statement": "(\\sin\\theta\\pm\\cos\\theta)^2=1\\pm2\\sin\\theta\\cos\\theta;\\ \\sin^4\\theta+\\cos^4\\theta=1-2\\sin^2\\theta\\cos^2\\theta",
+  "conditions": [],
+  "derivation": [
+   "Expand: $(\\sin\\theta\\pm\\cos\\theta)^2=\\sin^2\\theta+\\cos^2\\theta\\pm2\\sin\\theta\\cos\\theta=1\\pm2\\sin\\theta\\cos\\theta$.",
+   "Square $\\sin^2\\theta+\\cos^2\\theta=1$: $\\sin^4\\theta+\\cos^4\\theta+2\\sin^2\\theta\\cos^2\\theta=1$.",
+   "Move the middle term: $\\sin^4\\theta+\\cos^4\\theta=1-2\\sin^2\\theta\\cos^2\\theta$.",
+   "Cube instead: $\\sin^6\\theta+\\cos^6\\theta=1-3\\sin^2\\theta\\cos^2\\theta$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Given $\\sin\\theta+\\cos\\theta=S$: $\\sin\\theta\\cos\\theta=\\frac{S^2-1}2$, then $\\sin^4\\theta+\\cos^4\\theta=1-2(\\sin\\theta\\cos\\theta)^2$.",
+  "worked_example": {
+   "question_key": "2024-09-17_1230_Q15",
+   "answer": "B",
+   "steps": [
+    "$(\\sin A+\\cos A)^2=\\frac18=1+2\\sin A\\cos A$.",
+    "$\\sin A\\cos A=\\frac{1/8-1}{2}=-\\frac7{16}$.",
+    "$\\sin^4A+\\cos^4A=1-2\\cdot\\frac{49}{256}=\\frac{79}{128}$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Forgetting the $1$: writing $(\\sin\\theta+\\cos\\theta)^2=2\\sin\\theta\\cos\\theta$.",
+   "Using $1-2\\sin\\theta\\cos\\theta$ instead of $1-2\\sin^2\\theta\\cos^2\\theta$ for the fourth powers.",
+   "Dividing by 126 or 13 from arithmetic slips; $2\\cdot\\frac{49}{256}=\\frac{49}{128}$, so the answer is $\\frac{79}{128}$."
+  ],
+  "related_ids": [
+   "trigonometry.pythagorean-identities",
+   "algebra.square-of-sum-difference",
+   "trigonometry.multiple-angle"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nt = sp.symbols('t')\ns, c = sp.sin(t), sp.cos(t)\nassert sp.simplify((s + c)**2 - (1 + 2*s*c)) == 0\nassert sp.simplify((s - c)**2 - (1 - 2*s*c)) == 0\nassert sp.simplify(s**4 + c**4 - (1 - 2*s**2*c**2)) == 0\nassert sp.simplify((s**6 + c**6 - (1 - 3*s**2*c**2)).rewrite(sp.exp)) == 0\nassert sp.simplify(s**4 - c**4 - (s**2 - c**2)) == 0\nassert sp.simplify((s + c)**2 + (s - c)**2 - 2) == 0\n# worked example: sin A + cos A = 1/(2 sqrt 2)\nS = 1 / (2*sp.sqrt(2))\nsc = (S**2 - 1) / 2\nassert sc == sp.Rational(-7, 16)\nval = 1 - 2*sc**2\nassert val == sp.Rational(79, 128)\n# a real angle with this sum exists (|S| <= sqrt 2); check numerically\nA = sp.nsolve(sp.sin(t) + sp.cos(t) - S, t, 2)\nassert abs(sp.N(sp.sin(A)**4 + sp.cos(A)**4 - val)) < 1e-12\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:42+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.reciprocal-sum-two",
+  "topic": "Trigonometry",
+  "subtopic": "Identities",
+  "name": "Trig ratio + its reciprocal = 2",
+  "statement": "\\tan\\theta+\\cot\\theta=2 \\Rightarrow \\theta=45^\\circ;\\ \\sin\\theta+\\csc\\theta=2 \\Rightarrow \\theta=90^\\circ",
+  "conditions": [
+   "$0^\\circ<\\theta\\le90^\\circ$ (exam range; outside it the angle repeats)"
+  ],
+  "derivation": [
+   "For $x>0$: $x+\\frac1x-2=\\frac{(x-1)^2}{x}\\ge0$.",
+   "So $x+\\frac1x\\ge2$, with equality only at $x=1$.",
+   "$\\tan\\theta+\\cot\\theta=2\\Rightarrow\\tan\\theta=1\\Rightarrow\\theta=45^\\circ$.",
+   "$\\sin\\theta+\\csc\\theta=2\\Rightarrow\\sin\\theta=1\\Rightarrow\\theta=90^\\circ$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Ratio $+$ its reciprocal $=2$ means the ratio is $1$: then every power of it is $1$ too.",
+  "worked_example": {
+   "question_key": "2024-09-19_1600_Q17",
+   "answer": "C",
+   "steps": [
+    "$\\tan\\theta+\\frac1{\\tan\\theta}=2\\Rightarrow(\\tan\\theta-1)^2=0$.",
+    "$\\tan\\theta=1$, so $\\theta=45^\\circ$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Using it when the sum is not 2 (e.g. $x+\\frac1x=3$ does not give $x=1$).",
+   "With $\\sin\\theta+\\csc\\theta=2$, answering $45^\\circ$ by habit: it is $90^\\circ$.",
+   "Computing $\\sin^7+\\csc^7$ as $1$ instead of $1+1=2$."
+  ],
+  "related_ids": [
+   "trigonometry.reciprocal-quotient",
+   "algebra.reciprocal-square",
+   "trigonometry.standard-values"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(2000):\n    x = F(random.randint(1, 10**6), random.randint(1, 10**6))\n    v = x + 1/x\n    assert v >= 2\n    assert (v == 2) == (x == 1)\n    assert v - 2 == (x - 1)**2 / x          # x + 1/x - 2 = (x - 1)^2 / x\n    n += 1\n# angle form: tan + cot = 2 only at 45 deg in (0, 90); sin + cosec = 2 only at 90 deg in (0, 90]\nhits_tan = [d for d in range(1, 90) if math.isclose(math.tan(math.radians(d)) + 1/math.tan(math.radians(d)), 2, abs_tol=1e-9)]\nhits_sin = [d for d in range(1, 91) if math.isclose(math.sin(math.radians(d)) + 1/math.sin(math.radians(d)), 2, abs_tol=1e-9)]\nassert hits_tan == [45] and hits_sin == [90]\n# worked example: tan + cot = 2, theta acute -> 45 deg (option C), not 15, 30, 60\nfor d in (15, 30, 60):\n    r = math.radians(d)\n    assert not math.isclose(math.tan(r) + 1/math.tan(r), 2)\nprint(f\"CASES={n}\")\n# boundary of 0 < theta <= 90: just past 90 deg sin+cosec > 2 again; negative ratios give <= -2, never 2\nassert math.sin(math.radians(90.5)) + 1/math.sin(math.radians(90.5)) > 2\nfor x in (F(-1), F(-1, 3), F(-7)):\n    assert x + 1/x <= -2\nassert F(1) + 1/F(1) == 2 and F(1001, 1000) + F(1000, 1001) > 2\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:43+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.divide-by-cos",
+  "topic": "Trigonometry",
+  "subtopic": "Identities",
+  "name": "Divide through by cos to get tan",
+  "statement": "\\frac{a\\sin\\theta+b\\cos\\theta}{c\\sin\\theta+d\\cos\\theta}=\\frac{a\\tan\\theta+b}{c\\tan\\theta+d}",
+  "conditions": [
+   "$\\cos\\theta\\neq0$ ($\\theta\\neq90^\\circ$)",
+   "$c\\sin\\theta+d\\cos\\theta\\neq0$"
+  ],
+  "derivation": [
+   "Divide top and bottom by $\\cos\\theta$; the fraction's value is unchanged.",
+   "$\\frac{\\sin\\theta}{\\cos\\theta}=\\tan\\theta$ and $\\frac{\\cos\\theta}{\\cos\\theta}=1$.",
+   "Result: $\\frac{a\\tan\\theta+b}{c\\tan\\theta+d}$."
+  ],
+  "visual_proof": null,
+  "shortcut": "Given $\\tan\\theta=\\frac pq$: replace $\\sin\\theta\\to p$, $\\cos\\theta\\to q$ in any expression where every term has the same degree.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_Q13",
+   "answer": "A",
+   "steps": [
+    "$7\\tan\\theta=3$; divide by $\\cos\\theta$: $\\frac{7\\tan\\theta+5}{7\\tan\\theta-2}$.",
+    "$=\\frac{3+5}{3-2}=8$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Dividing only the numerator by $\\cos\\theta$.",
+   "Substituting $\\tan\\theta=3$ instead of $7\\tan\\theta=3$: gives $\\frac{26}{19}$.",
+   "Using the $p,q$ swap when terms have mixed degree (e.g. $\\sin\\theta+1$): it fails there."
+  ],
+  "related_ids": [
+   "trigonometry.reciprocal-quotient",
+   "trigonometry.right-triangle-ratios"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    a, b, c, d = (random.randint(-20, 20) for _ in range(4))\n    th = random.uniform(-1.5, 1.5)\n    s, co, t = math.sin(th), math.cos(th), math.tan(th)\n    den = c*s + d*co\n    if abs(den) < 1e-3 or abs(co) < 1e-3:\n        continue\n    lhs = (a*s + b*co) / den\n    rhs = (a*t + b) / (c*t + d)\n    assert math.isclose(lhs, rhs, rel_tol=1e-9, abs_tol=1e-9)\n    n += 1\nprint(f\"CASES={n}\")\n# worked example: 7 tan = 3 -> (7 sin + 5 cos)/(7 sin - 2 cos) = (3 + 5)/(3 - 2) = 8\nt = F(3, 7)\nassert (7*t + 5) / (7*t - 2) == 8\nth = math.atan(3/7)\nassert math.isclose((7*math.sin(th) + 5*math.cos(th)) / (7*math.sin(th) - 2*math.cos(th)), 8)\n# boundary cos = 0 (theta = 90): tan is undefined, the left side equals a/c\na, b, c, d = 7, 5, 7, -2\nth = math.pi/2\nassert abs(math.cos(th)) < 1e-15\nassert math.isclose((a*math.sin(th) + b*math.cos(th)) / (c*math.sin(th) + d*math.cos(th)), a/c)\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:43+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.multiple-angle",
+  "topic": "Trigonometry",
+  "subtopic": "Multiple & compound angles",
+  "name": "Double and triple angle formulas",
+  "statement": "\\sin2\\theta=2\\sin\\theta\\cos\\theta;\\ \\cos2\\theta=1-2\\sin^2\\theta;\\ \\sin3\\theta=3\\sin\\theta-4\\sin^3\\theta;\\ \\cos3\\theta=4\\cos^3\\theta-3\\cos\\theta",
+  "conditions": [],
+  "derivation": [
+   "Put $B=A=\\theta$ in [[f:trigonometry.compound-angle]]: $\\sin2\\theta=2\\sin\\theta\\cos\\theta$.",
+   "Same way: $\\cos2\\theta=\\cos^2\\theta-\\sin^2\\theta$.",
+   "Replace $\\cos^2\\theta=1-\\sin^2\\theta$: $\\cos2\\theta=1-2\\sin^2\\theta=2\\cos^2\\theta-1$.",
+   "Write $3\\theta=2\\theta+\\theta$, expand and use $\\cos^2\\theta=1-\\sin^2\\theta$: $\\sin3\\theta=3\\sin\\theta-4\\sin^3\\theta$; similarly $\\cos3\\theta=4\\cos^3\\theta-3\\cos\\theta$."
+  ],
+  "visual_proof": "Isosceles triangle with two sides 5 and apex angle 2θ: its area is ½·5·5·sin 2θ, and the altitude splits it into two right triangles each of area ½·4·3, so sin 2θ = 2·(3/5)(4/5).",
+  "shortcut": "$\\frac{1-\\cos2\\theta}{1+\\cos2\\theta}=\\tan^2\\theta$; $\\cos2\\theta=\\frac{1-\\tan^2\\theta}{1+\\tan^2\\theta}$; $\\sin2\\theta=\\frac{2\\tan\\theta}{1+\\tan^2\\theta}$.",
+  "worked_example": {
+   "question_key": "2024-09-23_0900_Q16",
+   "answer": "A",
+   "steps": [
+    "$1-\\cos2\\theta=2\\sin^2\\theta$, $1+\\cos2\\theta=2\\cos^2\\theta$.",
+    "Ratio $=\\tan^2\\theta$.",
+    "$4\\tan\\theta=3\\Rightarrow\\tan^2\\theta=\\frac9{16}$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Answering $\\tan\\theta=\\frac34$ instead of $\\tan^2\\theta=\\frac9{16}$.",
+   "Writing $\\cos2\\theta=1-2\\cos^2\\theta$ (sign error).",
+   "Treating $\\sin2\\theta$ as $2\\sin\\theta$."
+  ],
+  "related_ids": [
+   "trigonometry.compound-angle",
+   "trigonometry.sin-cos-power-sums",
+   "trigonometry.pythagorean-identities"
+  ],
+  "diagram": {
+   "alt_text": "Isosceles triangle OAB with OA = OB = 5 and apex angle 2θ at O; the altitude OM = 4 meets AB at M, splitting it into MA = MB = 3, with angle θ between OM and OA.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      4,
+      3
+     ],
+     "B": [
+      4,
+      -3
+     ],
+     "M": [
+      4,
+      0
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "A"
+     ],
+     [
+      "O",
+      "B"
+     ],
+     [
+      "A",
+      "B"
+     ],
+     [
+      "O",
+      "M"
+     ]
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "M",
+      "to": "A",
+      "label": "θ",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "B",
+      "to": "A",
+      "label": "2θ",
+      "right": false
+     },
+     {
+      "at": "M",
+      "from": "O",
+      "to": "A",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       1.6,
+       1.9
+      ],
+      "text": "5"
+     },
+     {
+      "at": [
+       1.6,
+       -1.9
+      ],
+      "text": "5"
+     },
+     {
+      "at": [
+       2,
+       0.3
+      ],
+      "text": "4"
+     },
+     {
+      "at": [
+       4.4,
+       1.5
+      ],
+      "text": "3"
+     },
+     {
+      "at": [
+       4.4,
+       -1.5
+      ],
+      "text": "3"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nt = sp.symbols('t')\ns, c = sp.sin(t), sp.cos(t)\nassert sp.simplify(sp.sin(2*t) - 2*s*c) == 0\nassert sp.simplify(sp.cos(2*t) - (1 - 2*s**2)) == 0\nassert sp.simplify(sp.cos(2*t) - (2*c**2 - 1)) == 0\nassert sp.simplify(sp.cos(2*t) - (c**2 - s**2)) == 0\nassert sp.simplify(sp.expand_trig(sp.sin(3*t)) - (3*s - 4*s**3)) == 0\nassert sp.simplify(sp.expand_trig(sp.cos(3*t)) - (4*c**3 - 3*c)) == 0\nassert sp.simplify((1 - sp.cos(2*t)) / (1 + sp.cos(2*t)) - sp.tan(t)**2) == 0\nassert sp.simplify(sp.cos(2*t) - (1 - sp.tan(t)**2)/(1 + sp.tan(t)**2)) == 0\n# worked example: 4 tan = 3 -> (1 - cos 2t)/(1 + cos 2t) = 9/16\nT = sp.Rational(3, 4)\nc2 = (1 - T**2) / (1 + T**2)\nassert c2 == sp.Rational(7, 25)\nassert (1 - c2) / (1 + c2) == sp.Rational(9, 16) == T**2\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:43+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.compound-angle",
+  "topic": "Trigonometry",
+  "subtopic": "Multiple & compound angles",
+  "name": "Compound angle and product-to-sum",
+  "statement": "\\sin(A\\pm B)=\\sin A\\cos B\\pm\\cos A\\sin B;\\ \\tan(A+B)=\\frac{\\tan A+\\tan B}{1-\\tan A\\tan B};\\ 2\\sin A\\sin B=\\cos(A-B)-\\cos(A+B)",
+  "conditions": [
+   "$\\tan(A+B)$ form: $\\cos A,\\cos B\\neq0$ and $\\tan A\\tan B\\neq1$ (i.e. $A+B\\neq90^\\circ$)"
+  ],
+  "derivation": [
+   "Take $OP=1$ at angle $A+B$; drop $PQ\\perp OQ$ where $OQ$ is at angle $A$, so $OQ=\\cos B$, $QP=\\sin B$.",
+   "Height of $P$ = height of $Q$ + rise along $QP$: $\\sin(A+B)=\\cos B\\sin A+\\sin B\\cos A$.",
+   "Replace $B$ by $-B$: $\\sin(A-B)=\\sin A\\cos B-\\cos A\\sin B$; likewise $\\cos(A+B)=\\cos A\\cos B-\\sin A\\sin B$.",
+   "Divide $\\sin(A+B)$ by $\\cos(A+B)$, then top and bottom by $\\cos A\\cos B$: $\\tan(A+B)=\\frac{\\tan A+\\tan B}{1-\\tan A\\tan B}$.",
+   "Subtract $\\cos(A+B)$ from $\\cos(A-B)$: $2\\sin A\\sin B=\\cos(A-B)-\\cos(A+B)$."
+  ],
+  "visual_proof": "A unit segment OP at angle A + B is split by the right angle at Q into OQ = cos B along angle A and QP = sin B; P's height adds the two vertical pieces sin A cos B + cos A sin B.",
+  "shortcut": "If $A-B=45^\\circ$: $\\tan A-\\tan B-\\tan A\\tan B=1$; if $A+B=45^\\circ$: $(1+\\tan A)(1+\\tan B)=2$.",
+  "worked_example": {
+   "question_key": "2024-09-25_1230_Q05",
+   "answer": "C",
+   "steps": [
+    "$72^\\circ-27^\\circ=45^\\circ$, so $\\tan45^\\circ=\\frac{\\tan72^\\circ-\\tan27^\\circ}{1+\\tan72^\\circ\\tan27^\\circ}=1$.",
+    "Cross-multiply: $\\tan72^\\circ-\\tan27^\\circ=1+\\tan72^\\circ\\tan27^\\circ$.",
+    "So $\\tan72^\\circ-\\tan27^\\circ-\\tan72^\\circ\\tan27^\\circ=1$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Using $1-\\tan A\\tan B$ in the denominator of $\\tan(A-B)$: the sign flips to $1+$.",
+   "Writing $\\sin(A+B)=\\sin A+\\sin B$.",
+   "Mixing up $2\\sin A\\sin B=\\cos(A-B)-\\cos(A+B)$ with $\\cos(A+B)-\\cos(A-B)$: the sign of the answer flips."
+  ],
+  "related_ids": [
+   "trigonometry.multiple-angle",
+   "trigonometry.max-a-sin-b-cos",
+   "trigonometry.standard-values"
+  ],
+  "diagram": {
+   "alt_text": "O at the origin; OQ at 27° to the base line, OP of length 5 at 72°, with a right angle at Q so angle QOP = 45°; perpendiculars QS and PR drop to the base line and PT meets QS, showing the height PR as QS plus TQ.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "Q": [
+      3.15,
+      1.605
+     ],
+     "P": [
+      1.545,
+      4.755
+     ],
+     "S": [
+      3.15,
+      0
+     ],
+     "R": [
+      1.545,
+      0
+     ],
+     "T": [
+      3.15,
+      4.755
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "S"
+     ],
+     [
+      "O",
+      "Q"
+     ],
+     [
+      "Q",
+      "P"
+     ],
+     [
+      "O",
+      "P"
+     ],
+     [
+      "Q",
+      "S"
+     ],
+     [
+      "P",
+      "R"
+     ],
+     [
+      "P",
+      "T"
+     ],
+     [
+      "T",
+      "Q"
+     ]
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "S",
+      "to": "Q",
+      "label": "A = 27°",
+      "right": false
+     },
+     {
+      "at": "O",
+      "from": "Q",
+      "to": "P",
+      "label": "B = 45°",
+      "right": false
+     },
+     {
+      "at": "Q",
+      "from": "O",
+      "to": "P",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       0.2,
+       3.2
+      ],
+      "text": "OP = 1 unit"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nA, B = sp.symbols('A B')\nassert sp.simplify(sp.expand_trig(sp.sin(A + B)) - (sp.sin(A)*sp.cos(B) + sp.cos(A)*sp.sin(B))) == 0\nassert sp.simplify(sp.expand_trig(sp.sin(A - B)) - (sp.sin(A)*sp.cos(B) - sp.cos(A)*sp.sin(B))) == 0\nassert sp.simplify(sp.expand_trig(sp.cos(A + B)) - (sp.cos(A)*sp.cos(B) - sp.sin(A)*sp.sin(B))) == 0\ntA, tB = sp.tan(A), sp.tan(B)\nassert sp.simplify(sp.expand_trig(sp.tan(A + B)) - (tA + tB)/(1 - tA*tB)) == 0\nassert sp.simplify(sp.expand_trig(sp.tan(A - B)) - (tA - tB)/(1 + tA*tB)) == 0\nassert sp.simplify(2*sp.sin(A)*sp.sin(B) - (sp.cos(A - B) - sp.cos(A + B))) == 0\nassert sp.simplify(2*sp.sin(A)*sp.cos(B) - (sp.sin(A + B) + sp.sin(A - B))) == 0\nassert sp.simplify(2*sp.cos(A)*sp.cos(B) - (sp.cos(A - B) + sp.cos(A + B))) == 0\n# worked example: A - B = 45 deg -> tan A - tan B - tan A tan B = 1 for any such pair\nx = sp.symbols('x')\nexpr = sp.tan(x) - sp.tan(x - sp.pi/4) - sp.tan(x)*sp.tan(x - sp.pi/4)\nassert sp.simplify(sp.expand_trig(expr) - 1) == 0\nv = sp.tan(sp.rad(72)) - sp.tan(sp.rad(27)) - sp.tan(sp.rad(72))*sp.tan(sp.rad(27))\nassert abs(sp.N(v, 30) - 1) < 1e-25\n# boundaries: tan(A + B) breaks when tan A tan B = 1 (A + B = 90 deg) and when cos A or cos B = 0\nassert sp.simplify(sp.tan(x)*sp.tan(sp.pi/2 - x) - 1) == 0\nassert sp.tan(sp.pi/2) is sp.zoo\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:44+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.complementary-angles",
+  "topic": "Trigonometry",
+  "subtopic": "Complementary angles",
+  "name": "Complementary angles",
+  "statement": "\\sin(90^\\circ-\\theta)=\\cos\\theta,\\ \\tan(90^\\circ-\\theta)=\\cot\\theta,\\ \\sec(90^\\circ-\\theta)=\\csc\\theta;\\ \\tan\\theta\\tan(90^\\circ-\\theta)=1",
+  "conditions": [
+   "$0^\\circ<\\theta<90^\\circ$ for $\\tan\\theta\\tan(90^\\circ-\\theta)=1$"
+  ],
+  "derivation": [
+   "In right triangle $ABC$ with $\\angle C=90^\\circ$, the acute angles are $\\theta$ and $90^\\circ-\\theta$.",
+   "The side opposite one is adjacent to the other.",
+   "So $\\sin(90^\\circ-\\theta)=\\cos\\theta$, $\\tan(90^\\circ-\\theta)=\\cot\\theta$, $\\sec(90^\\circ-\\theta)=\\csc\\theta$.",
+   "$\\tan\\theta\\tan(90^\\circ-\\theta)=\\tan\\theta\\cot\\theta=1$."
+  ],
+  "visual_proof": "In a right triangle the two acute angles add to 90°; the leg opposite one angle is adjacent to the other, so sin of one equals cos of the other.",
+  "shortcut": "$\\tan x\\tan y=1$ or $\\sin x=\\cos y$ (acute) $\\Rightarrow x+y=90^\\circ$; pair angles adding to $90^\\circ$ in long products and sums.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q06",
+   "answer": "D",
+   "steps": [
+    "$\\tan4\\theta\\tan6\\theta=1\\Rightarrow4\\theta+6\\theta=90^\\circ$.",
+    "$\\theta=9^\\circ$, so $5\\theta=45^\\circ$.",
+    "$\\cot45^\\circ=1$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Setting $4\\theta+6\\theta=180^\\circ$: gives $\\theta=18^\\circ$ and $\\cot90^\\circ=0$.",
+   "Pairing angles that add to $90^\\circ$ but switching sin to sin instead of sin to cos.",
+   "Forgetting the product is $1$, not $0$, so $\\tan1^\\circ\\tan2^\\circ\\cdots\\tan89^\\circ=1$."
+  ],
+  "related_ids": [
+   "trigonometry.pythagorean-identities",
+   "trigonometry.standard-values",
+   "geometry.triangle-angle-sum"
+  ],
+  "diagram": {
+   "alt_text": "Right triangle with right angle at C, angle 36° (4θ) at A and 54° (6θ) at B; side BC is opposite A and adjacent to B.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "C": [
+      0,
+      0
+     ],
+     "A": [
+      5,
+      0
+     ],
+     "B": [
+      0,
+      3.633
+     ]
+    },
+    "segments": [
+     [
+      "C",
+      "A"
+     ],
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ]
+    ],
+    "angles": [
+     {
+      "at": "A",
+      "from": "C",
+      "to": "B",
+      "label": "4θ = 36°",
+      "right": false
+     },
+     {
+      "at": "B",
+      "from": "A",
+      "to": "C",
+      "label": "6θ = 54°",
+      "right": false
+     },
+     {
+      "at": "C",
+      "from": "A",
+      "to": "B",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nt = sp.symbols('t')\nq = sp.pi/2 - t\nassert sp.simplify(sp.sin(q) - sp.cos(t)) == 0\nassert sp.simplify(sp.cos(q) - sp.sin(t)) == 0\nassert sp.simplify(sp.tan(q) - sp.cot(t)) == 0\nassert sp.simplify(sp.sec(q) - sp.csc(t)) == 0\nassert sp.simplify(sp.csc(q) - sp.sec(t)) == 0\nassert sp.simplify(sp.tan(t)*sp.tan(q) - 1) == 0\nassert sp.simplify(sp.sin(t)**2 + sp.sin(q)**2 - 1) == 0\n# worked example: tan 4x tan 6x = 1, 6x acute -> 4x + 6x = 90 -> x = 9 deg -> cot 45 deg = 1\nx = sp.solve(sp.Eq(4*t + 6*t, 90), t)[0]\nassert x == 9 and sp.cot(sp.rad(5*x)) == 1\nassert abs(sp.N(sp.tan(sp.rad(4*x))*sp.tan(sp.rad(6*x))) - 1) < 1e-12\n# boundary of 0 < theta < 90: at theta = 0 the product tan 0 * tan 90 is undefined\nassert sp.tan(0) == 0 and sp.tan(sp.pi/2) is sp.zoo\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:44+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.standard-values",
+  "topic": "Trigonometry",
+  "subtopic": "Standard values",
+  "name": "Standard angle values",
+  "statement": "\\sin 0^\\circ,30^\\circ,45^\\circ,60^\\circ,90^\\circ=\\tfrac{\\sqrt0}2,\\tfrac{\\sqrt1}2,\\tfrac{\\sqrt2}2,\\tfrac{\\sqrt3}2,\\tfrac{\\sqrt4}2;\\ \\cos \\text{ in reverse}",
+  "conditions": [],
+  "derivation": [
+   "Half an equilateral triangle of side 2 has sides $1,\\sqrt3,2$ and angles $30^\\circ,60^\\circ$: $\\sin30^\\circ=\\frac12$, $\\sin60^\\circ=\\frac{\\sqrt3}2$.",
+   "Half a square of side 1 has diagonal $\\sqrt2$: $\\sin45^\\circ=\\frac1{\\sqrt2}=\\frac{\\sqrt2}2$.",
+   "$\\sin0^\\circ=0$, $\\sin90^\\circ=1$ complete the pattern $\\frac{\\sqrt0}2,\\frac{\\sqrt1}2,\\frac{\\sqrt2}2,\\frac{\\sqrt3}2,\\frac{\\sqrt4}2$.",
+   "$\\cos\\theta=\\sin(90^\\circ-\\theta)$ reads the same row backwards; $\\tan=\\frac{\\sin}{\\cos}$ gives $0,\\frac1{\\sqrt3},1,\\sqrt3$, undefined."
+  ],
+  "visual_proof": null,
+  "shortcut": "$\\sin$: $\\sqrt{0},\\sqrt1,\\sqrt2,\\sqrt3,\\sqrt4$ over 2; $\\cos$ the same reversed; $\\tan=\\sqrt{\\frac{n}{4-n}}$.",
+  "worked_example": {
+   "question_key": "2024-09-13_0900_Q11",
+   "answer": "B",
+   "steps": [
+    "$\\cot30^\\circ=\\sqrt3$, so the bracket is $2\\sqrt3$.",
+    "$\\tan^360^\\circ=3\\sqrt3$, $2\\sin60^\\circ=\\sqrt3$; right side $=2\\sqrt3$.",
+    "$p\\cdot2\\sqrt3=2\\sqrt3\\Rightarrow p=1$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Swapping $\\sin30^\\circ$ and $\\cos30^\\circ$.",
+   "Taking $\\tan^360^\\circ=3$ instead of $(\\sqrt3)^3=3\\sqrt3$.",
+   "Using $\\cot30^\\circ=\\frac1{\\sqrt3}$ (that is $\\tan30^\\circ$)."
+  ],
+  "related_ids": [
+   "trigonometry.complementary-angles",
+   "trigonometry.right-triangle-ratios",
+   "geometry.equilateral-triangle"
+  ],
+  "diagram": {
+   "alt_text": "Table of sin, cos and tan at 0°, 30°, 45°, 60° and 90°.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "θ",
+     "0°",
+     "30°",
+     "45°",
+     "60°",
+     "90°"
+    ],
+    "rows": [
+     [
+      "sin θ",
+      "0",
+      "1/2",
+      "1/√2",
+      "√3/2",
+      "1"
+     ],
+     [
+      "cos θ",
+      "1",
+      "√3/2",
+      "1/√2",
+      "1/2",
+      "0"
+     ],
+     [
+      "tan θ",
+      "0",
+      "1/√3",
+      "1",
+      "√3",
+      "undefined"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nangles = [0, 30, 45, 60, 90]\nfor k, d in enumerate(angles):\n    r = sp.rad(d)\n    assert sp.simplify(sp.sin(r) - sp.sqrt(k)/2) == 0\n    assert sp.simplify(sp.cos(r) - sp.sqrt(4 - k)/2) == 0\n    if d != 90:\n        assert sp.simplify(sp.tan(r) - sp.sqrt(k)/sp.sqrt(4 - k)) == 0\nassert sp.tan(sp.rad(90)) is sp.zoo\n# worked example: p (sqrt3 + cot 30) = tan^3 60 - 2 sin 60\np = sp.symbols('p')\nsol = sp.solve(sp.Eq(p*(sp.sqrt(3) + sp.cot(sp.rad(30))), sp.tan(sp.rad(60))**3 - 2*sp.sin(sp.rad(60))), p)\nassert sol == [1]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.equation-solving",
+  "topic": "Trigonometry",
+  "subtopic": "Trig equations",
+  "name": "Solving trig equations",
+  "statement": "\\text{Convert to one ratio (e.g. } \\cos^2=1-\\sin^2), \\text{ solve the resulting quadratic, keep } 0^\\circ\\le\\theta\\le90^\\circ",
+  "conditions": [
+   "$0^\\circ\\le\\theta\\le90^\\circ$, so $0\\le\\sin\\theta,\\cos\\theta\\le1$"
+  ],
+  "derivation": [
+   "Use [[f:trigonometry.pythagorean-identities]] to write every term in one ratio $s$.",
+   "Solve the quadratic in $s$ by factorising.",
+   "Reject roots outside $[0,1]$ (for sin or cos) — they give no angle in range.",
+   "Read the angle from [[f:trigonometry.standard-values]]."
+  ],
+  "visual_proof": null,
+  "shortcut": "Faster still: plug each option into the equation; only one survives.",
+  "worked_example": {
+   "question_key": "2024-09-24_0900_Q19",
+   "answer": "A",
+   "steps": [
+    "$2\\sin^2\\theta+3\\sin\\theta-2=(2\\sin\\theta-1)(\\sin\\theta+2)=0$.",
+    "$\\sin\\theta=-2$ is impossible; $\\sin\\theta=\\frac12$.",
+    "$\\theta=30^\\circ$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Keeping $\\sin\\theta=-2$ or a value above 1.",
+   "Dividing both sides by $\\sin\\theta$ and losing the root $\\sin\\theta=0$.",
+   "Factorising with the wrong sign and getting $\\sin\\theta=-\\frac12$."
+  ],
+  "related_ids": [
+   "algebra.quadratic-factorisation",
+   "trigonometry.standard-values",
+   "trigonometry.pythagorean-identities"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef solve_sin_quadratic(a, b, c):\n    \"\"\"a s^2 + b s + c = 0 with s = sin(theta); return angles in [0, 90] degrees.\"\"\"\n    disc = b*b - 4*a*c\n    if disc < 0:\n        return []\n    roots = {(-b + math.sqrt(disc)) / (2*a), (-b - math.sqrt(disc)) / (2*a)}\n    out = []\n    for s in roots:\n        if -1e-12 <= s <= 1 + 1e-12:\n            out.append(math.degrees(math.asin(min(1.0, max(0.0, s)))))\n    return sorted(out)\n\nn = 0\nwhile n < 1500:\n    s0 = F(random.randint(1, 999), 1000)                     # the genuine sin(theta)\n    r = F(random.choice([-1, 1]) * random.randint(1001, 5000), 1000)   # the other root, |r| > 1\n    if random.random() < 0.5:\n        r = -abs(r)\n    k = random.randint(1, 9)\n    a, b, c = k, -k*(s0 + r), k*s0*r                         # k (s - s0)(s - r)\n    got = solve_sin_quadratic(float(a), float(b), float(c))\n    assert len(got) == 1 and math.isclose(got[0], math.degrees(math.asin(s0)), abs_tol=1e-6)\n    n += 1\nprint(f\"CASES={n}\")\n# worked example: 2 sin^2 + 3 sin - 2 = 0 -> (2s - 1)(s + 2) = 0 -> s = 1/2 -> 30 deg (A)\nassert solve_sin_quadratic(2, 3, -2) == [math.degrees(math.asin(0.5))]\nassert math.isclose(solve_sin_quadratic(2, 3, -2)[0], 30)\nfor wrong in (15, 45, 60):\n    s = math.sin(math.radians(wrong))\n    assert abs(2*s*s + 3*s - 2) > 1e-6\n# boundaries of 0 <= theta <= 90: s = 1 (90 deg) and s = 0 (0 deg) kept; s just above 1 rejected\nassert math.isclose(solve_sin_quadratic(1, -2, 1)[0], 90)            # (s - 1)^2\nassert solve_sin_quadratic(1, -1, 0) == [0.0, 90.0]                   # s(s - 1)\nassert solve_sin_quadratic(1, -2.002, 1.002) == [90.0]                # roots 1 and 1.002: only 1 kept\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.right-triangle-ratios",
+  "topic": "Trigonometry",
+  "subtopic": "Ratios from a right triangle",
+  "name": "Ratios from a right triangle",
+  "statement": "\\sin\\theta=\\frac PH,\\ \\cos\\theta=\\frac BH,\\ \\tan\\theta=\\frac PB;\\ \\text{use triplets } (3,4,5),(5,12,13),(8,15,17),(7,24,25)",
+  "conditions": [
+   "$\\theta$ is an acute angle of the right triangle ($0^\\circ<\\theta<90^\\circ$)"
+  ],
+  "derivation": [
+   "Label the sides from $\\theta$: perpendicular $P$ (opposite), base $B$ (adjacent), hypotenuse $H$.",
+   "Define $\\sin\\theta=\\frac PH$, $\\cos\\theta=\\frac BH$, $\\tan\\theta=\\frac PB$; the rest are reciprocals.",
+   "Given one ratio, read two sides from it and find the third with $P^2+B^2=H^2$.",
+   "Recognise triplets to skip the square root: $(3,4,5),(5,12,13),(8,15,17),(7,24,25),(20,21,29)$."
+  ],
+  "visual_proof": "A right triangle with the angle θ marked: P is the side facing θ, B the side touching θ, H the side facing the right angle.",
+  "shortcut": "Given $\\sec\\theta=\\frac{29}{20}$: $H=29$, $B=20$, so $P=21$ by the triplet.",
+  "worked_example": {
+   "question_key": "2024-09-17_0900_Q21",
+   "answer": "A",
+   "steps": [
+    "$\\sec\\theta=\\frac HB=\\frac{29}{20}$, so $P=\\sqrt{29^2-20^2}=21$.",
+    "$\\csc\\theta=\\frac{29}{21}$, $\\cot\\theta=\\frac{20}{21}$.",
+    "$3\\left(\\frac{29+20}{21}\\right)=3\\cdot\\frac{49}{21}=7$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Taking $\\sec\\theta=\\frac HP$ (that is cosec).",
+   "Computing $P$ as $29-20=9$ instead of $\\sqrt{29^2-20^2}=21$.",
+   "Forgetting the factor 3 and answering $\\frac73$."
+  ],
+  "related_ids": [
+   "geometry.pythagoras",
+   "trigonometry.pythagorean-identities",
+   "trigonometry.heights-distances"
+  ],
+  "diagram": {
+   "alt_text": "Right triangle with right angle at C; angle θ at A; base AC = 20, perpendicular BC = 21, hypotenuse AB = 29.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "C": [
+      20,
+      0
+     ],
+     "B": [
+      20,
+      21
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "C"
+     ],
+     [
+      "C",
+      "B"
+     ],
+     [
+      "A",
+      "B"
+     ]
+    ],
+    "angles": [
+     {
+      "at": "A",
+      "from": "C",
+      "to": "B",
+      "label": "θ",
+      "right": false
+     },
+     {
+      "at": "C",
+      "from": "A",
+      "to": "B",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       10,
+       -1.5
+      ],
+      "text": "B = 20"
+     },
+     {
+      "at": [
+       21.5,
+       10.5
+      ],
+      "text": "P = 21"
+     },
+     {
+      "at": [
+       8,
+       12
+      ],
+      "text": "H = 29"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    m, k = random.randint(2, 60), random.randint(1, 59)\n    if k >= m:\n        continue\n    P, B, H = m*m - k*k, 2*m*k, m*m + k*k        # Euclid triple: P^2 + B^2 = H^2\n    if random.random() < 0.5:\n        P, B = B, P\n    assert P*P + B*B == H*H\n    th = math.atan2(P, B)\n    assert math.isclose(math.sin(th), P/H) and math.isclose(math.cos(th), B/H) and math.isclose(math.tan(th), P/B)\n    # from one ratio the rest follow: sec = H/B -> P = sqrt(H^2 - B^2)\n    assert math.isqrt(H*H - B*B) == P\n    n += 1\nprint(f\"CASES={n}\")\nfor p, b, h in [(3, 4, 5), (5, 12, 13), (8, 15, 17), (7, 24, 25), (20, 21, 29)]:\n    assert p*p + b*b == h*h\n# worked example: sec = 29/20 -> B = 20, H = 29, P = 21 -> 3 cosec + 3 cot = 3 (29 + 20)/21 = 7\nH, B = 29, 20\nP = math.isqrt(H*H - B*B)\nassert P*P == H*H - B*B == 441\nassert 3*F(H, P) + 3*F(B, P) == 7\n# boundary of 0 < theta < 90: at theta = 0 the triangle collapses (P = 0, H = B) and cosec, cot are undefined\nH, B = 29, 29\nassert math.isqrt(H*H - B*B) == 0\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.max-a-sin-b-cos",
+  "topic": "Trigonometry",
+  "subtopic": "Maximum & minimum",
+  "name": "Range of a sin + b cos",
+  "statement": "-\\sqrt{a^2+b^2}\\le a\\sin\\theta+b\\cos\\theta\\le\\sqrt{a^2+b^2}",
+  "conditions": [],
+  "derivation": [
+   "Let $R=\\sqrt{a^2+b^2}$ and pick $\\varphi$ with $\\cos\\varphi=\\frac aR$, $\\sin\\varphi=\\frac bR$.",
+   "Then $a\\sin\\theta+b\\cos\\theta=R(\\sin\\theta\\cos\\varphi+\\cos\\theta\\sin\\varphi)=R\\sin(\\theta+\\varphi)$ by [[f:trigonometry.compound-angle]].",
+   "$-1\\le\\sin(\\theta+\\varphi)\\le1$, so the value lies in $[-R,R]$.",
+   "The maximum $R$ occurs when $\\sin\\theta=\\frac aR$, $\\cos\\theta=\\frac bR$, i.e. $\\tan\\theta=\\frac ab$."
+  ],
+  "visual_proof": "The graph of 3 sin θ + 4 cos θ is a sine wave of height √(3² + 4²) = 5, swinging between −5 and 5.",
+  "shortcut": "If $a\\sin\\theta+b\\cos\\theta=\\sqrt{a^2+b^2}$ (the maximum), then $\\tan\\theta=\\frac ab$ at once.",
+  "worked_example": {
+   "question_key": "2024-09-18_0900_Q12",
+   "answer": "B",
+   "steps": [
+    "$\\sqrt{3^2+4^2}=5$, so $3\\sin A+4\\cos A=5$ is the maximum.",
+    "At the maximum $\\sin A=\\frac35$, $\\cos A=\\frac45$.",
+    "$\\tan A=\\frac34$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Taking the maximum as $a+b=7$ instead of $\\sqrt{a^2+b^2}=5$.",
+   "Inverting the ratio: $\\tan A=\\frac ba=\\frac43$.",
+   "Answering $\\sin A=\\frac35$ when $\\tan A$ is asked."
+  ],
+  "related_ids": [
+   "trigonometry.compound-angle",
+   "trigonometry.right-triangle-ratios",
+   "algebra.am-gm-hm-inequality"
+  ],
+  "diagram": {
+   "alt_text": "Line chart of 3 sin θ + 4 cos θ for θ from 0° to 360°; the curve peaks at 5 near θ = 37° (tan θ = 3/4) and bottoms at −5 near 217°.",
+   "spec": {
+    "type": "chart",
+    "kind": "line",
+    "series": [
+     {
+      "label": "3 sin θ + 4 cos θ",
+      "points": [
+       [
+        0,
+        4.0
+       ],
+       [
+        15,
+        4.64
+       ],
+       [
+        30,
+        4.964
+       ],
+       [
+        45,
+        4.95
+       ],
+       [
+        60,
+        4.598
+       ],
+       [
+        75,
+        3.933
+       ],
+       [
+        90,
+        3.0
+       ],
+       [
+        105,
+        1.863
+       ],
+       [
+        120,
+        0.598
+       ],
+       [
+        135,
+        -0.707
+       ],
+       [
+        150,
+        -1.964
+       ],
+       [
+        165,
+        -3.087
+       ],
+       [
+        180,
+        -4.0
+       ],
+       [
+        195,
+        -4.64
+       ],
+       [
+        210,
+        -4.964
+       ],
+       [
+        225,
+        -4.95
+       ],
+       [
+        240,
+        -4.598
+       ],
+       [
+        255,
+        -3.933
+       ],
+       [
+        270,
+        -3.0
+       ],
+       [
+        285,
+        -1.863
+       ],
+       [
+        300,
+        -0.598
+       ],
+       [
+        315,
+        0.707
+       ],
+       [
+        330,
+        1.964
+       ],
+       [
+        345,
+        3.087
+       ],
+       [
+        360,
+        4.0
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    a, b = random.uniform(-50, 50), random.uniform(-50, 50)\n    R = math.hypot(a, b)\n    th = random.uniform(0, 2*math.pi)\n    v = a*math.sin(th) + b*math.cos(th)\n    assert -R - 1e-9 <= v <= R + 1e-9\n    # R-form: a sin + b cos = R sin(theta + phi) with cos phi = a/R, sin phi = b/R\n    phi = math.atan2(b, a)\n    assert math.isclose(v, R*math.sin(th + phi), abs_tol=1e-9)\n    # max attained where sin = a/R, cos = b/R (tan = a/b); min at the opposite angle\n    tmax = math.atan2(a, b)\n    assert math.isclose(a*math.sin(tmax) + b*math.cos(tmax), R, rel_tol=1e-12)\n    assert math.isclose(a*math.sin(tmax + math.pi) + b*math.cos(tmax + math.pi), -R, rel_tol=1e-12)\n    n += 1\nprint(f\"CASES={n}\")\n# worked example: 3 sin A + 4 cos A = 5 = sqrt(9 + 16) -> sin = 3/5, cos = 4/5 -> tan = 3/4 (B)\nassert math.hypot(3, 4) == 5\nA = math.atan2(3, 4)\nassert math.isclose(3*math.sin(A) + 4*math.cos(A), 5)\nassert math.isclose(math.tan(A), 3/4)\n# grid check: no angle gives more than 5\nassert max(3*math.sin(math.radians(d/10)) + 4*math.cos(math.radians(d/10)) for d in range(3600)) <= 5 + 1e-12\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ },
+ {
+  "id": "trigonometry.heights-distances",
+  "topic": "Trigonometry",
+  "subtopic": "Heights & distances",
+  "name": "Heights and distances",
+  "statement": "h=d\\tan\\theta \\text{ (angle of elevation } \\theta \\text{ at horizontal distance } d)",
+  "conditions": [
+   "$0^\\circ<\\theta<90^\\circ$, ground horizontal, object vertical, eye at ground level"
+  ],
+  "derivation": [
+   "The eye, the foot and the top of the object form a right triangle with the right angle at the foot.",
+   "Angle of elevation $\\theta$ is at the eye; $h$ is opposite it, $d$ is adjacent.",
+   "$\\tan\\theta=\\frac hd$, so $h=d\\tan\\theta$; the line of sight is $\\frac d{\\cos\\theta}$.",
+   "Angle of depression from the top equals the angle of elevation from the ground (alternate angles)."
+  ],
+  "visual_proof": "A right triangle on the ground: horizontal leg d from the eye to the foot, vertical leg h up the object, and the line of sight as hypotenuse at angle θ.",
+  "shortcut": "$\\theta=45^\\circ\\Rightarrow h=d$; $60^\\circ\\Rightarrow h=\\sqrt3d$; $30^\\circ\\Rightarrow h=\\frac d{\\sqrt3}$.",
+  "worked_example": null,
+  "common_traps": [
+   "Using $\\sin\\theta$ or $\\cos\\theta$ for $h$ when $d$ (the ground distance) is given: $\\tan\\theta$ links $h$ and $d$.",
+   "Forgetting to add the observer's height when the eye is above the ground.",
+   "Treating the angle of depression as the angle with the vertical."
+  ],
+  "related_ids": [
+   "trigonometry.right-triangle-ratios",
+   "trigonometry.standard-values"
+  ],
+  "diagram": {
+   "alt_text": "Eye E on the ground, foot F of a vertical object at distance d, top T at height h; angle of elevation θ at E between EF and the line of sight ET.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "E": [
+      0,
+      0
+     ],
+     "F": [
+      10,
+      0
+     ],
+     "T": [
+      10,
+      5.774
+     ]
+    },
+    "segments": [
+     [
+      "E",
+      "F"
+     ],
+     [
+      "F",
+      "T"
+     ],
+     [
+      "E",
+      "T"
+     ]
+    ],
+    "angles": [
+     {
+      "at": "E",
+      "from": "F",
+      "to": "T",
+      "label": "θ",
+      "right": false
+     },
+     {
+      "at": "F",
+      "from": "E",
+      "to": "T",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       5,
+       -0.7
+      ],
+      "text": "d"
+     },
+     {
+      "at": [
+       10.6,
+       2.9
+      ],
+      "text": "h = d tan θ"
+     }
+    ],
+    "to_scale": false
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    d = random.uniform(1, 1000)\n    th = random.uniform(0.5, 89.5)\n    h = d*math.tan(math.radians(th))\n    # place eye at (0, 0), foot of the object at (d, 0), top at (d, h); measure the elevation\n    elev = math.degrees(math.atan2(h, d))\n    assert math.isclose(elev, th, rel_tol=1e-12)\n    # the line of sight is the hypotenuse: d / cos(theta)\n    assert math.isclose(math.hypot(d, h), d/math.cos(math.radians(th)), rel_tol=1e-12)\n    n += 1\nprint(f\"CASES={n}\")\n# standard values used most: 30, 45, 60 deg\nassert math.isclose(100*math.tan(math.radians(45)), 100)\nassert math.isclose(100*math.tan(math.radians(60)), 100*math.sqrt(3))\nassert math.isclose(100*math.tan(math.radians(30)), 100/math.sqrt(3))\n# boundaries of 0 < theta < 90: theta = 0 gives h = 0 (no height), theta -> 90 makes h unbounded\nassert 100*math.tan(0) == 0\nassert 100*math.tan(math.radians(89.999)) > 1e6\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:45+00:00"
+   }
+  }
+ }
+]
