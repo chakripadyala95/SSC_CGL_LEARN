@@ -129,3 +129,14 @@ then `tagger_v2.md` and `tagger_v3.md` with decision rules added after each samp
   (fastembed, BAAI/bge-small-en-v1.5) similarity is at least 0.95, the subtopic matches, the option sets mostly
   match and the stems are near-identical. SSC reuses templates with new numbers, so none are marked.
 - `coverage` writes `COVERAGE_TAGS.md`, the Phase 3c gate report.
+
+## Phase 3d: Solutions (pilot)
+
+`data/solutions/<paper>.jsonl` holds one shortcut-first solution per question: answer, the named trick and at most
+4 one-line fastest steps (at most 60 words outside math), optional option elimination, one trap line, an optional
+diagram spec, the collapsed full method, the formula ids and check code. Writers (`pipeline/prompts/solution_v1.md`)
+only get questions with a confirmed answer. `python -m pipeline.solutions prepare <paper> <dir>` builds their
+batches, `merge <dir>` collects `sol_*.jsonl` (later files win), and `verify` runs the crispness lint (step and
+word limits, banned phrases, restating the question, unlinked formula names, unresolved `[[f:…]]` tokens, diagram
+rules) plus the check code, which must print the verified `ANSWER=<letter>`. A solution that passes is
+`VERIFIED_CODE`; anything else is `PENDING`. The pilot covers 2024-09-19_1600 (50 of 50 verified).
