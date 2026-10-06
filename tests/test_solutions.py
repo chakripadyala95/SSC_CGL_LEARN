@@ -73,3 +73,8 @@ def test_geometry_needs_a_diagram_and_figures_keep_the_crop():
 def test_check_code_must_print_the_verified_answer():
     assert check(dict(GOOD, check_code='print("ANSWER=C")'), "B")[0] is False
     assert check(dict(GOOD, check_code="assert False"), "B")[0] is False
+
+
+def test_trap_may_be_left_out_but_not_blank():
+    assert bad(trap=None) == []
+    assert any("one line" in e for e in bad(trap="  "))

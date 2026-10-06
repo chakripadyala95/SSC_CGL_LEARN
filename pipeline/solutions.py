@@ -26,7 +26,7 @@ from pipeline.solve import CONFIRMED, LETTERS, load_questions, question_version
 from pipeline.tags import load_tags
 
 ROOT = Path(__file__).resolve().parents[1]
-PROMPT_VERSION = "solution_v1"
+PROMPT_VERSION = "solution_v2"
 SOLUTION_KEYS = {"key", "question_version", "answer", "answer_value", "trick", "fastest", "elimination",
                  "elimination_is_fastest", "trap", "diagram", "full", "formula_ids", "check_code", "writer",
                  "prompt_version"}
@@ -151,7 +151,7 @@ def lint(sol: dict, q: dict, tag: dict, answer: str, entries: dict[str, dict]) -
         errs.append("elimination marked fastest but empty")
     if not any(TOKEN_RE.search(s) for s in (steps or [])):
         errs.append("the fastest way links no formula or method ([[f:<id>]])")
-    text_blocks = (sol["fastest"] + (sol["elimination"] or []) + [sol["trap"]] + sol["full"]
+    text_blocks = (sol["fastest"] + (sol["elimination"] or []) + [sol["trap"] or ""] + sol["full"]
                    + [sol["answer_value"] or ""])
     text = "\n".join(text_blocks)
     for tok in TOKEN_RE.findall(text):
@@ -165,7 +165,9 @@ def lint(sol: dict, q: dict, tag: dict, answer: str, entries: dict[str, dict]) -
     errs += [f"banned phrase {b!r}" for b in BANNED if re.search(rf"\b{re.escape(b)}\b", low)]
     if shingles(q["stem_text"]) & shingles("\n".join(sol["fastest"])):
         errs.append("the fastest way restates the question")
-    if not sol["trap"].strip() or "\n" in sol["trap"]:
+    if sol["trap"] is None:
+        pass  # no wrong option comes from a real mistake (pilot decision, 2026-10-06)
+    elif not sol["trap"].strip() or "\n" in sol["trap"]:
         errs.append("trap must be one line")
     elif not re.search(r"\(([a-d])\)", sol["trap"]):
         errs.append("trap must name the wrong option it leads to, e.g. (b)")
