@@ -151,7 +151,7 @@
 {"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 1, "question_id": "630680922774", "official_answer": "B", "final_answer": "B", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 2, "question_id": "630680358065", "official_answer": "C", "final_answer": "C", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 3, "question_id": "630680526460", "official_answer": "B", "final_answer": "B", "status": "KEY_CONFIRMED_CODE"}
-{"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 4, "question_id": "630680380394", "official_answer": "A", "final_answer": "C", "status": "KEY_CONFIRMED_REVIEW"}
+{"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 4, "question_id": "630680380394", "official_answer": "A", "final_answer": null, "status": "REJECTED"}
 {"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 5, "question_id": "630680404479", "official_answer": "A", "final_answer": "A", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 6, "question_id": "630680108755", "official_answer": "C", "final_answer": "C", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-10_0900", "section": "QUANT", "q_no": 7, "question_id": "630680428043", "official_answer": "A", "final_answer": "A", "status": "KEY_CONFIRMED_CODE"}
@@ -1167,7 +1167,7 @@
 {"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 17, "question_id": "630680421492", "official_answer": "D", "final_answer": "D", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 18, "question_id": "630680566264", "official_answer": "B", "final_answer": "B", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 19, "question_id": "630680428064", "official_answer": "C", "final_answer": "C", "status": "KEY_CONFIRMED_CODE"}
-{"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 20, "question_id": "2024-09-24_1600_QUANT_20", "official_answer": "C", "final_answer": "B", "status": "KEY_CONFIRMED_REVIEW"}
+{"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 20, "question_id": "2024-09-24_1600_QUANT_20", "official_answer": "C", "final_answer": null, "status": "REJECTED"}
 {"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 21, "question_id": "630680387735", "official_answer": "D", "final_answer": "D", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 22, "question_id": "630680383493", "official_answer": "A", "final_answer": "A", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-24_1600", "section": "QUANT", "q_no": 23, "question_id": "630680428109", "official_answer": "C", "final_answer": "C", "status": "KEY_CONFIRMED_CODE"}
@@ -1318,7 +1318,7 @@
 {"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 18, "question_id": "630680108867", "official_answer": "B", "final_answer": "B", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 19, "question_id": "630680428188", "official_answer": "A", "final_answer": "A", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 20, "question_id": "630680566254", "official_answer": "B", "final_answer": "B", "status": "KEY_CONFIRMED_CODE"}
-{"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 21, "question_id": "630680413500", "official_answer": "B", "final_answer": "C", "status": "KEY_CONFIRMED_REVIEW"}
+{"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 21, "question_id": "630680413500", "official_answer": "B", "final_answer": null, "status": "REJECTED"}
 {"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 22, "question_id": "630680296082", "official_answer": "B", "final_answer": "B", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 23, "question_id": "630680196068", "official_answer": "C", "final_answer": "C", "status": "KEY_CONFIRMED_CODE"}
 {"paper_id": "2024-09-25_1600", "section": "QUANT", "q_no": 24, "question_id": "630680217287", "official_answer": "A", "final_answer": "A", "status": "KEY_CONFIRMED_CODE"}
