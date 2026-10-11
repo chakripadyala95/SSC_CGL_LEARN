@@ -3,7 +3,8 @@
 Usage: python -m api.load [--data-dir PATH]
 
 Reads data/intake_manifest.json (papers), data/questions/questions.jsonl and review_queue.json (extraction),
-and data/solver/verifications/*.jsonl (solver runs). Idempotent: re-running changes nothing unless an input
+data/solver/verifications/*.jsonl (solver runs), data/review/decisions.jsonl (human review), data/library/ (formulas
+and methods) and data/tags/questions.jsonl (question tags). Idempotent: re-running changes nothing unless an input
 changed. A question whose stem, options or key changed gets a new version; older versions stay for the
 attempts and solver runs that point at them.
 """
@@ -29,10 +30,13 @@ from api.models import (
     SECTIONS,
     AnswerVerification,
     ExamPattern,
+    Formula,
     Mock,
     Paper,
     Question,
     QuestionAsset,
+    QuestionFormula,
+    QuestionTag,
     QuestionVersion,
     ReviewItem,
 )
@@ -170,7 +174,10 @@ def load_questions(s: Session, records: list[dict], r: Report) -> None:
                 r.add("assets added")
         elif _update(version, {k: q[k] for k in TOPIC_FIELDS}):  # provisional tags change without a new version
             r.add("topic tags updated")
-        if question.current_version_id != version.id:
+        current = question.current_version
+        reviewed_edit = (current is not None and current.content_hash == h and current.key_status == "KEY_CONFIRMED_REVIEW"
+                         and current.official_answer != q["official_answer"])
+        if question.current_version_id != version.id and not reviewed_edit:
             question.current_version_id = version.id
             r.add("current versions moved")
     s.flush()
@@ -248,6 +255,60 @@ def withdraw_verdicts(s: Session, covered: set[int], r: Report) -> None:
     s.flush()
 
 
+REVIEW_OUTCOME = {"approve": "APPROVED", "edit": "EDITED", "reject": "REJECTED"}
+
+
+def _edited_version(s: Session, question: Question, base: QuestionVersion, answer: str, r: Report) -> QuestionVersion:
+    """The same content with a reviewer-corrected key, as its own version (attempts keep pointing at theirs)."""
+    version = s.scalar(select(QuestionVersion).where(
+        QuestionVersion.question_id == question.id, QuestionVersion.content_hash == base.content_hash,
+        QuestionVersion.official_answer == answer))
+    if version is None:
+        skip = {"id", "version", "official_answer", "key_status", "created_at", "question_id"}
+        version = QuestionVersion(
+            question_id=question.id, version=len(question.versions) + 1, official_answer=answer,
+            key_status="KEY_CONFIRMED_REVIEW",
+            **{c.key: getattr(base, c.key) for c in QuestionVersion.__table__.columns if c.key not in skip})
+        s.add(version)
+        s.flush()
+        s.refresh(question)
+        for a in s.scalars(select(QuestionAsset).where(QuestionAsset.question_version_id == base.id)):
+            s.add(QuestionAsset(question_version_id=version.id, kind=a.kind, path=a.path, shows_answer=a.shows_answer))
+        r.add("question versions added")
+    return version
+
+
+def load_decisions(s: Session, decisions: list[dict], r: Report) -> None:
+    """Apply review decisions (approve / edit / reject) made on a specific version of a question."""
+    for d in decisions:
+        question = _question(s, d["paper_id"], d["section"], d["q_no"])
+        if question is None:
+            continue
+        base = s.scalar(select(QuestionVersion).where(
+            QuestionVersion.question_id == question.id, QuestionVersion.content_hash == d["question_version"],
+            QuestionVersion.official_answer == d["official_answer"]))
+        if base is None:  # the question changed after it was reviewed; it stays in the queue
+            r.add("stale review decisions skipped")
+            continue
+        if d["action"] == "reject":
+            if question.status != "REJECTED":
+                question.status = "REJECTED"
+                r.add("questions rejected")
+        else:
+            target = base if d["action"] == "approve" else _edited_version(s, question, base, d["answer"], r)
+            if target.key_status != "KEY_CONFIRMED_REVIEW":
+                target.key_status = "KEY_CONFIRMED_REVIEW"
+                r.add("key statuses set")
+            if question.current_version_id != target.id:
+                question.current_version_id = target.id
+                r.add("current versions moved")
+        for item in s.scalars(select(ReviewItem).where(ReviewItem.question_id == question.id,
+                                                       ReviewItem.status == "OPEN")):
+            item.status = REVIEW_OUTCOME[d["action"]]
+            r.add("review items closed")
+    s.flush()
+
+
 def publish_mocks(s: Session, r: Report) -> None:
     """A section mock is PUBLISHED only when all its questions have a confirmed key."""
     s.expire_all()
@@ -260,6 +321,62 @@ def publish_mocks(s: Session, r: Report) -> None:
         if mock.status != status:
             mock.status = status
             r.add(f"mocks set {status}")
+
+
+SECTION_DIRS = {"quant": "QUANT", "reasoning": "REASONING"}
+TAG_FIELDS = ("topic", "subtopic", "question_type", "shortcut_used", "difficulty", "expected_time_sec", "has_visual",
+              "tagger", "prompt_version")
+
+
+def load_formulas(s: Session, library_dir: Path, r: Report) -> None:
+    for folder, section in SECTION_DIRS.items():
+        for path in sorted((library_dir / folder).glob("*.json")):
+            for e in json.loads(path.read_text()):
+                values = dict(section=section, topic=e["topic"], topic_slug=e["id"].split(".")[0],
+                              subtopic=e["subtopic"], name=e["name"], statement=e["statement"],
+                              shortcut=e["shortcut"],
+                              verification_status=(e["verification"].get("result") or {}).get("status", "UNVERIFIED"),
+                              entry=e)
+                formula = s.get(Formula, e["id"])
+                if formula is None:
+                    s.add(Formula(id=e["id"], **values))
+                    r.add("formulas added")
+                elif _update(formula, values):
+                    r.add("formulas updated")
+    s.flush()
+
+
+def _question_by_key(s: Session, key: str) -> Question | None:
+    """'2024-09-09_0900_Q04' -> the question (Q = Quant, R = Reasoning)."""
+    pid, slot = key.rsplit("_", 1)
+    return _question(s, pid, {"Q": "QUANT", "R": "REASONING"}[slot[0]], int(slot[1:]))
+
+
+def load_tags(s: Session, tags: list[dict], r: Report) -> None:
+    for t in tags:
+        question = _question_by_key(s, t["key"])
+        if question is None:
+            continue
+        dup = _question_by_key(s, t["duplicate_of"]) if t.get("duplicate_of") else None
+        values = {**{k: t[k] for k in TAG_FIELDS}, "duplicate_of_id": dup.id if dup else None}
+        tag = s.get(QuestionTag, question.id)
+        if tag is None:
+            tag = QuestionTag(question_id=question.id, **values)
+            s.add(tag)
+            r.add("question tags added")
+        elif _update(tag, values):
+            r.add("question tags updated")
+        s.flush()
+        links = [(fid, rank) for rank, fid in enumerate(t["formula_ids"])]
+        old = s.scalars(select(QuestionFormula).where(QuestionFormula.question_id == question.id)
+                        .order_by(QuestionFormula.rank)).all()
+        if [(f.formula_id, f.rank) for f in old] != links:
+            for f in old:
+                s.delete(f)
+            s.flush()
+            s.add_all(QuestionFormula(question_id=question.id, formula_id=fid, rank=rank) for fid, rank in links)
+            r.add("question formula links set")
+    s.flush()
 
 
 def load_all(s: Session, data_dir: Path) -> Report:
@@ -277,7 +394,15 @@ def load_all(s: Session, data_dir: Path) -> Report:
     for path in sorted((data_dir / "solver" / "verifications").glob("*.jsonl")):
         covered |= load_verifications(s, read_jsonl(path), r)
     withdraw_verdicts(s, covered, r)
+    decisions = data_dir / "review" / "decisions.jsonl"
+    if decisions.exists():
+        load_decisions(s, read_jsonl(decisions), r)
     publish_mocks(s, r)
+    if (data_dir / "library").exists():
+        load_formulas(s, data_dir / "library", r)
+    tags = data_dir / "tags" / "questions.jsonl"
+    if tags.exists():
+        load_tags(s, read_jsonl(tags), r)
     return r
 
 

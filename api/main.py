@@ -3,7 +3,8 @@
 Run: uvicorn api.main:app --reload
 
 Test-taker routes never return an answer key and only serve PUBLISHED mocks. /admin routes show keys, solver
-runs and the review queue.
+runs and the review queue. /index routes browse the tagged question bank (no keys); /study/questions/{id} shows a
+question with its answer only once that answer is verified; /formulas serves the formula and method library.
 """
 
 from __future__ import annotations
@@ -14,12 +15,23 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from api.config import settings
 from api.db import get_session
-from api.models import ExamPattern, Mock, Paper, Question, QuestionVersion, ReviewItem
+from api.models import (
+    CONFIRMED,
+    ExamPattern,
+    Formula,
+    Mock,
+    Paper,
+    Question,
+    QuestionFormula,
+    QuestionTag,
+    QuestionVersion,
+    ReviewItem,
+)
 
 ASSET_PREFIX = "data/questions/assets/"
 
@@ -197,3 +209,216 @@ def admin_question(question_id: int, db: DB):
 def review_queue(db: DB, status: str = "OPEN"):
     query = select(ReviewItem).where(ReviewItem.status == status.upper())
     return db.scalars(query.order_by(ReviewItem.paper_id, ReviewItem.section, ReviewItem.q_no)).all()
+
+
+# --- Question index (Phase 3c) ---------------------------------------------------------------------------------
+
+
+class TypeNode(BaseModel):
+    name: str
+    count: int
+
+
+class SubtopicNode(BaseModel):
+    name: str
+    count: int
+    per_shift: float
+    question_types: list[TypeNode]
+
+
+class TopicNode(BaseModel):
+    section: str
+    topic: str
+    slug: str
+    count: int
+    per_shift: float
+    subtopics: list[SubtopicNode]
+
+
+class FormulaRef(Out):
+    id: str
+    name: str
+    topic_slug: str
+
+
+class IndexRow(BaseModel):
+    id: int
+    paper_id: str
+    section: str
+    q_no: int
+    stem_text: str
+    topic: str
+    subtopic: str
+    question_type: str
+    difficulty: int
+    expected_time_sec: int
+    has_visual: bool
+    key_status: str
+    duplicate_of: int | None
+    formulas: list[FormulaRef]
+    crop_url: str | None
+
+
+class IndexPage(BaseModel):
+    total: int
+    rows: list[IndexRow]
+
+
+def _round(x: float) -> float:
+    return round(x, 2)
+
+
+@app.get("/index/tree", response_model=list[TopicNode])
+def index_tree(db: DB, section: str | None = None):
+    """Topic -> subtopic -> question type, with counts. Near-duplicates of an earlier shift count once."""
+    shifts = db.scalar(select(func.count(Paper.id))) or 1
+    query = (select(Mock.section, QuestionTag.topic, QuestionTag.subtopic, QuestionTag.question_type, func.count())
+             .join(Question, Question.id == QuestionTag.question_id).join(Mock, Mock.id == Question.mock_id)
+             .where(QuestionTag.duplicate_of_id.is_(None))
+             .group_by(Mock.section, QuestionTag.topic, QuestionTag.subtopic, QuestionTag.question_type))
+    if section:
+        query = query.where(Mock.section == section.upper())
+    slugs = dict(db.execute(select(Formula.topic, Formula.topic_slug).distinct()).all())
+    tree: dict[tuple[str, str], dict[str, dict[str, int]]] = {}
+    for sec, topic, sub, qtype, n in db.execute(query):
+        tree.setdefault((sec, topic), {}).setdefault(sub, {})[qtype] = n
+    out = []
+    for (sec, topic), subs in tree.items():
+        nodes = [SubtopicNode(name=sub, count=sum(ts.values()), per_shift=_round(sum(ts.values()) / shifts),
+                              question_types=sorted((TypeNode(name=k, count=v) for k, v in ts.items()),
+                                                    key=lambda t: (-t.count, t.name)))
+                 for sub, ts in subs.items()]
+        nodes.sort(key=lambda n: (-n.count, n.name))
+        total = sum(n.count for n in nodes)
+        out.append(TopicNode(section=sec, topic=topic, slug=slugs.get(topic, ""), count=total,
+                             per_shift=_round(total / shifts), subtopics=nodes))
+    return sorted(out, key=lambda t: (t.section, -t.count, t.topic))
+
+
+@app.get("/index/questions", response_model=IndexPage)
+def index_questions(db: DB, section: str | None = None, topic: str | None = None, subtopic: str | None = None,
+                    question_type: str | None = None, difficulty: int | None = None, formula: str | None = None,
+                    status: str | None = None, q: str | None = None, limit: int = 50, offset: int = 0):
+    """Filter by topic, subtopic, question type, difficulty, formula and verification status; `q` searches the
+    question text (PostgreSQL full-text search, plus a plain substring match for numbers and short words)."""
+    query = (select(Question, QuestionTag, QuestionVersion, Mock.section, Mock.paper_id)
+             .join(QuestionTag, QuestionTag.question_id == Question.id)
+             .join(QuestionVersion, QuestionVersion.id == Question.current_version_id)
+             .join(Mock, Mock.id == Question.mock_id))
+    if section:
+        query = query.where(Mock.section == section.upper())
+    for col, value in ((QuestionTag.topic, topic), (QuestionTag.subtopic, subtopic),
+                       (QuestionTag.question_type, question_type), (QuestionTag.difficulty, difficulty)):
+        if value is not None and value != "":
+            query = query.where(col == value)
+    if formula:
+        query = query.where(Question.id.in_(select(QuestionFormula.question_id)
+                                            .where(QuestionFormula.formula_id == formula)))
+    if status:
+        status = status.upper()
+        if status == "REJECTED":
+            query = query.where(Question.status == "REJECTED")
+        elif status == "CONFIRMED":
+            query = query.where(QuestionVersion.key_status.in_(CONFIRMED), Question.status != "REJECTED")
+        else:
+            query = query.where(QuestionVersion.key_status == status)
+    if q:
+        text = QuestionVersion.stem_text
+        query = query.where(or_(func.to_tsvector("english", text).op("@@")(func.websearch_to_tsquery("english", q)),
+                                text.ilike(f"%{q}%")))
+    total = db.scalar(select(func.count()).select_from(query.subquery()))
+    rows = db.execute(query.order_by(Mock.paper_id, Mock.section, Question.q_no).limit(min(limit, 200))
+                      .offset(offset)).all()
+    return IndexPage(total=total, rows=[
+        IndexRow(id=question.id, paper_id=paper, section=sec, q_no=question.q_no, stem_text=v.stem_text,
+                 topic=tag.topic, subtopic=tag.subtopic, question_type=tag.question_type,
+                 difficulty=tag.difficulty, expected_time_sec=tag.expected_time_sec, has_visual=tag.has_visual,
+                 key_status="REJECTED" if question.status == "REJECTED" else v.key_status,
+                 duplicate_of=tag.duplicate_of_id, crop_url=asset_url(v.question_crop),
+                 formulas=[FormulaRef.model_validate(f.formula) for f in tag.formulas])
+        for question, tag, v, sec, paper in rows])
+
+
+class TagOut(Out):
+    topic: str
+    subtopic: str
+    question_type: str
+    shortcut_used: str
+    difficulty: int
+    expected_time_sec: int
+    duplicate_of_id: int | None
+
+
+class StudyQuestionOut(QuestionOut):
+    paper_id: str
+    section: str
+    answer: str
+    key_status: str
+    crop_url: str | None
+    tag: TagOut | None
+    formulas: list[FormulaRef]
+    working: list[str]
+
+
+@app.get("/study/questions/{question_id}", response_model=StudyQuestionOut)
+def study_question(question_id: int, db: DB):
+    """A question with its answer, for study. Only a verified answer is ever shown."""
+    q = db.get(Question, question_id)
+    if q is None:
+        raise HTTPException(404, "No such question")
+    v: QuestionVersion = q.current_version
+    if q.status == "REJECTED" or v.key_status not in CONFIRMED:
+        raise HTTPException(409, "This question's answer is not verified")
+    tag = db.get(QuestionTag, q.id)
+    # Until Phase 3d writes solutions, show the working of a verified solver that reached the key.
+    run = next((x for x in v.verifications if x.valid and x.solver_answer == v.official_answer and x.steps), None)
+    return StudyQuestionOut(
+        **question_out(q).model_dump(), paper_id=q.mock.paper_id, section=q.mock.section, answer=v.official_answer,
+        key_status=v.key_status, crop_url=asset_url(v.question_crop),
+        tag=TagOut.model_validate(tag) if tag else None,
+        formulas=[FormulaRef.model_validate(f.formula) for f in tag.formulas] if tag else [],
+        working=run.steps if run else [])
+
+
+# --- Formula and method library (Phase 3b) ---------------------------------------------------------------------
+
+
+class FormulaOut(Out):
+    id: str
+    section: str
+    topic: str
+    topic_slug: str
+    subtopic: str
+    name: str
+    statement: str
+    shortcut: str | None
+    verification_status: str
+    question_count: int = 0
+
+
+class FormulaDetailOut(FormulaOut):
+    entry: dict[str, Any]
+    question_ids: list[int]
+
+
+@app.get("/formulas", response_model=list[FormulaOut])
+def formulas(db: DB, section: str | None = None, topic_slug: str | None = None):
+    counts = dict(db.execute(select(QuestionFormula.formula_id, func.count()).group_by(QuestionFormula.formula_id)).all())
+    query = select(Formula).order_by(Formula.section, Formula.topic_slug, Formula.id)
+    if section:
+        query = query.where(Formula.section == section.upper())
+    if topic_slug:
+        query = query.where(Formula.topic_slug == topic_slug)
+    return [FormulaOut.model_validate(f).model_copy(update={"question_count": counts.get(f.id, 0)})
+            for f in db.scalars(query)]
+
+
+@app.get("/formulas/{formula_id}", response_model=FormulaDetailOut)
+def formula(formula_id: str, db: DB):
+    f = db.get(Formula, formula_id)
+    if f is None:
+        raise HTTPException(404, "No such formula")
+    ids = db.scalars(select(QuestionFormula.question_id).where(QuestionFormula.formula_id == f.id)
+                     .order_by(QuestionFormula.question_id)).all()
+    return FormulaDetailOut(**FormulaOut.model_validate(f).model_dump(exclude={"question_count"}),
+                            question_count=len(ids), entry=f.entry, question_ids=list(ids))

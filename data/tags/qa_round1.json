@@ -1,0 +1,601 @@
+{
+ "Algebra": {
+  "sampled": 9,
+  "checked": 9,
+  "agree": 9,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Alphabet/Word order": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Analogy": {
+  "sampled": 14,
+  "checked": 14,
+  "agree": 14,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Average": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Blood Relations": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Classification": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 6,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Coding-Decoding": {
+  "sampled": 7,
+  "checked": 7,
+  "agree": 7,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Counting Figures": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Data Interpretation": {
+  "sampled": 12,
+  "checked": 12,
+  "agree": 10,
+  "rate": 0.833,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-18_1230_Q11",
+    "agree": false,
+    "first": {
+     "topic": "Data Interpretation",
+     "subtopic": "Pie chart",
+     "formula_ids": [
+      "data-interpretation.percentage-from-chart",
+      "data-interpretation.pie-central-angle"
+     ]
+    },
+    "second": {
+     "topic": "Data Interpretation",
+     "subtopic": "Pie chart",
+     "formula_ids": [
+      "data-interpretation.pie-percent-value",
+      "percentage.percent-change"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-19_1230_Q11",
+    "agree": false,
+    "first": {
+     "topic": "Data Interpretation",
+     "subtopic": "Bar graph",
+     "formula_ids": [
+      "data-interpretation.average-from-chart",
+      "average.arithmetic-mean"
+     ]
+    },
+    "second": {
+     "topic": "Data Interpretation",
+     "subtopic": "Bar graph",
+     "formula_ids": [
+      "data-interpretation.read-and-total",
+      "average.arithmetic-mean"
+     ]
+    }
+   }
+  ]
+ },
+ "Dice/Cube": {
+  "sampled": 4,
+  "checked": 4,
+  "agree": 3,
+  "rate": 0.75,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-23_1600_R13",
+    "agree": false,
+    "first": {
+     "topic": "Dice/Cube",
+     "subtopic": "Dice positions",
+     "formula_ids": [
+      "dice.adjacency-elimination",
+      "dice.common-face-opposite"
+     ]
+    },
+    "second": {
+     "topic": "Dice/Cube",
+     "subtopic": "Dice positions",
+     "formula_ids": [
+      "dice.common-face-opposite",
+      "dice.cyclic-order"
+     ]
+    }
+   }
+  ]
+ },
+ "Figure-based": {
+  "sampled": 14,
+  "checked": 14,
+  "agree": 9,
+  "rate": 0.643,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-12_1600_R15",
+    "agree": false,
+    "first": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.element-count-change"
+     ]
+    },
+    "second": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.element-tracking"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-13_1230_R04",
+    "agree": false,
+    "first": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.element-count-change",
+      "figure.element-tracking"
+     ]
+    },
+    "second": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.element-tracking"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-17_0900_R03",
+    "agree": false,
+    "first": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.position-permutation",
+      "figure.element-tracking"
+     ]
+    },
+    "second": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.element-tracking"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-19_1230_R15",
+    "agree": false,
+    "first": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.rotation-step",
+      "figure.element-tracking"
+     ]
+    },
+    "second": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.element-tracking"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-19_1600_R13",
+    "agree": false,
+    "first": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.position-permutation",
+      "figure.element-tracking"
+     ]
+    },
+    "second": {
+     "topic": "Figure-based",
+     "subtopic": "Figure series",
+     "formula_ids": [
+      "figure.element-tracking"
+     ]
+    }
+   }
+  ]
+ },
+ "Geometry": {
+  "sampled": 9,
+  "checked": 9,
+  "agree": 6,
+  "rate": 0.667,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-18_1600_Q07",
+    "agree": false,
+    "first": {
+     "topic": "Geometry",
+     "subtopic": "Quadrilaterals",
+     "formula_ids": [
+      "geometry.similar-triangles",
+      "geometry.midpoint-bpt"
+     ]
+    },
+    "second": {
+     "topic": "Geometry",
+     "subtopic": "Quadrilaterals",
+     "formula_ids": [
+      "geometry.midpoint-bpt",
+      "geometry.quadrilateral-diagonals"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-19_1600_Q23",
+    "agree": false,
+    "first": {
+     "topic": "Geometry",
+     "subtopic": "Quadrilaterals",
+     "formula_ids": [
+      "geometry.quadrilateral-diagonals",
+      "geometry.triangle-angle-sum"
+     ]
+    },
+    "second": {
+     "topic": "Geometry",
+     "subtopic": "Quadrilaterals",
+     "formula_ids": [
+      "geometry.triangle-angle-sum",
+      "geometry.congruence-criteria"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-25_1230_Q04",
+    "agree": false,
+    "first": {
+     "topic": "Geometry",
+     "subtopic": "Quadrilaterals",
+     "formula_ids": [
+      "geometry.congruence-criteria"
+     ]
+    },
+    "second": {
+     "topic": "Geometry",
+     "subtopic": "Congruence",
+     "formula_ids": [
+      "geometry.congruence-criteria"
+     ]
+    }
+   }
+  ]
+ },
+ "Mathematical Operations": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 6,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Mensuration": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 5,
+  "rate": 0.833,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-26_1600_Q18",
+    "agree": false,
+    "first": {
+     "topic": "Mensuration",
+     "subtopic": "Triangles & quadrilaterals",
+     "formula_ids": [
+      "mensuration.triangle-area",
+      "geometry.isosceles-triangle"
+     ]
+    },
+    "second": {
+     "topic": "Geometry",
+     "subtopic": "Triangles",
+     "formula_ids": [
+      "geometry.isosceles-triangle"
+     ]
+    }
+   }
+  ]
+ },
+ "Mixture & Alligation": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Number System": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 2,
+  "rate": 0.667,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-18_1230_Q15",
+    "agree": false,
+    "first": {
+     "topic": "Number System",
+     "subtopic": "Remainders",
+     "formula_ids": [
+      "number-system.remainder-theorem"
+     ]
+    },
+    "second": {
+     "topic": "Number System",
+     "subtopic": "Remainders",
+     "formula_ids": [
+      "number-system.remainder-cyclicity"
+     ]
+    }
+   }
+  ]
+ },
+ "Percentage": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 2,
+  "rate": 0.667,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-10_0900_Q14",
+    "agree": false,
+    "first": {
+     "topic": "Percentage",
+     "subtopic": "Basic percentage",
+     "formula_ids": [
+      "percentage.percent-of-quantity",
+      "profit-loss.discount-on-marked-price"
+     ]
+    },
+    "second": {
+     "topic": "Profit & Loss",
+     "subtopic": "Discount & marked price",
+     "formula_ids": [
+      "profit-loss.discount-on-marked-price",
+      "percentage.percent-of-quantity"
+     ]
+    }
+   }
+  ]
+ },
+ "Profit & Loss": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 4,
+  "rate": 0.667,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-12_1600_Q19",
+    "agree": false,
+    "first": {
+     "topic": "Profit & Loss",
+     "subtopic": "Profit & loss basics",
+     "formula_ids": [
+      "profit-loss.gain-fraction-of-sp",
+      "profit-loss.profit-percent"
+     ]
+    },
+    "second": {
+     "topic": "Profit & Loss",
+     "subtopic": "Profit & loss basics",
+     "formula_ids": [
+      "profit-loss.profit-percent"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-13_0900_Q14",
+    "agree": false,
+    "first": {
+     "topic": "Profit & Loss",
+     "subtopic": "Successive discount",
+     "formula_ids": [
+      "profit-loss.successive-discount"
+     ]
+    },
+    "second": {
+     "topic": "Percentage",
+     "subtopic": "Successive change & discount",
+     "formula_ids": [
+      "percentage.successive-change",
+      "profit-loss.successive-discount"
+     ]
+    }
+   }
+  ]
+ },
+ "Ratio & Proportion": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "SI/CI": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Series": {
+  "sampled": 10,
+  "checked": 10,
+  "agree": 10,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Simplification": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 2,
+  "rate": 0.667,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-26_1600_Q16",
+    "agree": false,
+    "first": {
+     "topic": "Simplification",
+     "subtopic": "BODMAS",
+     "formula_ids": [
+      "simplification.fraction-decimal-operations"
+     ]
+    },
+    "second": {
+     "topic": "Simplification",
+     "subtopic": "Decimals",
+     "formula_ids": [
+      "simplification.fraction-decimal-operations"
+     ]
+    }
+   }
+  ]
+ },
+ "Statistics": {
+  "sampled": 1,
+  "checked": 1,
+  "agree": 1,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Syllogism": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Time & Work": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Time-Speed-Distance": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Trigonometry": {
+  "sampled": 9,
+  "checked": 9,
+  "agree": 7,
+  "rate": 0.778,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-17_1600_Q13",
+    "agree": false,
+    "first": {
+     "topic": "Trigonometry",
+     "subtopic": "Identities",
+     "formula_ids": [
+      "trigonometry.divide-by-cos",
+      "simplification.surd-rationalisation"
+     ]
+    },
+    "second": {
+     "topic": "Trigonometry",
+     "subtopic": "Trig equations",
+     "formula_ids": [
+      "trigonometry.divide-by-cos",
+      "trigonometry.reciprocal-quotient"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-19_0900_Q22",
+    "agree": false,
+    "first": {
+     "topic": "Trigonometry",
+     "subtopic": "Identities",
+     "formula_ids": [
+      "trigonometry.pythagorean-identities",
+      "trigonometry.standard-values"
+     ]
+    },
+    "second": {
+     "topic": "Trigonometry",
+     "subtopic": "Trig equations",
+     "formula_ids": [
+      "trigonometry.pythagorean-identities",
+      "trigonometry.equation-solving"
+     ]
+    }
+   }
+  ]
+ },
+ "Venn": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ }
+}

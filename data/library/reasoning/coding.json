@@ -1,0 +1,360 @@
+[
+ {
+  "id": "coding.letter-position-shift",
+  "topic": "Coding-Decoding",
+  "subtopic": "Letter shift coding",
+  "name": "Letter position shift",
+  "statement": "\\text{code}_i = \\text{word}_i + d_i \\pmod{26},\\ d_i \\text{ constant, alternating } (+a, -a) \\text{ or increasing } (+1, +2, +3, \\dots)",
+  "conditions": [],
+  "derivation": [
+   "Line up word and code letter by letter.",
+   "Find each $d_i$ from alphabet positions (A=1, ..., Z=26), wrapping Z $\\to$ A.",
+   "Name the pattern: constant, alternating or increasing.",
+   "Check it on the second word, then apply it to the asked word.",
+   "No pattern: try [[f:coding.reverse-then-shift]] or [[f:coding.vowel-consonant-shift]]."
+  ],
+  "visual_proof": null,
+  "shortcut": "Check the first two letters of every option against the first two shifted letters; usually only one option survives.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_R01",
+   "answer": "C",
+   "steps": [
+    "RIVAL $\\to$ PKTCJ: R$-2$, I$+2$, V$-2$, A$+2$, L$-2$ (alternating).",
+    "TEXTS $\\to$ RGVVQ confirms $-2, +2, -2, +2, -2$.",
+    "POINT: N, Q, G, P, R $\\to$ NQGPR, answer (C)."
+   ]
+  },
+  "common_traps": [
+   "Reading the shift backwards (code to word), which gives the decoded word instead of the code.",
+   "Losing the alternation when the target is longer or shorter than the example word.",
+   "Stopping after two letters: RIVAL starts $-2, +2$ but every letter must be checked."
+  ],
+  "related_ids": [
+   "coding.reverse-then-shift",
+   "coding.vowel-consonant-shift",
+   "analogy.letter-cluster-shift",
+   "alphabet.opposite-letter"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\nL = lambda p: chr((p - 1) % 26 + 65)\n\ndef shifts(w, c):\n    return [((P(b) - P(a) + 13) % 26) - 13 for a, b in zip(w, c)]\n\ndef infer(d):\n    if len(set(d)) == 1:\n        return lambda i: d[0]\n    if len(d) > 2 and all(d[i] == d[i % 2] for i in range(len(d))):\n        return lambda i: d[i % 2]\n    s = d[1] - d[0]\n    if all(d[i + 1] - d[i] == s for i in range(len(d) - 1)):\n        return lambda i: d[0] + s * i\n    return None\n\ndef apply(rule, w):\n    return \"\".join(L(P(ch) + rule(i)) for i, ch in enumerate(w))\n\ndef learn(examples):\n    rule = infer(shifts(*examples[0]))\n    if rule is None or any(apply(rule, w) != c for w, c in examples):\n        return None\n    return rule\n\ndef code(examples, target, options):\n    rule = learn(examples)\n    assert rule is not None\n    return [lab for lab, v in options.items() if v == apply(rule, target)]\n\n# worked example 2024-09-12_1600_R01: RIVAL -> PKTCJ, TEXTS -> RGVVQ, POINT -> ?\nassert shifts(\"RIVAL\", \"PKTCJ\") == [-2, 2, -2, 2, -2]\nassert code([(\"RIVAL\", \"PKTCJ\"), (\"TEXTS\", \"RGVVQ\")], \"POINT\",\n            {\"A\": \"NRGOR\", \"B\": \"OQGPO\", \"C\": \"NQGPR\", \"D\": \"OQGOQ\"}) == [\"C\"]\n# 2024-09-12_1230_R11: constant -4\nassert code([(\"NGRP\", \"JCNL\"), (\"FKLT\", \"BGHP\")], \"SQUO\",\n            {\"A\": \"PNRL\", \"B\": \"PMRK\", \"C\": \"ONQL\", \"D\": \"OMQK\"}) == [\"D\"]\n# constructed: +1, +2, +3 ...\nassert code([(\"CAT\", \"DCW\"), (\"BAT\", \"CCW\")], \"DOG\", {\"A\": \"EQJ\", \"B\": \"EPH\", \"C\": \"FQJ\", \"D\": \"EQI\"}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "coding.reverse-then-shift",
+  "topic": "Coding-Decoding",
+  "subtopic": "Letter shift coding",
+  "name": "Reverse then shift",
+  "statement": "\\text{code} = \\text{shift}(\\text{reverse}(\\text{word})):\\ \\text{if no direct shift fits, reverse the word and find the shifts again}",
+  "conditions": [],
+  "derivation": [
+   "Clue: the code's first letter is close to the word's last letter.",
+   "Write the word backwards.",
+   "Find the per-letter shifts between the reversed word and the code, as in [[f:coding.letter-position-shift]].",
+   "Confirm on the second word, then reverse the asked word and apply the shifts."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R05",
+   "answer": "D",
+   "steps": [
+    "NAME reversed = EMAN; $+1$ each gives FNBO.",
+    "NANO reversed = ONAN; $+1$ gives POBO.",
+    "NAIL reversed = LIAN; $+1$ gives MJBO, answer (D)."
+   ]
+  },
+  "common_traps": [
+   "Shifting before reversing: with alternating shifts BLEW gives VFKC instead of XDMA; reverse first.",
+   "Shifting the original word: NAIL $+1$ gives OBJM, which is not even an option.",
+   "Picking the option with the right letters in the wrong order (MJOB instead of MJBO)."
+  ],
+  "related_ids": [
+   "coding.letter-position-shift",
+   "coding.letter-rearrangement"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\nL = lambda p: chr((p - 1) % 26 + 65)\n\ndef shifts(w, c):\n    return [((P(b) - P(a) + 13) % 26) - 13 for a, b in zip(w, c)]\n\ndef infer(d):\n    if len(set(d)) == 1:\n        return lambda i: d[0]\n    if len(d) > 2 and all(d[i] == d[i % 2] for i in range(len(d))):\n        return lambda i: d[i % 2]\n    s = d[1] - d[0]\n    if all(d[i + 1] - d[i] == s for i in range(len(d) - 1)):\n        return lambda i: d[0] + s * i\n    return None\n\ndef apply(rule, w):\n    return \"\".join(L(P(ch) + rule(i)) for i, ch in enumerate(w))\n\ndef learn(examples):\n    rule = infer(shifts(*examples[0]))\n    if rule is None or any(apply(rule, w) != c for w, c in examples):\n        return None\n    return rule\n\ndef code(examples, target, options):\n    direct = learn(examples)\n    rev = learn([(w[::-1], c) for w, c in examples])\n    rule, word = (direct, target) if direct else (rev, target[::-1])\n    assert rule is not None\n    return direct is None, [lab for lab, v in options.items() if v == apply(rule, word)]\n\n# worked example 2024-09-09_0900_R05: NAME -> FNBO, NANO -> POBO, NAIL -> ?\nassert code([(\"NAME\", \"FNBO\"), (\"NANO\", \"POBO\")], \"NAIL\",\n            {\"A\": \"MOBJ\", \"B\": \"MJOB\", \"C\": \"MOJB\", \"D\": \"MJBO\"}) == (True, [\"D\"])\n# 2024-09-25_1600_R12: CASE -> FTBD, CAKE -> FLBD, CALF -> ?\nassert code([(\"CASE\", \"FTBD\"), (\"CAKE\", \"FLBD\")], \"CALF\",\n            {\"A\": \"GBDM\", \"B\": \"GBMD\", \"C\": \"GMBD\", \"D\": \"GMDB\"}) == (True, [\"C\"])\n# 2024-09-10_0900_R04: reverse, then +1/-1 alternately\nassert code([(\"BELL\", \"MKFA\"), (\"BOND\", \"EMPA\")], \"BLEW\",\n            {\"A\": \"XDMA\", \"B\": \"XMDA\", \"C\": \"XMAD\", \"D\": \"XDAM\"}) == (True, [\"A\"])\n# constructed control: a plain +2 shift is found directly, no reversal needed\nassert code([(\"PEN\", \"RGP\"), (\"CUP\", \"EWR\")], \"BOX\", {\"A\": \"DQZ\", \"B\": \"ZQD\", \"C\": \"DQY\", \"D\": \"CPY\"}) == (False, [\"A\"])\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "coding.vowel-consonant-shift",
+  "topic": "Coding-Decoding",
+  "subtopic": "Letter shift coding",
+  "name": "Vowel/consonant rule",
+  "statement": "\\text{code}_i = \\text{word}_i + d_v \\text{ if vowel (A, E, I, O, U)},\\ \\text{word}_i + d_c \\text{ if consonant},\\ d_v \\neq d_c \\text{ (often } d_v = 0\\text{)}",
+  "conditions": [],
+  "derivation": [
+   "Clue: vowels in the word stay vowels or neighbours in the code, while consonants move by a fixed step.",
+   "Mark the vowels in the example word.",
+   "Find the shift for vowels $d_v$ and for consonants $d_c$ separately; each must be constant.",
+   "Confirm on the second example, then code the asked word letter by letter by type."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_1600_R16",
+   "answer": "C",
+   "steps": [
+    "SILK $\\to$ TIML: S$+1$, I stays, L$+1$, K$+1$.",
+    "INSECT $\\to$ IOTEDU: consonants $+1$, vowels unchanged.",
+    "CHANGE: C$\\to$D, H$\\to$I, A, N$\\to$O, G$\\to$H, E $\\to$ DIAOHE, answer (C)."
+   ]
+  },
+  "common_traps": [
+   "Shifting vowels with the consonant step: CHANGE becomes DIBOHF, not an option.",
+   "Treating Y as a vowel; in these questions only A, E, I, O, U are vowels.",
+   "Deciding the type after shifting instead of from the original letter."
+  ],
+  "related_ids": [
+   "coding.letter-position-shift"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\nL = lambda p: chr((p - 1) % 26 + 65)\n\ndef shifts(w, c):\n    return [((P(b) - P(a) + 13) % 26) - 13 for a, b in zip(w, c)]\n\ndef infer(d):\n    if len(set(d)) == 1:\n        return lambda i: d[0]\n    if len(d) > 2 and all(d[i] == d[i % 2] for i in range(len(d))):\n        return lambda i: d[i % 2]\n    s = d[1] - d[0]\n    if all(d[i + 1] - d[i] == s for i in range(len(d) - 1)):\n        return lambda i: d[0] + s * i\n    return None\n\ndef apply(rule, w):\n    return \"\".join(L(P(ch) + rule(i)) for i, ch in enumerate(w))\n\ndef learn(examples):\n    rule = infer(shifts(*examples[0]))\n    if rule is None or any(apply(rule, w) != c for w, c in examples):\n        return None\n    return rule\n\nV = set(\"AEIOU\")\n\ndef learn_vc(examples):\n    dv, dc = set(), set()\n    for w, c in examples:\n        for a, d in zip(w, shifts(w, c)):\n            (dv if a in V else dc).add(d)\n    assert len(dv) == 1 and len(dc) == 1\n    return dv.pop(), dc.pop()\n\ndef code(examples, target, options):\n    assert learn(examples) is None          # one shift for all letters fails\n    v, c = learn_vc(examples)\n    out = \"\".join(L(P(ch) + (v if ch in V else c)) for ch in target)\n    return (v, c), [lab for lab, x in options.items() if x == out]\n\n# worked example 2024-09-09_1600_R16: consonants +1, vowels unchanged\nassert code([(\"SILK\", \"TIML\"), (\"INSECT\", \"IOTEDU\")], \"CHANGE\",\n            {\"A\": \"DEIHAO\", \"B\": \"DOIHAE\", \"C\": \"DIAOHE\", \"D\": \"DEIOHA\"}) == ((0, 1), [\"C\"])\n# 2024-09-12_1230_R23: vowels -1, consonants -2\nassert code([(\"BOOK\", \"ZNNI\"), (\"SHOP\", \"QFNN\")], \"NOTES\",\n            {\"A\": \"LNRDQ\", \"B\": \"LRDQN\", \"C\": \"LDNQR\", \"D\": \"QDRNL\"}) == ((-1, -2), [\"A\"])\n# 2024-09-13_0900_R10: vowels +1, consonants +2\nassert code([(\"HUSBAND\", \"JVUDBPF\"), (\"SISTER\", \"UJUVFT\")], \"BROTHER\",\n            {\"A\": \"DJTFPTV\", \"B\": \"FJPVDTT\", \"C\": \"DTPVJFT\", \"D\": \"TFVJTPD\"}) == ((1, 2), [\"C\"])\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "coding.letter-rearrangement",
+  "topic": "Coding-Decoding",
+  "subtopic": "Rearrangement coding",
+  "name": "Letter rearrangement",
+  "statement": "\\text{code} = \\text{word with its letters reordered by a fixed position map (reverse, reverse all but last, halves swapped, pairs swapped)}",
+  "conditions": [],
+  "derivation": [
+   "Clue: code and word have exactly the same letters.",
+   "Number the word's positions 1 to n and write under each code letter the position it came from.",
+   "Read the map (e.g. 7 6 5 4 3 2 1 8 = first seven reversed, last kept).",
+   "Check it on the second word, then move the asked word's letters the same way."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-13_1230_R07",
+   "answer": "C",
+   "steps": [
+    "RETAINE|D $\\to$ ENIATER|D: first seven letters reversed, last kept.",
+    "MATURIT|Y $\\to$ TIRUTAM|Y confirms.",
+    "FIREWAL|L $\\to$ LAWERIF|L = LAWERIFL, answer (C)."
+   ]
+  },
+  "common_traps": [
+   "Reversing the whole word when the last letter stays fixed (FIREWALL reversed is LLAWERIF, not LAWERIFL).",
+   "Mapping by letter instead of by position when a letter repeats.",
+   "Choosing an option that has the right letters but one swapped pair."
+  ],
+  "related_ids": [
+   "coding.reverse-then-shift"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import permutations\n\ndef perms(examples):\n    n = len(examples[0][0])\n    assert all(len(w) == len(c) == n and sorted(w) == sorted(c) for w, c in examples)\n    return [p for p in permutations(range(n))\n            if all(\"\".join(w[i] for i in p) == c for w, c in examples)]\n\ndef code(examples, target, options):\n    ps = perms(examples)\n    outs = {\"\".join(target[i] for i in p) for p in ps}\n    assert len(outs) == 1\n    out = outs.pop()\n    return ps[0], [lab for lab, v in options.items() if v == out]\n\n# worked example 2024-09-13_1230_R07: reverse first seven letters, keep the last\np, ans = code([(\"RETAINED\", \"ENIATERD\"), (\"MATURITY\", \"TIRUTAMY\")], \"FIREWALL\",\n              {\"A\": \"LAWEFIFR\", \"B\": \"FLIREWAL\", \"C\": \"LAWERIFL\", \"D\": \"FLLAWERI\"})\nassert p == (6, 5, 4, 3, 2, 1, 0, 7) and ans == [\"C\"]\n# 2024-09-17_0900_R09: same rule\nassert code([(\"BIRTHDAY\", \"ADHTRIBY\"), (\"CONGRESS\", \"SERGNOCS\")], \"DIVISION\",\n            {\"A\": \"NDOISIVI\", \"B\": \"DNOISIVI\", \"C\": \"OISIVIDN\", \"D\": \"NOISIVID\"})[1] == [\"C\"]\n# constructed: halves swapped\nassert code([(\"CODE\", \"DECO\"), (\"WORK\", \"RKWO\")], \"LAMP\",\n            {\"A\": \"MPLA\", \"B\": \"PMAL\", \"C\": \"LAMP\", \"D\": \"AMPL\"})[1] == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "coding.common-element-elimination",
+  "topic": "Coding-Decoding",
+  "subtopic": "Common element coding",
+  "name": "Common element elimination",
+  "statement": "\\text{word in sentences } S_1 \\text{ and } S_2 \\Rightarrow \\text{its code is in } \\text{codes}(S_1) \\cap \\text{codes}(S_2);\\ \\text{remove codes of sentences without it}",
+  "conditions": [],
+  "derivation": [
+   "Word order and code order are unrelated; work with sets.",
+   "For the asked word, intersect the code sets of every sentence that contains it.",
+   "Remove every code that belongs to a sentence without the word.",
+   "One code left: that is the answer. Two left: the code cannot be determined."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R20",
+   "answer": "A",
+   "steps": [
+    "'where' is in sentences 1 and 2: $\\{aa, dd, ff\\} \\cap \\{dd, zz, pp\\} = \\{dd\\}$.",
+    "'what' is in sentences 1 and 3: $\\{aa, dd, ff\\} \\cap \\{ff, kk, ll\\} = \\{ff\\}$.",
+    "'how' gets the code left in sentence 1: aa, answer (A)."
+   ]
+  },
+  "common_traps": [
+   "Matching by position: 'how' is the third word but 'ff' (third code) belongs to 'what'.",
+   "Forgetting the third sentence, which leaves two codes for the word.",
+   "Answering a code for a word that appears in only one sentence when that sentence has other unknown words."
+  ],
+  "related_ids": [],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "def decode(sentences, word):\n    # candidates = codes of every sentence with the word, minus codes of every sentence without it\n    cand = None\n    for words, codes in sentences:\n        if word in words:\n            cand = set(codes) if cand is None else cand & set(codes)\n    for words, codes in sentences:\n        if word not in words:\n            cand -= set(codes)\n    return cand\n\ndef answer(sentences, word, options):\n    cand = decode(sentences, word)\n    assert len(cand) == 1\n    return [lab for lab, v in options.items() if v in cand]\n\nS1 = [(\"what where how\".split(), \"aa dd ff\".split()),\n      (\"where there that\".split(), \"dd zz pp\".split()),\n      (\"which what here\".split(), \"ff kk ll\".split())]\n# worked example 2024-09-09_0900_R20\nassert decode(S1, \"where\") == {\"dd\"} and decode(S1, \"what\") == {\"ff\"}\nassert answer(S1, \"how\", {\"A\": \"aa\", \"B\": \"kk\", \"C\": \"zz\", \"D\": \"ff\"}) == [\"A\"]\n# 2024-09-09_1230_R06\nS2 = [(\"let it go\".split(), \"vc nt ap\".split()), (\"this is it\".split(), \"mq vc lh\".split())]\nassert answer(S2, \"it\", {\"A\": \"nt\", \"B\": \"lh\", \"C\": \"vc\", \"D\": \"mq\"}) == [\"C\"]\n# 2024-09-09_1230_R11\nS3 = [(\"It's your life\".split(), \"Ao Bo Co\".split()), (\"It's your food\".split(), \"Ba Co Bo\".split())]\nassert answer(S3, \"food\", {\"A\": \"Ba\", \"B\": \"Bo\", \"C\": \"Ao\", \"D\": \"Co\"}) == [\"A\"]\n# with only two sentences, 'let' cannot be fixed: two codes remain\nassert decode(S2, \"let\") == {\"nt\", \"ap\"}\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "coding.letter-position-value",
+  "topic": "Coding-Decoding",
+  "subtopic": "Letter-to-number coding",
+  "name": "Letter position values",
+  "statement": "\\text{each letter} \\to p \\text{ (A=1, ..., Z=26) or } 27 - p \\text{ (Z=1, ..., A=26)}, \\text{ possibly } \\pm c;\\ \\text{write the numbers side by side}",
+  "conditions": [],
+  "derivation": [
+   "Split the code into numbers that match the word's letters (1 or 2 digits each).",
+   "Compare the first letter's number with $p$ and with $27 - p$.",
+   "The gap from the closer one is the constant $c$; check it on every letter.",
+   "Code the asked word letter by letter and join the numbers in order."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-13_1230_R01",
+   "answer": "A",
+   "steps": [
+    "GLOBAL: G = 7 $\\to$ 22, L = 12 $\\to$ 17, B = 2 $\\to$ 27: each is $27 - p + 2 = 29 - p$.",
+    "FOREST: 23, 14, 11, 24, 10, 9 fits $29 - p$.",
+    "IMPACT: $29 - 9, 29 - 13, 29 - 16, 29 - 1, 29 - 3, 29 - 20$ = 20 16 13 28 26 9 $\\to$ 20161328269, answer (A)."
+   ]
+  },
+  "common_traps": [
+   "Splitting the digit string wrongly: G = 22 and L = 17, not 2, 21, 71.",
+   "Using $27 - p$ when the constant is $+2$, which gives $27 - 9 = 18$ for I instead of 20 (option B pattern).",
+   "Joining the numbers in reverse order."
+  ],
+  "related_ids": [
+   "coding.reverse-alphabet-position",
+   "coding.position-sum-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\n\ndef rules(examples):\n    out = []\n    for name, f in ((\"p\", P), (\"27-p\", lambda ch: 27 - P(ch))):\n        for c in range(-26, 27):\n            g = lambda ch, f=f, c=c: f(ch) + c\n            if all(\"\".join(str(g(ch)) for ch in w) == code for w, code in examples):\n                out.append((name, c, g))\n    return out\n\ndef answer(examples, target, options):\n    rs = rules(examples)\n    assert len(rs) == 1\n    out = \"\".join(str(rs[0][2](ch)) for ch in target)\n    return rs[0][:2], [lab for lab, v in options.items() if v == out]\n\n# worked example 2024-09-13_1230_R01: code = (27 - p) + 2 = 29 - p\nassert answer([(\"GLOBAL\", \"221714272817\"), (\"FOREST\", \"23141124109\")], \"IMPACT\",\n              {\"A\": \"20161328269\", \"B\": \"18141126247\", \"C\": \"20161226259\", \"D\": \"20161327259\"}) == ((\"27-p\", 2), [\"A\"])\n# constructed: plain positions p\nassert answer([(\"CAB\", \"312\"), (\"HEN\", \"8514\")], \"DOG\",\n              {\"A\": \"4157\", \"B\": \"4158\", \"C\": \"41520\", \"D\": \"3157\"}) == ((\"p\", 0), [\"A\"])\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "coding.position-sum-rule",
+  "topic": "Coding-Decoding",
+  "subtopic": "Letter-to-number coding",
+  "name": "Sum/count of letter values",
+  "statement": "\\text{code} = f(S, n),\\ S = \\textstyle\\sum p \\text{ (or } \\sum (27-p)\\text{)},\\ n = \\text{number of letters};\\ \\text{test } S,\\ S \\pm k,\\ S \\cdot n,\\ n \\cdot k",
+  "conditions": [],
+  "derivation": [
+   "Compute $S$ with $p$ (A=1) and with $27 - p$ (Z=1) for the first word.",
+   "Compare with the code: equal, off by a constant, or a multiple of $S$ or of $n$.",
+   "If the code is divisible by $n$, check $\\text{code} \\div n$ against $S$.",
+   "Keep only the rule that also fits the second word, then apply it."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-18_1230_R08",
+   "answer": "D",
+   "steps": [
+    "HIT: reverse values $19 + 18 + 7 = 44$, $44 \\times 3 = 132$.",
+    "SBYZ: $8 + 25 + 2 + 1 = 36$, $36 \\times 4 = 144$.",
+    "YRF: $2 + 9 + 21 = 32$, $32 \\times 3 = 96$, answer (D)."
+   ]
+  },
+  "common_traps": [
+   "Stopping at the forward sum: HIT forward is 37 and 132 is not a multiple of 37.",
+   "Ignoring $n$: 132 and 144 come from different-length words, so try dividing by 3 and 4.",
+   "Missing a pure count rule (BLEACHERS 9 letters $\times 7 = 63$) while adding letter values."
+  ],
+  "related_ids": [
+   "coding.letter-position-value",
+   "coding.reverse-alphabet-position"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nP = lambda ch: ord(ch) - 64\nVALUES = {\"p\": P, \"27-p\": lambda ch: 27 - P(ch)}\n\ndef rules(examples):\n    out = []\n    for vn, v in VALUES.items():\n        S = lambda w, v=v: sum(v(ch) for ch in w)\n        w0, c0 = examples[0]\n        cands = [\n            (\"S+k\", lambda w, k, S=S: S(w) + k, c0 - S(w0)),\n            (\"S*k\", lambda w, k, S=S: S(w) * k, F(c0, S(w0))),\n            (\"S*n+k\", lambda w, k, S=S: S(w) * len(w) + k, c0 - S(w0) * len(w0)),\n            (\"S+n*k\", lambda w, k, S=S: S(w) + len(w) * k, F(c0 - S(w0), len(w0))),\n            (\"n*k\", lambda w, k: len(w) * k, F(c0, len(w0))),\n        ]\n        for name, f, k in cands:\n            if all(f(w, k) == c for w, c in examples):\n                out.append((vn, name, k, f))\n    return out\n\ndef answer(examples, target, options):\n    rs = rules(examples)\n    assert rs\n    preds = {r[3](target, r[2]) for r in rs}\n    return [lab for lab, v in options.items() if v in preds]\n\n# worked example 2024-09-18_1230_R08: (sum of 27 - p) x number of letters\nrs = rules([(\"HIT\", 132), (\"SBYZ\", 144)])\nassert [(r[0], r[1], r[2]) for r in rs] == [(\"27-p\", \"S*n+k\", 0)]\nassert answer([(\"HIT\", 132), (\"SBYZ\", 144)], \"YRF\", {\"A\": 108, \"B\": 124, \"C\": 112, \"D\": 96}) == [\"D\"]\n# 2024-09-24_1230_R20: plain sum\nassert answer([(\"IFF\", 21), (\"ARB\", 21)], \"CAW\", {\"A\": 25, \"B\": 23, \"C\": 27, \"D\": 26}) == [\"C\"]\n# 2024-09-24_1600_R15: number of letters x 7\nassert answer([(\"BLEACHERS\", 63), (\"ABACAS\", 42)], \"FIZZY\", {\"A\": 52, \"B\": 45, \"C\": 44, \"D\": 35}) == [\"D\"]\n# 2024-09-13_1600_R22: sum + 10\nassert answer([(\"ESTATE\", 80), (\"FAMOUS\", 85)], \"FOREST\", {\"A\": 88, \"B\": 90, \"C\": 93, \"D\": 83}) == [\"C\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "coding.reverse-alphabet-position",
+  "topic": "Coding-Decoding",
+  "subtopic": "Letter-to-number coding",
+  "name": "Reverse alphabet positions",
+  "statement": "r(\\text{letter}) = 27 - p:\\ \\text{Z}=1, \\text{Y}=2, \\dots, \\text{A}=26;\\ \\text{used per letter or summed}",
+  "conditions": [],
+  "derivation": [
+   "Writing the alphabet backwards puts A at 26 and Z at 1.",
+   "A letter at position $p$ is the $(27 - p)$th from Z, because $p + (27 - p) = 27$.",
+   "It is the position of the opposite letter [[f:alphabet.opposite-letter]].",
+   "Summed form: $\\sum (27 - p) = 27n - \\sum p$ for an $n$-letter word."
+  ],
+  "visual_proof": null,
+  "shortcut": "Sum of reverse values $= 27n - (\\text{forward sum})$: SET $= 81 - 44 = 37$.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_R25",
+   "answer": "B",
+   "steps": [
+    "SET: $8 + 22 + 7 = 37$; MIX: $14 + 18 + 3 = 35$ (reverse values).",
+    "WAR: W = 4, A = 26, R = 9.",
+    "$4 + 26 + 9 = 39$, answer (B)."
+   ]
+  },
+  "common_traps": [
+   "Using forward positions: SET forward sum is 44, not 37.",
+   "Using $26 - p$, which makes Z = 0 and every value one too small.",
+   "Mixing forward for one word and reverse for another."
+  ],
+  "related_ids": [
+   "alphabet.opposite-letter",
+   "coding.letter-position-value"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "P = lambda ch: ord(ch) - 64\nR = lambda ch: 27 - P(ch)\nALPHA = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"\nassert all(R(ch) == ALPHA[::-1].index(ch) + 1 for ch in ALPHA)   # Z=1 ... A=26\n\ndef sum_code(examples, target, options):\n    assert any(sum(P(ch) for ch in w) != c for w, c in examples)   # forward sum fails\n    assert all(sum(R(ch) for ch in w) == c for w, c in examples)\n    return [lab for lab, v in options.items() if v == sum(R(ch) for ch in target)]\n\ndef each_code(examples, target, options):\n    assert all([R(ch) for ch in w] == c for w, c in examples)\n    return [lab for lab, v in options.items() if v == [R(ch) for ch in target]]\n\n# worked example 2024-09-09_1600_R25: SET 37, MIX 35, WAR ?\nassert sum_code([(\"SET\", 37), (\"MIX\", 35)], \"WAR\", {\"A\": 29, \"B\": 39, \"C\": 21, \"D\": 32}) == [\"B\"]\n# 2024-09-18_1600_R02: each letter separately\nassert each_code([(\"MORE\", [14, 12, 9, 22]), (\"KNOW\", [16, 13, 12, 4])], \"SAID\",\n                 {\"A\": [8, 26, 18, 23], \"B\": [8, 26, 17, 23], \"C\": [7, 25, 18, 23], \"D\": [7, 26, 18, 22]}) == [\"A\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

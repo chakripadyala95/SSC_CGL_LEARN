@@ -1,0 +1,237 @@
+[
+ {
+  "id": "statistics.mean",
+  "topic": "Statistics",
+  "subtopic": "Mean, median & mode",
+  "name": "Mean of grouped data",
+  "statement": "\\bar x=\\frac{\\Sigma f_ix_i}{\\Sigma f_i}",
+  "conditions": [
+   "\\Sigma f_i > 0"
+  ],
+  "derivation": [
+   "Value $x_i$ occurs $f_i$ times, so it adds $f_ix_i$ to the total.",
+   "The total of all observations is $\\Sigma f_ix_i$; their count is $\\Sigma f_i$.",
+   "Mean = total $\\div$ count $= \\frac{\\Sigma f_ix_i}{\\Sigma f_i}$."
+  ],
+  "visual_proof": "A bar chart of frequencies balances on a pivot at the mean; a symmetric chart balances at its centre.",
+  "shortcut": "Assumed mean: $\\bar x = A + \\frac{\\Sigma f_i(x_i - A)}{\\Sigma f_i}$; symmetric frequencies give $\\bar x$ = the middle value.",
+  "worked_example": {
+   "question_key": "2024-09-13_1230_Q01",
+   "answer": "C",
+   "steps": [
+    "Ages 1..5 with 20, 50, 70, 50, 20 children: $\\Sigma f = 210$.",
+    "$\\Sigma fx = 20 + 100 + 210 + 200 + 100 = 630$, so $\\bar x = \\frac{630}{210} = 3$.",
+    "Mode = age with the tallest bar = 3 (see [[f:statistics.mode]]).",
+    "Mean $-$ mode $= 0$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Averaging the ages 1..5 without weights, or averaging the frequencies (210/5 = 42).",
+   "Dividing $\\Sigma fx$ by the number of classes (5) instead of $\\Sigma f$ (210).",
+   "Reading a bar's height (70) as the mode; the mode is the age under it (3)."
+  ],
+  "related_ids": [
+   "statistics.mode",
+   "statistics.median",
+   "average.weighted-average",
+   "data-interpretation.average-from-chart"
+  ],
+  "diagram": {
+   "alt_text": "Bar chart of children by age: ages 1 to 5 have 20, 50, 70, 50 and 20 children; the bars are symmetric about age 3, the mean.",
+   "spec": {
+    "type": "chart",
+    "kind": "bar",
+    "series": [
+     {
+      "label": "Number of children",
+      "points": [
+       [
+        1,
+        20
+       ],
+       [
+        2,
+        50
+       ],
+       [
+        3,
+        70
+       ],
+       [
+        4,
+        50
+       ],
+       [
+        5,
+        20
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    k = random.randint(1, 10)\n    xs = [F(random.randint(-100, 100), random.randint(1, 4)) for _ in range(k)]\n    fs = [random.randint(0, 30) for _ in range(k)]\n    if sum(fs) == 0:\n        fs[0] = 1\n    raw = [x for x, f in zip(xs, fs) for _ in range(f)]\n    mean = sum(f * x for f, x in zip(fs, xs)) / sum(fs)\n    assert mean == F(sum(raw)) / len(raw)\n    A = random.choice(xs)                         # assumed mean\n    assert mean == A + sum(f * (x - A) for f, x in zip(fs, xs)) / sum(fs)\n    n += 1\n# boundary: total frequency 0 leaves the mean undefined\ntry:\n    F(0) / 0\n    raise AssertionError\nexcept ZeroDivisionError:\n    pass\n# worked example: ages 1..5 with 20, 50, 70, 50, 20 children\nxs, fs = [1, 2, 3, 4, 5], [20, 50, 70, 50, 20]\nmean = F(sum(f * x for f, x in zip(fs, xs)), sum(fs))\nmode = xs[fs.index(max(fs))]\nassert sum(fs) == 210 and sum(f * x for f, x in zip(fs, xs)) == 630 and mean == 3 and mode == 3\nassert mean - mode == 0 and 0 not in (F(1, 2), 1, 2)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:39+00:00"
+   }
+  }
+ },
+ {
+  "id": "statistics.mode",
+  "topic": "Statistics",
+  "subtopic": "Mean, median & mode",
+  "name": "Mode and the empirical relation",
+  "statement": "\\text{mode}=\\text{most frequent value};\\ \\text{mode}=3\\,\\text{median}-2\\,\\text{mean}\\ (\\text{symmetric: all equal})",
+  "conditions": [
+   "3\\,\\text{median}-2\\,\\text{mean} \\text{ is an estimate for moderately skewed data, exact when the distribution is symmetric and unimodal}"
+  ],
+  "derivation": [
+   "The mode is read directly: the value with the largest frequency.",
+   "For a symmetric single-peaked distribution, the peak, the middle value and the balance point coincide: mode = median = mean.",
+   "Karl Pearson's observation for mildly skewed data: the median lies about a third of the way from the mean to the mode, so mode $\\approx$ 3 median $-$ 2 mean."
+  ],
+  "visual_proof": "The tallest bar of a frequency chart marks the mode; for a symmetric chart it sits at the centre, where the mean and median also are.",
+  "shortcut": "Use 3 median $-$ 2 mean only when the question says 'empirical relation' or gives two of the three.",
+  "worked_example": {
+   "question_key": "2024-09-13_1230_Q01",
+   "answer": "C",
+   "steps": [
+    "Tallest bar: 70 children at age 3, so mode = 3.",
+    "Frequencies 20, 50, 70, 50, 20 are symmetric about age 3, so mean = 3.",
+    "Mean $-$ mode $= 0$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Giving the highest frequency (70) as the mode instead of the value (age 3).",
+   "Writing mode = 3 mean $-$ 2 median: the 3 goes with the median.",
+   "Treating 3 median $-$ 2 mean as exact for any data: for 1,1,1,1,1,2,2,2,10 it gives $-\\frac53$, but the mode is 1."
+  ],
+  "related_ids": [
+   "statistics.mean",
+   "statistics.median"
+  ],
+  "diagram": {
+   "alt_text": "Bar chart of children by age with the tallest bar, 70 children at age 3, marking the mode; the other bars 20, 50, 50, 20 are symmetric around it.",
+   "spec": {
+    "type": "chart",
+    "kind": "bar",
+    "series": [
+     {
+      "label": "Number of children",
+      "points": [
+       [
+        1,
+        20
+       ],
+       [
+        2,
+        50
+       ],
+       [
+        3,
+        70
+       ],
+       [
+        4,
+        50
+       ],
+       [
+        5,
+        20
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nimport statistics as st\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    # symmetric unimodal frequency table around a centre c\n    c = random.randint(-50, 50)\n    h = random.randint(1, 6)\n    step = random.randint(1, 5)\n    side = sorted(random.sample(range(1, 40), h), reverse=True)   # strictly falling away from c\n    peak = side[0] + random.randint(1, 20)\n    table = {c: peak}\n    for i, f in enumerate(side, 1):\n        table[c + i * step] = f\n        table[c - i * step] = f\n    raw = sorted(x for x, f in table.items() for _ in range(f))\n    mode = max(table, key=table.get)\n    assert st.multimode(raw) == [mode]\n    mean, median = F(sum(raw), len(raw)), F(st.median(raw))\n    assert mode == median == mean == 3 * median - 2 * mean\n    n += 1\n# boundary: for skewed data the relation is only an estimate.\nraw = [1] * 5 + [2] * 3 + [10]\nmean, median, mode = F(sum(raw), len(raw)), F(st.median(raw)), st.mode(raw)\nassert 3 * median - 2 * mean != mode\n# worked example: 20, 50, 70, 50, 20 children at ages 1..5 -> mode 3 = mean\nraw = [a for a, f in zip(range(1, 6), (20, 50, 70, 50, 20)) for _ in range(f)]\nassert st.mode(raw) == 3 and F(sum(raw), len(raw)) == 3\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:39+00:00"
+   }
+  }
+ },
+ {
+  "id": "statistics.median",
+  "topic": "Statistics",
+  "subtopic": "Mean, median & mode",
+  "name": "Median",
+  "statement": "\\text{sorted data: middle value } \\left(\\tfrac{n+1}2\\right)^{\\text{th}};\\ \\text{even } n: \\text{ mean of the two middle values}",
+  "conditions": [],
+  "derivation": [
+   "Sort the $n$ values in order.",
+   "Odd $n$: the $\\frac{n+1}{2}$th value has $\\frac{n-1}{2}$ values on each side.",
+   "Even $n$: the $\\frac n2$th and $(\\frac n2+1)$th values share the middle; take their mean."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Taking the middle of the unsorted list: for 7, 1, 3 it gives 1; the median is 3.",
+   "For even $n$, picking the $\\frac n2$th value alone instead of the mean of the two middle values.",
+   "Using $\\frac n2$ as the position for odd $n$: for 9 values the median is the 5th, not the 4.5th."
+  ],
+  "related_ids": [
+   "statistics.mean",
+   "statistics.mode",
+   "statistics.range-deviation"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nimport statistics as st\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef median(xs):\n    s, n = sorted(xs), len(xs)\n    if n % 2:\n        return F(s[(n + 1) // 2 - 1])\n    return F(s[n // 2 - 1] + s[n // 2], 2)\n\nn = 0\nfor _ in range(2000):\n    xs = [random.randint(-1000, 1000) for _ in range(random.randint(1, 30))]\n    assert median(xs) == F(st.median(xs))\n    n += 1\n# unsorted data must be sorted first: middle of 7, 1, 3 as written is 1, true median is 3\nassert median([7, 1, 3]) == 3 and [7, 1, 3][1] == 1\nassert median([1, 2, 3, 10]) == F(5, 2)\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:39+00:00"
+   }
+  }
+ },
+ {
+  "id": "statistics.range-deviation",
+  "topic": "Statistics",
+  "subtopic": "Mean, median & mode",
+  "name": "Range and standard deviation",
+  "statement": "\\text{range}=\\max-\\min;\\ \\sigma=\\sqrt{\\frac{\\Sigma(x_i-\\bar x)^2}{n}}",
+  "conditions": [],
+  "derivation": [
+   "Range uses only the two extreme values.",
+   "$x_i - \\bar x$ measures how far each value is from the mean; squaring stops $+$ and $-$ cancelling.",
+   "Average the squares over $n$ (variance) and take the square root to return to the original units.",
+   "Expanding: $\\frac{\\Sigma(x_i-\\bar x)^2}{n} = \\frac{\\Sigma x_i^2}{n} - \\bar x^2$."
+  ],
+  "visual_proof": null,
+  "shortcut": "$\\sigma^2 = \\overline{x^2} - \\bar x^2$; adding a constant changes neither range nor $\\sigma$, multiplying by $k$ multiplies both by $|k|$.",
+  "worked_example": null,
+  "common_traps": [
+   "Dividing by $n-1$: that is the sample formula, not the $\\sigma$ above.",
+   "Forgetting the square root and giving the variance as $\\sigma$.",
+   "Changing $\\sigma$ when a constant is added to every value; only scaling changes it."
+  ],
+  "related_ids": [
+   "statistics.mean",
+   "statistics.median"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math\nimport random\nimport statistics as st\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    xs = [F(random.randint(-500, 500), random.randint(1, 4)) for _ in range(random.randint(1, 25))]\n    N = len(xs)\n    m = sum(xs) / N\n    var = sum((x - m) ** 2 for x in xs) / N\n    assert var == st.pvariance(xs)\n    assert var == sum(x * x for x in xs) / N - m * m          # shortcut: mean of squares - square of mean\n    assert math.isclose(math.sqrt(var), st.pstdev([float(x) for x in xs]), rel_tol=1e-9, abs_tol=1e-9)\n    k, c = F(random.randint(-9, 9)), F(random.randint(-50, 50))\n    ys = [k * x + c for x in xs]\n    assert st.pvariance(ys) == k * k * var                 # adding c changes nothing, scaling by k scales sigma by |k|\n    assert max(ys) - min(ys) == abs(k) * (max(xs) - min(xs))\n    n += 1\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:39+00:00"
+   }
+  }
+ }
+]

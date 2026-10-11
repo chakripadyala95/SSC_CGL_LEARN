@@ -1,0 +1,43 @@
+[
+ {
+  "paper_id": "2024-09-12_1600",
+  "section": "QUANT",
+  "q_no": 11,
+  "ssc_question_id": null,
+  "reasons": [
+   "Question ID not found",
+   "option 4 marker icon missing"
+  ],
+  "question_crop": "data/questions/assets/2024-09-12_1600/Q11.png"
+ },
+ {
+  "paper_id": "2024-09-13_1230",
+  "section": "QUANT",
+  "q_no": 13,
+  "ssc_question_id": null,
+  "reasons": [
+   "Question ID not found"
+  ],
+  "question_crop": "data/questions/assets/2024-09-13_1230/Q13.png"
+ },
+ {
+  "paper_id": "2024-09-24_1600",
+  "section": "QUANT",
+  "q_no": 20,
+  "ssc_question_id": null,
+  "reasons": [
+   "Question ID not found"
+  ],
+  "question_crop": "data/questions/assets/2024-09-24_1600/Q20.png"
+ },
+ {
+  "paper_id": "2024-09-26_1600",
+  "section": "QUANT",
+  "q_no": 15,
+  "ssc_question_id": "630680402",
+  "reasons": [
+   "Question ID box clipped by an overflowing stem"
+  ],
+  "question_crop": "data/questions/assets/2024-09-26_1600/Q15.png"
+ }
+]

@@ -1,0 +1,30 @@
+# Trigonometry: cheat sheet
+
+- [Pythagorean identities](/formulas/trigonometry#pythagorean-identities): $\sin^2\theta+\cos^2\theta=1;\ \sec^2\theta-\tan^2\theta=1;\ \csc^2\theta-\cot^2\theta=1$
+  - Shortcut: Swap on sight: $\sec^2-1=\tan^2$, $1+\cot^2=\csc^2$, $1-\sin^2=\cos^2$; $\sin^2 x+\sin^2(90^\circ-x)=1$.
+- [sec + tan and cosec + cot conjugates](/formulas/trigonometry#conjugate-pairs): $(\sec\theta+\tan\theta)(\sec\theta-\tan\theta)=1;\ (\csc\theta+\cot\theta)(\csc\theta-\cot\theta)=1$
+  - Shortcut: $\frac{\csc\theta+\cot\theta}{\csc\theta-\cot\theta}=(\csc\theta+\cot\theta)^2=\frac{1+\cos\theta}{1-\cos\theta}$; likewise $\frac{1+\sin\theta}{1-\sin\theta}=(\sec\theta+\tan\theta)^2$.
+- [Reciprocal and quotient identities](/formulas/trigonometry#reciprocal-quotient): $\tan\theta=\frac{\sin\theta}{\cos\theta},\ \sec\theta=\frac1{\cos\theta};\ \tan\theta+\cot\theta=\frac1{\sin\theta\cos\theta}$
+  - Shortcut: Stuck? Rewrite everything in $\sin$ and $\cos$; $\csc\theta-\sin\theta=\frac{\cos^2\theta}{\sin\theta}$, $\sec\theta-\cos\theta=\frac{\sin^2\theta}{\cos\theta}$.
+- [Squares and fourth powers of sin and cos](/formulas/trigonometry#sin-cos-power-sums): $(\sin\theta\pm\cos\theta)^2=1\pm2\sin\theta\cos\theta;\ \sin^4\theta+\cos^4\theta=1-2\sin^2\theta\cos^2\theta$
+  - Shortcut: Given $\sin\theta+\cos\theta=S$: $\sin\theta\cos\theta=\frac{S^2-1}2$, then $\sin^4\theta+\cos^4\theta=1-2(\sin\theta\cos\theta)^2$.
+- [Trig ratio + its reciprocal = 2](/formulas/trigonometry#reciprocal-sum-two): $\tan\theta+\cot\theta=2 \Rightarrow \theta=45^\circ;\ \sin\theta+\csc\theta=2 \Rightarrow \theta=90^\circ$
+  - Shortcut: Ratio $+$ its reciprocal $=2$ means the ratio is $1$: then every power of it is $1$ too.
+- [Divide through by cos to get tan](/formulas/trigonometry#divide-by-cos): $\frac{a\sin\theta+b\cos\theta}{c\sin\theta+d\cos\theta}=\frac{a\tan\theta+b}{c\tan\theta+d}$
+  - Shortcut: Given $\tan\theta=\frac pq$: replace $\sin\theta\to p$, $\cos\theta\to q$ in any expression where every term has the same degree.
+- [Double and triple angle formulas](/formulas/trigonometry#multiple-angle): $\sin2\theta=2\sin\theta\cos\theta;\ \cos2\theta=1-2\sin^2\theta;\ \sin3\theta=3\sin\theta-4\sin^3\theta;\ \cos3\theta=4\cos^3\theta-3\cos\theta$
+  - Shortcut: $\frac{1-\cos2\theta}{1+\cos2\theta}=\tan^2\theta$; $\cos2\theta=\frac{1-\tan^2\theta}{1+\tan^2\theta}$; $\sin2\theta=\frac{2\tan\theta}{1+\tan^2\theta}$.
+- [Compound angle and product-to-sum](/formulas/trigonometry#compound-angle): $\sin(A\pm B)=\sin A\cos B\pm\cos A\sin B;\ \tan(A+B)=\frac{\tan A+\tan B}{1-\tan A\tan B};\ 2\sin A\sin B=\cos(A-B)-\cos(A+B)$
+  - Shortcut: If $A-B=45^\circ$: $\tan A-\tan B-\tan A\tan B=1$; if $A+B=45^\circ$: $(1+\tan A)(1+\tan B)=2$.
+- [Complementary angles](/formulas/trigonometry#complementary-angles): $\sin(90^\circ-\theta)=\cos\theta,\ \tan(90^\circ-\theta)=\cot\theta,\ \sec(90^\circ-\theta)=\csc\theta;\ \tan\theta\tan(90^\circ-\theta)=1$
+  - Shortcut: $\tan x\tan y=1$ or $\sin x=\cos y$ (acute) $\Rightarrow x+y=90^\circ$; pair angles adding to $90^\circ$ in long products and sums.
+- [Standard angle values](/formulas/trigonometry#standard-values): $\sin 0^\circ,30^\circ,45^\circ,60^\circ,90^\circ=\tfrac{\sqrt0}2,\tfrac{\sqrt1}2,\tfrac{\sqrt2}2,\tfrac{\sqrt3}2,\tfrac{\sqrt4}2;\ \cos \text{ in reverse}$
+  - Shortcut: $\sin$: $\sqrt{0},\sqrt1,\sqrt2,\sqrt3,\sqrt4$ over 2; $\cos$ the same reversed; $\tan=\sqrt{\frac{n}{4-n}}$.
+- [Solving trig equations](/formulas/trigonometry#equation-solving): $\text{Convert to one ratio (e.g. } \cos^2=1-\sin^2), \text{ solve the resulting quadratic, keep } 0^\circ\le\theta\le90^\circ$
+  - Shortcut: Faster still: plug each option into the equation; only one survives.
+- [Ratios from a right triangle](/formulas/trigonometry#right-triangle-ratios): $\sin\theta=\frac PH,\ \cos\theta=\frac BH,\ \tan\theta=\frac PB;\ \text{use triplets } (3,4,5),(5,12,13),(8,15,17),(7,24,25)$
+  - Shortcut: Given $\sec\theta=\frac{29}{20}$: $H=29$, $B=20$, so $P=21$ by the triplet.
+- [Range of a sin + b cos](/formulas/trigonometry#max-a-sin-b-cos): $-\sqrt{a^2+b^2}\le a\sin\theta+b\cos\theta\le\sqrt{a^2+b^2}$
+  - Shortcut: If $a\sin\theta+b\cos\theta=\sqrt{a^2+b^2}$ (the maximum), then $\tan\theta=\frac ab$ at once.
+- [Heights and distances](/formulas/trigonometry#heights-distances): $h=d\tan\theta \text{ (angle of elevation } \theta \text{ at horizontal distance } d)$
+  - Shortcut: $\theta=45^\circ\Rightarrow h=d$; $60^\circ\Rightarrow h=\sqrt3d$; $30^\circ\Rightarrow h=\frac d{\sqrt3}$.

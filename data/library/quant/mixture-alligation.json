@@ -1,0 +1,258 @@
+[
+ {
+  "id": "mixture-alligation.alligation-rule",
+  "topic": "Mixture & Alligation",
+  "subtopic": "Alligation",
+  "name": "Rule of alligation",
+  "statement": "\\frac{q_{\\text{cheap}}}{q_{\\text{dear}}}=\\frac{d-m}{m-c}",
+  "conditions": [
+   "$c < m < d$"
+  ],
+  "derivation": [
+   "Mixing keeps the total value: $q_c c + q_d d = (q_c + q_d)m$.",
+   "Rearrange: $q_c(m - c) = q_d(d - m)$.",
+   "Divide: $\\frac{q_c}{q_d} = \\frac{d-m}{m-c}$: each quantity is the distance of the mean from the other price."
+  ],
+  "visual_proof": "The cross: cheap and dear prices on the left, the mean in the centre, and the differences written diagonally give the quantities.",
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q19",
+   "answer": "B",
+   "steps": [
+    "Boys 75, girls 80, all 78.",
+    "Boys : girls $= (80-78):(78-75) = 2:3$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Writing the differences on the same side: gives 3:2, the inverse ratio.",
+   "Mixing a cheap price with a mean that lies outside the range: the ratio comes out negative, re-read the question.",
+   "Applying it to totals (₹ amounts) instead of rates per unit (₹/kg, % rate, marks per student)."
+  ],
+  "related_ids": [
+   "mixture-alligation.weighted-mean-price",
+   "average.weighted-average",
+   "mixture-alligation.add-to-mixture"
+  ],
+  "diagram": {
+   "alt_text": "Alligation cross with boys' average 75 and girls' average 80 around the overall 78; differences 2 and 3 give boys:girls = 2:3.",
+   "spec": {
+    "type": "alligation-cross",
+    "high": 80,
+    "low": 75,
+    "mean": 78,
+    "ratio": "2 : 3"
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    c = F(random.randint(0, 10**4), random.randint(1, 10))\n    d = c + F(random.randint(1, 10**4), random.randint(1, 10))\n    q1, q2 = F(random.randint(1, 1000)), F(random.randint(1, 1000))\n    m = (q1 * c + q2 * d) / (q1 + q2)\n    assert c < m < d\n    assert (d - m) / (m - c) == q1 / q2\n    n += 1\nassert F(80 - 78, 78 - 75) == F(2, 3)            # boys : girls\nr = F(352 * 100, 4000)                           # average rate 8.8%\nassert F(10 - r, r - 8) == F(3, 2) and 4000 * F(2, 5) == 1600\nassert 15 * (30 - 10) == 5 * (90 - 30)            # 15 : 5 = (p - 30) : (30 - 10)\nprint(f\"CASES={n}\")\n# boundaries: m = c gives no dear part; m outside [c, d] gives a negative quantity\nc, d = 75, 80\ntry:                                             # m = c: q_dear = 0, ratio undefined\n    F(d - c, c - c); raise AssertionError\nexcept ZeroDivisionError:\n    pass\nassert F(d - 85, 85 - c) < 0                     # m > d is impossible\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:29+00:00"
+   }
+  }
+ },
+ {
+  "id": "mixture-alligation.weighted-mean-price",
+  "topic": "Mixture & Alligation",
+  "subtopic": "Alligation",
+  "name": "Mean price of a mixture",
+  "statement": "m=\\frac{q_1c_1+q_2c_2}{q_1+q_2}",
+  "conditions": [],
+  "derivation": [
+   "The cost of the mixture is the cost of its parts: $q_1c_1 + q_2c_2$.",
+   "Divide by the total quantity $q_1 + q_2$ for the price per unit.",
+   "Unknown price of one part: put the mean in and solve the same equation."
+  ],
+  "visual_proof": "Alligation cross read backwards: given the quantities 5 and 3, the mean sits where the differences are in the ratio 5:3.",
+  "shortcut": "$m = c_1 + (c_2 - c_1)\\frac{q_2}{q_1 + q_2}$: start at the first price and move by the second part's share.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q21",
+   "answer": "C",
+   "steps": [
+    "Cost $= 5\\times 4 + 3\\times 6 = 38$.",
+    "Per kg $= \\frac{38}{8} = 4.75$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Averaging the prices $\\frac{4+6}{2} = 5$ when quantities differ.",
+   "Using price per 5 kg as price per kg (₹250/5 kg is ₹50/kg).",
+   "Ignoring the third part's weight 2 in a 1:1:2 mixture."
+  ],
+  "related_ids": [
+   "mixture-alligation.alligation-rule",
+   "average.weighted-average",
+   "profit-loss.profit-percent"
+  ],
+  "diagram": {
+   "alt_text": "Alligation cross with ₹4/kg and ₹6/kg around the mixture price ₹4.75/kg; differences 1.25 and 0.75 are in the ratio 5:3, the quantities.",
+   "spec": {
+    "type": "alligation-cross",
+    "high": 6,
+    "low": 4,
+    "mean": 4.75,
+    "ratio": "5 : 3"
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    q1, q2 = F(random.randint(1, 1000), 4), F(random.randint(1, 1000), 4)\n    c1, c2 = F(random.randint(1, 10**4), 10), F(random.randint(1, 10**4), 10)\n    m = (q1 * c1 + q2 * c2) / (q1 + q2)\n    assert m * (q1 + q2) == q1 * c1 + q2 * c2           # cost is conserved\n    assert m == c1 + (c2 - c1) * q2 / (q1 + q2)         # shortcut\n    n += 1\nassert F(5 * 4 + 3 * 6, 8) == F(475, 100)\nassert F(7 * 50 + 8 * 56, 15) == F(5320, 100)\nassert F(4 * 350 - 250 - 300, 2) == 425\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:29+00:00"
+   }
+  }
+ },
+ {
+  "id": "mixture-alligation.add-to-mixture",
+  "topic": "Mixture & Alligation",
+  "subtopic": "Mixture ratios & concentration",
+  "name": "Adding to or combining mixtures",
+  "statement": "\\frac{a+x}{b}=\\frac pq;\\ \\text{combined component}_k=\\Sigma_i V_i\\frac{r_{ik}}{\\Sigma_j r_{ij}}",
+  "conditions": [],
+  "derivation": [
+   "Split the mixture into its components using the ratio: component $=$ volume $\\times\\frac{\\text{its term}}{\\text{sum of terms}}$.",
+   "Adding $x$ of one component changes only that component: $\\frac{a+x}{b} = \\frac pq$.",
+   "Solve: $x = \\frac pq b - a$.",
+   "Combining vessels: add each component across vessels, then form the new ratio."
+  ],
+  "visual_proof": "Before and after bars; the component that is not added keeps its length and fixes the scale of the new ratio.",
+  "shortcut": "Hold the untouched component fixed and scale the new ratio to it; the gap in the other component is the amount to add.",
+  "worked_example": {
+   "question_key": "2024-09-23_0900_Q20",
+   "answer": "B",
+   "steps": [
+    "Milk $= 32\\times\\frac58 = 20$ l, water $= 12$ l.",
+    "50% water means water $=$ milk $= 20$ l.",
+    "Add $20 - 12 = 8$ l (B)."
+   ]
+  },
+  "common_traps": [
+   "Taking 50% of 32 l (16 l) as the target water: the total grows when water is added.",
+   "Changing both components when only one is added.",
+   "Adding pure alcohol to a solution and keeping the denominator fixed: total volume also rises by $x$."
+  ],
+  "related_ids": [
+   "ratio-proportion.ratio-change",
+   "mixture-alligation.alligation-rule",
+   "mixture-alligation.repeated-replacement"
+  ],
+  "diagram": {
+   "alt_text": "Two bars: before, milk 20 l and water 12 l; after adding 8 l of water, milk 20 l and water 20 l.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Before (5 : 3)",
+      "parts": [
+       {
+        "value": 20,
+        "label": "Milk 20 l"
+       },
+       {
+        "value": 12,
+        "label": "Water 12 l"
+       }
+      ]
+     },
+     {
+      "label": "After (1 : 1)",
+      "parts": [
+       {
+        "value": 20,
+        "label": "Milk 20 l"
+       },
+       {
+        "value": 20,
+        "label": "Water 20 l (+8)"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    a, b = F(random.randint(0, 1000)), F(random.randint(1, 1000))\n    p, q = random.randint(1, 50), random.randint(1, 50)\n    if F(p, q) * b < a:\n        continue\n    x = F(p, q) * b - a                                  # amount of component a to add\n    assert (a + x) / b == F(p, q)\n    m = random.randint(2, 4)                             # combining m mixtures, 2 components\n    V = [F(random.randint(1, 1000)) for _ in range(m)]\n    R = [(random.randint(1, 20), random.randint(1, 20)) for _ in range(m)]\n    comp0 = sum(V[i] * F(R[i][0], sum(R[i])) for i in range(m))\n    comp1 = sum(V[i] * F(R[i][1], sum(R[i])) for i in range(m))\n    assert comp0 + comp1 == sum(V)\n    n += 1\n# worked example: 32 l at milk:water 5:3 -> add water until 50%\nmilk, water = F(32 * 5, 8), F(32 * 3, 8)\nassert (milk, water) == (20, 12) and F(1, 1) * milk - water == 8\nassert F(1188 * 7, 11) == 756\nx = F(500 - 2 * 75)                                      # (75 + x)/(500 + x) = 1/2\nassert (75 + x) / (500 + x) == F(1, 2) and x == 350\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:29+00:00"
+   }
+  }
+ },
+ {
+  "id": "mixture-alligation.repeated-replacement",
+  "topic": "Mixture & Alligation",
+  "subtopic": "Mixture ratios & concentration",
+  "name": "Repeated replacement",
+  "statement": "\\text{left}=V\\left(1-\\frac xV\\right)^n",
+  "conditions": [
+   "$0 < x < V$",
+   "each time the same volume $x$ is drawn off and refilled with the other liquid"
+  ],
+  "derivation": [
+   "Drawing off $x$ from $V$ removes the fraction $\\frac xV$ of every component.",
+   "So the original liquid left is multiplied by $1 - \\frac xV$ each operation.",
+   "Refilling adds only the other liquid, so this factor applies again each round.",
+   "After $n$ rounds: left $= V\\left(1 - \\frac xV\\right)^n$."
+  ],
+  "visual_proof": "A line chart of the original liquid left after each operation; each point is the previous one times the same factor, so it falls like a geometric decay.",
+  "shortcut": "Fraction left after $n$ steps $= \\left(1 - \\frac xV\\right)^n$; e.g. drawing $\\frac1{10}$ three times leaves $0.9^3 = 72.9\\%$.",
+  "worked_example": null,
+  "common_traps": [
+   "Subtracting $x$ each time ($V - nx$): later draws remove less of the original liquid because it is already diluted.",
+   "Using $\\frac xV$ as the fraction left instead of $1 - \\frac xV$.",
+   "Applying the formula when the drawn volume changes between steps or the refill is a different volume."
+  ],
+  "related_ids": [
+   "mixture-alligation.add-to-mixture",
+   "percentage.successive-change"
+  ],
+  "diagram": {
+   "alt_text": "Line chart of the original liquid left in a 40 l vessel when 4 l is drawn off and refilled each time: 40, 36, 32.4, 29.16 litres after 0 to 3 operations.",
+   "spec": {
+    "type": "chart",
+    "kind": "line",
+    "series": [
+     {
+      "label": "Original liquid left (l)",
+      "points": [
+       [
+        0,
+        40
+       ],
+       [
+        1,
+        36
+       ],
+       [
+        2,
+        32.4
+       ],
+       [
+        3,
+        29.16
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    V = F(random.randint(2, 500))\n    x = F(random.randint(1, int(V) - 1))\n    steps = random.randint(1, 8)\n    pure = V\n    for _ in range(steps):                    # remove x of the mixture, refill with x of the other liquid\n        pure -= x * pure / V\n    assert pure == V * (1 - x / V) ** steps\n    n += 1\nassert [40 * F(9, 10) ** k for k in range(4)] == [40, 36, F(324, 10), F(2916, 100)]\nprint(f\"CASES={n}\")\n# boundaries of 0 < x < V\nassert 40 * (1 - F(40, 40)) ** 3 == 0         # x = V: everything replaced in one step\nassert 40 * (1 - F(0, 40)) ** 3 == 40         # x = 0: nothing changes\nassert (1 - F(50, 40)) < 0                    # x > V: cannot remove more than the vessel holds\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:30+00:00"
+   }
+  }
+ }
+]

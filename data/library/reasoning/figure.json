@@ -1,0 +1,979 @@
+[
+ {
+  "id": "figure.element-tracking",
+  "topic": "Figure-based",
+  "subtopic": "Figure series",
+  "name": "Element tracking across frames",
+  "statement": "\\text{Track one element at a time: record its position in every frame, find its path and step, move it one more step.}",
+  "conditions": [],
+  "derivation": [
+   "Name the slots once (TL, TR, C, BL, BR) and use the same names in every frame.",
+   "Pick one element and write its slot in frames 1, 2, 3, 4.",
+   "Read the path and step from that list (e.g. C → TL → TR → BR → BL → C, one slot per frame).",
+   "Check that the other elements follow the same path; then move every element one more step for frame 5."
+  ],
+  "visual_proof": "A table with one row per frame and one column per slot: each letter walks along the same slot path, so frame 5 is frame 4 with every letter moved one step.",
+  "shortcut": "Solve for two elements only, then pick the option where both sit correctly; usually only one option survives.",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_R25",
+   "answer": "D",
+   "steps": [
+    "D sits at TL, TR, BR, BL in frames 1-4, so it goes to C next.",
+    "S: TR, BR, BL, C → TL next; O: BR, BL, C, TL → TR next.",
+    "P: BL, C, TL, TR → BR; U: C, TL, TR, BR → BL.",
+    "Frame 5: S TL, O TR, D C, U BL, P BR → option D."
+   ]
+  },
+  "common_traps": [
+   "Tracking the whole figure as one picture instead of one element at a time: options that look 'rotated' (A, C) seem right.",
+   "Assuming every element moves clockwise round the corners when the path passes through the centre slot: puts D in a corner.",
+   "Checking only one element: several options can agree on one letter."
+  ],
+  "related_ids": [
+   "figure.position-permutation",
+   "figure.rotation-step",
+   "figure.element-count-change"
+  ],
+  "diagram": {
+   "alt_text": "Table of four frames and the answer frame with letters at TL, TR, centre, BL, BR; each letter follows the path centre, TL, TR, BR, BL.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Frame",
+     "TL",
+     "TR",
+     "C",
+     "BL",
+     "BR"
+    ],
+    "rows": [
+     [
+      "1",
+      "D",
+      "S",
+      "U",
+      "P",
+      "O"
+     ],
+     [
+      "2",
+      "U",
+      "D",
+      "P",
+      "O",
+      "S"
+     ],
+     [
+      "3",
+      "P",
+      "U",
+      "O",
+      "S",
+      "D"
+     ],
+     [
+      "4",
+      "O",
+      "P",
+      "S",
+      "D",
+      "U"
+     ],
+     [
+      "5 (?)",
+      "S",
+      "O",
+      "D",
+      "U",
+      "P"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "def learn_path(frames):\n    \"\"\"Track each element frame to frame; every move must follow one fixed successor map of positions.\"\"\"\n    succ = {}\n    for a, b in zip(frames, frames[1:]):\n        where = {sym: pos for pos, sym in b.items()}\n        for pos, sym in a.items():\n            nxt = where[sym]\n            assert succ.setdefault(pos, nxt) == nxt, \"elements do not share one path\"\n    return succ\n\ndef predict(frames):\n    succ = learn_path(frames)\n    return {succ[pos]: sym for pos, sym in frames[-1].items()}\n\ndef solve(frames, options):\n    nxt = predict(frames)\n    hits = [k for k, o in options.items() if o == nxt]\n    assert len(hits) == 1, hits\n    return hits[0]\n\n# 2024-09-10_0900_R25\nF = lambda tl, tr, c, bl, br: {\"TL\": tl, \"TR\": tr, \"C\": c, \"BL\": bl, \"BR\": br}\nframes = [F(\"D\", \"S\", \"U\", \"P\", \"O\"), F(\"U\", \"D\", \"P\", \"O\", \"S\"), F(\"P\", \"U\", \"O\", \"S\", \"D\"), F(\"O\", \"P\", \"S\", \"D\", \"U\")]\noptions = {\"A\": F(\"S\", \"D\", \"P\", \"U\", \"O\"), \"B\": F(\"U\", \"O\", \"S\", \"P\", \"D\"),\n           \"C\": F(\"S\", \"O\", \"U\", \"P\", \"D\"), \"D\": F(\"S\", \"O\", \"D\", \"U\", \"P\")}\nassert learn_path(frames) == {\"C\": \"TL\", \"TL\": \"TR\", \"TR\": \"BR\", \"BR\": \"BL\", \"BL\": \"C\"}\nassert solve(frames, options) == \"D\"\n# constructed: three symbols stepping clockwise round four corners\nG = lambda tl, tr, br, bl: {k: v for k, v in zip((\"TL\", \"TR\", \"BR\", \"BL\"), (tl, tr, br, bl))}\nfr = [G(\"a\", \"b\", \"c\", \"d\"), G(\"d\", \"a\", \"b\", \"c\"), G(\"c\", \"d\", \"a\", \"b\")]\nassert solve(fr, {\"A\": G(\"b\", \"c\", \"d\", \"a\"), \"B\": G(\"a\", \"b\", \"c\", \"d\"), \"C\": G(\"d\", \"a\", \"b\", \"c\")}) == \"A\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.rotation-step",
+  "topic": "Figure-based",
+  "subtopic": "Figure series",
+  "name": "Fixed-angle rotation",
+  "statement": "\\text{Find the turn per frame (45°, 90°, 135°; clockwise or anticlockwise) for each element and apply it once more.}",
+  "conditions": [],
+  "derivation": [
+   "Fix one feature of the element (arrow head, dot, open side) and note where it points in each frame.",
+   "Turn each pointing into an angle or a compass direction.",
+   "Subtract consecutive angles: the difference must be the same each time (45° = one eighth turn, 90° = quarter turn).",
+   "Add that difference once more to the last frame for the answer."
+  ],
+  "visual_proof": "An arrow drawn at each frame's direction steps 45° anticlockwise round a compass: up, up-left, left, down-left, then down.",
+  "shortcut": "Count the eighth-turns between frames 1 and 2 and check it against frames 3 and 4; then turn the last frame by the same count.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R13",
+   "answer": "B",
+   "steps": [
+    "Arrow head points up, up-left, left, down-left.",
+    "Each step is 45° anticlockwise.",
+    "Next: 45° anticlockwise from down-left = down, with the double bar at the top.",
+    "Option B."
+   ]
+  },
+  "common_traps": [
+   "Following the tail (double bar) for one frame and the head for another: gives an arrow pointing up (D).",
+   "Mixing up clockwise and anticlockwise: from down-left a 45° clockwise turn gives left, not down.",
+   "Taking a 45° step as 90°: gives right (A)."
+  ],
+  "related_ids": [
+   "figure.element-tracking",
+   "figure.position-permutation"
+  ],
+  "diagram": {
+   "alt_text": "Table of frame number, arrow direction and angle: 90°, 135°, 180°, 225°, then 270° (down) for the answer.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Frame",
+     "Arrow points",
+     "Angle",
+     "Turn"
+    ],
+    "rows": [
+     [
+      "1",
+      "up",
+      "90°",
+      ""
+     ],
+     [
+      "2",
+      "up-left",
+      "135°",
+      "+45°"
+     ],
+     [
+      "3",
+      "left",
+      "180°",
+      "+45°"
+     ],
+     [
+      "4",
+      "down-left",
+      "225°",
+      "+45°"
+     ],
+     [
+      "5 (?)",
+      "down",
+      "270°",
+      "+45°"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "def step(angles):\n    \"\"\"Angles in degrees (anticlockwise from east). The turn per frame must be constant.\"\"\"\n    d = {(b - a) % 360 for a, b in zip(angles, angles[1:])}\n    assert len(d) == 1, \"rotation is not a fixed step\"\n    return d.pop()\n\ndef solve(angles, options):\n    nxt = (angles[-1] + step(angles)) % 360\n    hits = [k for k, v in options.items() if v % 360 == nxt]\n    assert len(hits) == 1, hits\n    return hits[0]\n\n# 2024-09-09_1230_R13: arrow points up, up-left, left, down-left (head direction)\nframes = [90, 135, 180, 225]\nassert step(frames) == 45                      # 45 deg anticlockwise each frame\noptions = {\"A\": 0, \"B\": 270, \"C\": 315, \"D\": 90}   # right, down, down-right, up\nassert solve(frames, options) == \"B\"\n# constructed: 90 deg clockwise (east, south, west) -> north\nassert step([0, 270, 180]) == 270 and solve([0, 270, 180], {\"A\": 90, \"B\": 0, \"C\": 180}) == \"A\"\n# 135 deg clockwise\nassert solve([90, 315, 180], {\"A\": 45, \"B\": 0, \"C\": 270}) == \"A\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.element-count-change",
+  "topic": "Figure-based",
+  "subtopic": "Figure series",
+  "name": "Element addition/removal",
+  "statement": "\\text{Count the elements in each frame and continue the add/remove pattern; track position changes separately.}",
+  "conditions": [],
+  "derivation": [
+   "Count each kind of element (lines, dots, shapes) in every frame.",
+   "Write the differences between frames: constant (+1, -2) or growing (+1, +2, +3).",
+   "Apply the next difference to get the count in the missing frame.",
+   "Check any element that moves (a number, a dot) with its own rule before choosing."
+  ],
+  "visual_proof": "A table of counts per frame: lines 1, 2, 3, 4 grow by one, while the number moves one side anticlockwise round the hexagon.",
+  "shortcut": "Eliminate options with the wrong count first, then use the position rule to choose among the rest.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_R13",
+   "answer": "B",
+   "steps": [
+    "Lines inside: 1, 2, 3, 4 → 5; the number also goes 1, 2, 3, 4 → 5.",
+    "The number moves one side anticlockwise: upper right, upper left, left, lower left → lower right.",
+    "A still shows 4; C keeps the lower-left side; D is on the right side.",
+    "B has 5 lines with 5 at the lower right."
+   ]
+  },
+  "common_traps": [
+   "Matching only the count: A, B and C all have 5 lines.",
+   "Moving the number clockwise: lands it on the left side, which no option shows correctly.",
+   "Counting overlapping lines twice: inflates the count by one."
+  ],
+  "related_ids": [
+   "figure.element-tracking",
+   "counting.lines-shapes"
+  ],
+  "diagram": {
+   "alt_text": "Table of frames 1 to 5 with the number of lines and the side of the hexagon where the number sits.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Frame",
+     "Lines",
+     "Number",
+     "Side"
+    ],
+    "rows": [
+     [
+      "1",
+      "1",
+      "1",
+      "upper right"
+     ],
+     [
+      "2",
+      "2",
+      "2",
+      "upper left"
+     ],
+     [
+      "3",
+      "3",
+      "3",
+      "left"
+     ],
+     [
+      "4",
+      "4",
+      "4",
+      "lower left"
+     ],
+     [
+      "5 (?)",
+      "5",
+      "5",
+      "lower right"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "def next_count(counts):\n    d = {b - a for a, b in zip(counts, counts[1:])}\n    if len(d) == 1:\n        return counts[-1] + d.pop()\n    d2 = {(c - b) - (b - a) for a, b, c in zip(counts, counts[1:], counts[2:])}\n    assert len(d2) == 1, \"no constant change\"\n    return counts[-1] + (counts[-1] - counts[-2]) + d2.pop()\n\nSIDES = [\"UR\", \"UL\", \"L\", \"LL\", \"LR\", \"R\"]      # hexagon sides, anticlockwise\n\ndef next_side(sides):\n    steps = {(SIDES.index(b) - SIDES.index(a)) % 6 for a, b in zip(sides, sides[1:])}\n    assert len(steps) == 1\n    return SIDES[(SIDES.index(sides[-1]) + steps.pop()) % 6]\n\n# 2024-09-12_1600_R13: lines inside the hexagon and the number beside one side\nlines, numbers, sides = [1, 2, 3, 4], [1, 2, 3, 4], [\"UR\", \"UL\", \"L\", \"LL\"]\nwant = (next_count(lines), next_count(numbers), next_side(sides))\nassert want == (5, 5, \"LR\")\noptions = {\"A\": (5, 4, \"UR\"), \"B\": (5, 5, \"LR\"), \"C\": (5, 5, \"LL\"), \"D\": (5, 5, \"R\")}\nassert [k for k, v in options.items() if v == want] == [\"B\"]\n# constructed: dots 1, 3, 6, 10 (add 2, 3, 4) -> 15\nassert next_count([1, 3, 6, 10]) == 15\n# removal: 9, 7, 5 -> 3\nassert next_count([9, 7, 5]) == 3\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.position-permutation",
+  "topic": "Figure-based",
+  "subtopic": "Figure series",
+  "name": "Position permutation of symbols",
+  "statement": "\\text{Number the slots, record where each symbol goes from one frame to the next, and repeat that slot-to-slot move.}",
+  "conditions": [],
+  "derivation": [
+   "Name every slot (TL, MM, MR, BL, BM, BR) and write each frame as a list of symbols in those slots.",
+   "For frames 1 → 2, note where each symbol moved: that is the move map.",
+   "Test the map on 2 → 3. If it fails, test 1 → 2 against 3 → 4: series often alternate two maps.",
+   "Apply the map that comes next to the last frame; a slot left empty gets a new symbol."
+  ],
+  "visual_proof": "A slot table for frames 1-4: the map from frame 1 to 2 repeats from 3 to 4, so 4 → 5 copies the 2 → 3 map.",
+  "shortcut": "When the maps alternate, frame 5 uses the same move as 2 → 3; compare only a few slots against the options.",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_R03",
+   "answer": "D",
+   "steps": [
+    "1 → 2 and 3 → 4 use the same map; 2 → 3 is the other map.",
+    "2 → 3 map: TL → BM, MM → MR, MR → MM, BR → TL, BM → BR, and BL gets a new symbol.",
+    "Apply it to frame 4 (TL T, MM 8, MR L, BL W, BM 2, BR X): TL X, MM L, MR 8, BM T, BR 2, BL new.",
+    "Only D matches (BL = 9)."
+   ]
+  },
+  "common_traps": [
+   "Applying the 1 → 2 map again for 4 → 5: gives T at BL and W at BM (C).",
+   "Keeping the old BL symbol instead of a new one: no option fits, which wastes time.",
+   "Recording positions by reading order instead of fixed slots: the map looks random."
+  ],
+  "related_ids": [
+   "figure.element-tracking",
+   "figure.rotation-step"
+  ],
+  "diagram": {
+   "alt_text": "Table of frames 1 to 5 with the symbol in each of six slots TL, MM, MR, BL, BM, BR; frame 5 is X, L, 8, 9, T, 2.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Frame",
+     "TL",
+     "MM",
+     "MR",
+     "BL",
+     "BM",
+     "BR"
+    ],
+    "rows": [
+     [
+      "1",
+      "K",
+      "L",
+      "8",
+      "X",
+      "W",
+      "2"
+     ],
+     [
+      "2",
+      "X",
+      "2",
+      "L",
+      "K",
+      "8",
+      "W"
+     ],
+     [
+      "3",
+      "W",
+      "L",
+      "2",
+      "T",
+      "X",
+      "8"
+     ],
+     [
+      "4",
+      "T",
+      "8",
+      "L",
+      "W",
+      "2",
+      "X"
+     ],
+     [
+      "5 (?)",
+      "X",
+      "L",
+      "8",
+      "new (9)",
+      "T",
+      "2"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "POS = [\"TL\", \"MM\", \"MR\", \"BL\", \"BM\", \"BR\"]\n\ndef mapping(a, b):\n    \"\"\"Where each symbol of frame a sits in frame b; a symbol that vanished maps to None.\"\"\"\n    where = {s: p for p, s in b.items()}\n    return {p: where.get(s) for p, s in a.items()}\n\ndef apply(m, frame, new):\n    out = {}\n    for p, s in frame.items():\n        if m[p] is not None:\n            out[m[p]] = s\n    for p in POS:\n        if p not in out:\n            out[p] = new\n    return out\n\nF = lambda *s: dict(zip(POS, s))\n# 2024-09-10_0900_R03: positions TL, MM, MR, BL, BM, BR\nf1 = F(\"K\", \"L\", \"8\", \"X\", \"W\", \"2\")\nf2 = F(\"X\", \"2\", \"L\", \"K\", \"8\", \"W\")\nf3 = F(\"W\", \"L\", \"2\", \"T\", \"X\", \"8\")\nf4 = F(\"T\", \"8\", \"L\", \"W\", \"2\", \"X\")\nm12, m23, m34 = mapping(f1, f2), mapping(f2, f3), mapping(f3, f4)\nassert m12 == m34                       # two mappings alternate\nassert list(m23.values()).count(None) == 1 and m23[\"BL\"] is None   # the BL symbol is replaced by a new one\nNEW = \"*\"\nf5 = apply(m23, f4, NEW)\nassert f5 == F(\"X\", \"L\", \"8\", NEW, \"T\", \"2\")\noptions = {\"A\": F(\"2\", \"L\", \"8\", \"9\", \"X\", \"T\"), \"B\": F(\"8\", \"L\", \"T\", \"X\", \"W\", \"2\"),\n           \"C\": F(\"X\", \"L\", \"8\", \"T\", \"W\", \"2\"), \"D\": F(\"X\", \"L\", \"8\", \"9\", \"T\", \"2\")}\nused = set(f4.values())\nmatch = lambda o: all(o[p] == f5[p] for p in POS if p != \"BL\") and o[\"BL\"] not in used\nassert [k for k, o in options.items() if match(o)] == [\"D\"]\n# constructed: one fixed permutation every frame (cyclic shift of three slots)\ng = [{\"1\": \"a\", \"2\": \"b\", \"3\": \"c\"}, {\"1\": \"c\", \"2\": \"a\", \"3\": \"b\"}]\nm = mapping(*g)\nassert {m[p]: s for p, s in g[1].items()} == {\"1\": \"b\", \"2\": \"c\", \"3\": \"a\"}\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.mirror-image",
+  "topic": "Figure-based",
+  "subtopic": "Mirror image",
+  "name": "Mirror image about a line",
+  "statement": "\\text{Vertical mirror: left} \\leftrightarrow \\text{right, top and bottom stay. Horizontal mirror: top} \\leftrightarrow \\text{bottom, left and right stay.}",
+  "conditions": [],
+  "derivation": [
+   "Every point moves to the same distance on the other side of the mirror line, along a perpendicular to it.",
+   "For a vertical mirror, horizontal positions swap: the first character becomes the last, and each character is flipped left-right.",
+   "Heights do not change, so nothing turns upside down.",
+   "Characters symmetric about a vertical axis (A, H, I, M, O, T, U, V, W, X, Y) look unchanged; check only the others (J, F, b, 3, 9 ...)."
+  ],
+  "visual_proof": "The word and its image sit on either side of the mirror line; the letter nearest the mirror stays nearest, and only the non-symmetric letters change shape.",
+  "shortcut": "With the mirror to the right or left, reverse the order and flip only the asymmetric characters; check those first in the options.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R02",
+   "answer": "D",
+   "steps": [
+    "Mirror MN is vertical, on the right of MJXWU.",
+    "Reverse the order: U W X J M.",
+    "M, X, W, U are symmetric; only J flips, its hook now points right.",
+    "Option D: U W X (flipped J) M."
+   ]
+  },
+  "common_traps": [
+   "Swapping M and W (a top-bottom flip) for a side mirror: gives options A and C.",
+   "Reversing the order but not flipping J: option C-style answers.",
+   "Flipping each letter without reversing the order: the image reads in the original order."
+  ],
+  "related_ids": [
+   "figure.water-image",
+   "figure.transparent-sheet-fold",
+   "figure.pattern-completion"
+  ],
+  "diagram": {
+   "alt_text": "The word MJXWU with a vertical mirror line on its right and its image U W X, reversed J, M on the other side.",
+   "spec": {
+    "type": "mirror-axis",
+    "axis": "vertical",
+    "sample": "MJXWU"
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "# 5x5 bitmaps, rows top to bottom\nGLYPH = {\n    \"b\": [\"#....\", \"#....\", \"####.\", \"#...#\", \"####.\"],\n    \"d\": [\"....#\", \"....#\", \".####\", \"#...#\", \".####\"],\n    \"p\": [\"####.\", \"#...#\", \"####.\", \"#....\", \"#....\"],\n    \"q\": [\".####\", \"#...#\", \".####\", \"....#\", \"....#\"],\n    \"J\": [\"..###\", \"...#.\", \"...#.\", \"#..#.\", \".##..\"],\n    \"M\": [\"#...#\", \"##.##\", \"#.#.#\", \"#...#\", \"#...#\"],\n    \"W\": [\"#...#\", \"#...#\", \"#.#.#\", \"##.##\", \"#...#\"],\n    \"X\": [\"#...#\", \".#.#.\", \"..#..\", \".#.#.\", \"#...#\"],\n    \"U\": [\"#...#\", \"#...#\", \"#...#\", \"#...#\", \".###.\"],\n    \"H\": [\"#...#\", \"#...#\", \"#####\", \"#...#\", \"#...#\"],\n}\n\ndef word(text):\n    \"\"\"Bitmap of a word: glyphs side by side with a blank column between.\"\"\"\n    rows = [\"\"] * 5\n    for i, ch in enumerate(text):\n        for r in range(5):\n            rows[r] += (\".\" if i else \"\") + GLYPH[ch][r]\n    return rows\n\ndef flip_lr(rows):\n    return [r[::-1] for r in rows]\n\ndef flip_tb(rows):\n    return rows[::-1]\n\ndef mirror_rule(tokens):\n    \"\"\"Vertical mirror: reverse the order and flip every glyph left-right; laterally symmetric glyphs stay.\"\"\"\n    out = []\n    for g in reversed(tokens):\n        out.append(g if g in SYMMETRIC_LR else (g[:-1] if g.endswith(\"'\") else g + \"'\"))\n    return out\n\nSYMMETRIC_LR = {g for g in GLYPH if flip_lr(GLYPH[g]) == GLYPH[g]}\nassert SYMMETRIC_LR == {\"M\", \"W\", \"X\", \"U\", \"H\"}\n\n# the rule matches a true pixel reflection of the whole word\nfor w in [\"MJXWU\", \"bd\", \"JUMX\"]:\n    picture = flip_lr(word(w))\n    rebuilt = [\"\"] * 5\n    for i, g in enumerate(mirror_rule(list(w))):\n        bm = flip_lr(GLYPH[g[0]]) if g.endswith(\"'\") else GLYPH[g]\n        for r in range(5):\n            rebuilt[r] += (\".\" if i else \"\") + bm[r]\n    assert picture == rebuilt, w\nassert flip_lr(GLYPH[\"b\"]) == GLYPH[\"d\"]                  # b in a side mirror reads as d\nassert flip_lr(GLYPH[\"b\"]) != flip_tb(GLYPH[\"b\"])         # a water flip is a different picture\n\n# 2024-09-09_1230_R02: 'MJXWU', mirror MN on the right (\"J'\" = laterally flipped J)\nwant = mirror_rule(list(\"MJXWU\"))\nassert want == [\"U\", \"W\", \"X\", \"J'\", \"M\"]\noptions = {\"A\": [\"U\", \"M\", \"X\", \"J'\", \"M\"], \"B\": [\"U\", \"W\", \"X\", \"J\", \"M'\"],\n           \"C\": [\"U\", \"M\", \"X\", \"J\", \"M\"], \"D\": [\"U\", \"W\", \"X\", \"J'\", \"M\"]}\nassert [k for k, v in options.items() if v == want] == [\"D\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.water-image",
+  "topic": "Figure-based",
+  "subtopic": "Water image",
+  "name": "Water image",
+  "statement": "\\text{Water image: top} \\leftrightarrow \\text{bottom; left and right stay. Order of characters is kept.}",
+  "conditions": [],
+  "derivation": [
+   "The water surface is a horizontal mirror line below the figure.",
+   "Each point keeps its left-right position and moves to the same depth below the line.",
+   "So characters stay in the same order; each one turns upside down without turning sideways (b → p, d → q, M → W-like).",
+   "Characters symmetric about a horizontal axis (B, C, D, E, H, I, K, O, X) look unchanged."
+  ],
+  "visual_proof": "The word bd above a horizontal line and its image pq below it: the order is the same and each letter is flipped top to bottom.",
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Reversing the order as for a side mirror: bd becomes qp instead of pq.",
+   "Rotating by 180° instead of flipping: b turns into q, not p.",
+   "Leaving M unchanged: under water it looks like W."
+  ],
+  "related_ids": [
+   "figure.mirror-image",
+   "figure.transparent-sheet-fold"
+  ],
+  "diagram": {
+   "alt_text": "The letters bd above a horizontal water line and their water image pq below it.",
+   "spec": {
+    "type": "mirror-axis",
+    "axis": "horizontal",
+    "sample": "bd"
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "# 5x5 bitmaps, rows top to bottom\nGLYPH = {\n    \"b\": [\"#....\", \"#....\", \"####.\", \"#...#\", \"####.\"],\n    \"d\": [\"....#\", \"....#\", \".####\", \"#...#\", \".####\"],\n    \"p\": [\"####.\", \"#...#\", \"####.\", \"#....\", \"#....\"],\n    \"q\": [\".####\", \"#...#\", \".####\", \"....#\", \"....#\"],\n    \"J\": [\"..###\", \"...#.\", \"...#.\", \"#..#.\", \".##..\"],\n    \"M\": [\"#...#\", \"##.##\", \"#.#.#\", \"#...#\", \"#...#\"],\n    \"W\": [\"#...#\", \"#...#\", \"#.#.#\", \"##.##\", \"#...#\"],\n    \"X\": [\"#...#\", \".#.#.\", \"..#..\", \".#.#.\", \"#...#\"],\n    \"U\": [\"#...#\", \"#...#\", \"#...#\", \"#...#\", \".###.\"],\n    \"H\": [\"#...#\", \"#...#\", \"#####\", \"#...#\", \"#...#\"],\n}\n\ndef word(text):\n    \"\"\"Bitmap of a word: glyphs side by side with a blank column between.\"\"\"\n    rows = [\"\"] * 5\n    for i, ch in enumerate(text):\n        for r in range(5):\n            rows[r] += (\".\" if i else \"\") + GLYPH[ch][r]\n    return rows\n\ndef flip_lr(rows):\n    return [r[::-1] for r in rows]\n\ndef flip_tb(rows):\n    return rows[::-1]\n\nSYMMETRIC_TB = {g for g in GLYPH if flip_tb(GLYPH[g]) == GLYPH[g]}\n\ndef water_rule(tokens):\n    \"\"\"Horizontal (water) mirror: order stays, each glyph flips top-bottom.\"\"\"\n    return [g if g in SYMMETRIC_TB else (g[:-1] if g.endswith(\"~\") else g + \"~\") for g in tokens]\n\nassert SYMMETRIC_TB == {\"X\", \"H\"}\n# the rule matches a pixel reflection of the whole word about a line below it\nfor w in [\"bd\", \"MJXWU\", \"HXb\"]:\n    picture = flip_tb(word(w))\n    rebuilt = [\"\"] * 5\n    for i, g in enumerate(water_rule(list(w))):\n        bm = flip_tb(GLYPH[g[0]]) if g.endswith(\"~\") else GLYPH[g]\n        for r in range(5):\n            rebuilt[r] += (\".\" if i else \"\") + bm[r]\n    assert picture == rebuilt, w\n# b -> p and d -> q under water; left-right order is kept\nassert flip_tb(GLYPH[\"b\"]) == GLYPH[\"p\"] and flip_tb(GLYPH[\"d\"]) == GLYPH[\"q\"]\nassert flip_tb(word(\"bd\")) == word(\"pq\")\n# constructed question: water image of 'bd'\noptions = {\"A\": word(\"pq\"), \"B\": word(\"qp\"), \"C\": word(\"db\"), \"D\": flip_lr(word(\"bd\"))}\nassert [k for k, v in options.items() if v == flip_tb(word(\"bd\"))] == [\"A\"]\n# M and W are not water-symmetric: M flipped is W-like, not M\nassert flip_tb(GLYPH[\"M\"]) == GLYPH[\"W\"]\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.paper-fold-unfold",
+  "topic": "Figure-based",
+  "subtopic": "Paper folding/cutting",
+  "name": "Paper fold and unfold",
+  "statement": "\\text{Unfold in reverse order of folding; at each fold line every hole or cut gains its mirror image.}",
+  "conditions": [],
+  "derivation": [
+   "Each fold puts two layers on top of each other, so one punch makes a hole in both layers.",
+   "The second layer is the mirror image of the first across the fold line.",
+   "Undo the last fold first: reflect every hole across that line.",
+   "Repeat for each earlier fold; with k folds one punch gives $2^k$ holes (fewer only if a hole sits on a fold line)."
+  ],
+  "visual_proof": "Fold steps: half the sheet, then a quarter, punched twice; opening each fold doubles the holes symmetrically about that fold line.",
+  "shortcut": "Count first: holes punched × $2^{\\text{folds}}$; drop every option with the wrong count, then check the symmetry.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R20",
+   "answer": "B",
+   "steps": [
+    "Folds: top onto bottom, then left onto right; holes at (2.5, 1.5) and (3.5, 0.5) on a 4 × 4 sheet.",
+    "Expect $2 \\times 2^2 = 8$ holes, which removes A, C, D.",
+    "Undo fold 2 (x = 2): add (1.5, 1.5), (0.5, 0.5); undo fold 1 (y = 2): reflect all four up.",
+    "4 corner holes + 4 centre holes → B."
+   ]
+  },
+  "common_traps": [
+   "Undoing only the last fold: 4 holes, like option C.",
+   "Reflecting across the wrong line (a diagonal): holes line up on one diagonal (C) or form a slanted pattern (A, D).",
+   "Unfolding in the order of folding: for symmetric folds the count is right but the cut shapes come out on the wrong side."
+  ],
+  "related_ids": [
+   "figure.transparent-sheet-fold",
+   "figure.mirror-image",
+   "figure.pattern-completion"
+  ],
+  "diagram": {
+   "alt_text": "Two fold steps on a square sheet: a horizontal fold, then a vertical fold with two punches at (2.5, 1.5) and (3.5, 0.5); unfolded they give 8 holes.",
+   "spec": {
+    "type": "fold-steps",
+    "steps": [
+     {
+      "fold": "horizontal",
+      "punches": []
+     },
+     {
+      "fold": "vertical",
+      "punches": [
+       [
+        2.5,
+        1.5
+       ],
+       [
+        3.5,
+        0.5
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as Fr\n\ndef reflect(p, fold):\n    axis, c = fold\n    x, y = p\n    return (2 * c - x, y) if axis == \"x\" else (x, 2 * c - y)\n\ndef unfold(holes, folds):\n    \"\"\"Undo the folds in reverse order; each hole gains its mirror image across that fold line.\"\"\"\n    pts = set(holes)\n    for fold in reversed(folds):\n        pts |= {reflect(p, fold) for p in pts}\n    return pts\n\nh = Fr(1, 2)\n# 2024-09-09_1230_R20: 4 x 4 sheet, y upwards. Fold 1: top onto bottom (line y = 2);\n# fold 2: left onto right (line x = 2). Punched quarter is bottom-right.\nfolds = [(\"y\", 2), (\"x\", 2)]\nholes = [(2 + h, 1 + h), (3 + h, h)]\ngot = unfold(holes, folds)\nassert len(got) == 2 * 2 ** len(folds)\ncorners = {(h, h), (3 + h, h), (h, 3 + h), (3 + h, 3 + h)}\ncentre = {(1 + h, 1 + h), (2 + h, 1 + h), (1 + h, 2 + h), (2 + h, 2 + h)}\noptions = {\"A\": corners | {(1 + h, 1 + h), (2 + h, 2 + h)},\n           \"B\": corners | centre,\n           \"C\": {(h, 3 + h), (1 + h, 2 + h), (2 + h, 1 + h), (3 + h, h)},\n           \"D\": corners | {(1 + h, 2 + h), (2 + h, 1 + h)}}\nassert [k for k, v in options.items() if v == got] == [\"B\"]\n# skipping the last unfold (common slip) gives only 4 holes\nassert len(unfold(holes, folds[1:])) == 4\n# constructed: one diagonal fold (line y = x) with a hole at (3, 1) -> also (1, 3)\ndef unfold_diag(holes):\n    return set(holes) | {(y, x) for x, y in holes}\nassert unfold_diag([(3, 1)]) == {(3, 1), (1, 3)}\n# a hole on the fold line stays a single hole\nassert unfold([(2, 1)], [(\"x\", 2)]) == {(2, 1)}\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.transparent-sheet-fold",
+  "topic": "Figure-based",
+  "subtopic": "Paper folding/cutting",
+  "name": "Transparent sheet fold",
+  "statement": "\\text{Reflect the pattern on the folded half across the fold line and superimpose it on the other half.}",
+  "conditions": [],
+  "derivation": [
+   "A transparent sheet shows both layers after folding.",
+   "The half that is folded over lands as its mirror image across the fold line.",
+   "The half that stays put does not change.",
+   "The answer is the fixed half plus the reflected half, drawn together on the fixed half."
+  ],
+  "visual_proof": "A line rising from bottom-left to top-right folds at the middle line into an inverted V: the top part is reflected downward, its arrow head now at the bottom right.",
+  "shortcut": "Track only the end points and the arrow head: reflect those across the fold line and join them as before.",
+  "worked_example": {
+   "question_key": "2024-09-17_1230_R05",
+   "answer": "C",
+   "steps": [
+    "Bottom half: the line from the bottom-left corner up to the middle of the fold line stays.",
+    "Top half: the part from the middle to the top-right corner (head at top-right) folds down.",
+    "Reflected, it runs from the middle to the bottom-right corner with the head at the bottom-right.",
+    "Inverted V with the head at the bottom right: C."
+   ]
+  },
+  "common_traps": [
+   "Putting the arrow head on the fixed end: gives the head at the bottom left (B).",
+   "Moving the top part down without reflecting it: a single slanted line (A or D).",
+   "Reflecting the fixed half too: the whole pattern turns over."
+  ],
+  "related_ids": [
+   "figure.paper-fold-unfold",
+   "figure.mirror-image",
+   "figure.water-image"
+  ],
+  "diagram": {
+   "alt_text": "A 2 by 2 sheet with fold line y = 1: the line from (0, 0) to (2, 2) becomes an inverted V from (0, 0) to (1, 1) to (2, 0) after the fold.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "P": [
+      0,
+      0
+     ],
+     "M": [
+      1,
+      1
+     ],
+     "H": [
+      2,
+      2
+     ],
+     "H'": [
+      2,
+      0
+     ],
+     "F1": [
+      0,
+      1
+     ],
+     "F2": [
+      2,
+      1
+     ]
+    },
+    "segments": [
+     [
+      "P",
+      "M"
+     ],
+     [
+      "M",
+      "H"
+     ],
+     [
+      "M",
+      "H'"
+     ],
+     [
+      "F1",
+      "F2"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       2,
+       2.15
+      ],
+      "text": "head before"
+     },
+     {
+      "at": [
+       2,
+       -0.2
+      ],
+      "text": "head after"
+     },
+     {
+      "at": [
+       0.1,
+       1.1
+      ],
+      "text": "fold"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as Fr\n\ndef reflect_y(p, c):\n    return (p[0], 2 * c - p[1])\n\ndef clip(seg, lo, hi):\n    \"\"\"Part of a straight segment with lo <= y <= hi (exact).\"\"\"\n    (x1, y1), (x2, y2) = seg\n    if y1 == y2:\n        return seg if lo <= y1 <= hi else None\n    t = sorted([Fr(lo - y1, y2 - y1), Fr(hi - y1, y2 - y1)])\n    t0, t1 = max(t[0], 0), min(t[1], 1)\n    if t0 >= t1:\n        return None\n    pt = lambda t: (x1 + t * (x2 - x1), y1 + t * (y2 - y1))\n    return (pt(t0), pt(t1))\n\ndef fold_down(segs, heads, c, top):\n    \"\"\"Fold the half above y = c onto the half below and superimpose (sheet height `top`).\"\"\"\n    out = set()\n    for s in segs:\n        below = clip(s, 0, c)\n        above = clip(s, c, top)\n        if below:\n            out.add(frozenset(below))\n        if above:\n            out.add(frozenset(reflect_y(p, c) for p in above))\n    hs = {reflect_y(p, c) if p[1] > c else p for p in heads}\n    return out, hs\n\n# 2024-09-17_1230_R05: sheet 2 wide, 2 high, fold line y = 1; arrow from (0, 0) to (2, 2), head at (2, 2)\ngot = fold_down([((0, 0), (2, 2))], [(2, 2)], 1, 2)\nwant = ({frozenset({(0, 0), (1, 1)}), frozenset({(1, 1), (2, 0)})}, {(2, 0)})\nassert got == want\nseg = lambda a, b: frozenset({a, b})\noptions = {\"A\": ({seg((0, 0), (2, 1))}, {(2, 1)}),\n           \"B\": (want[0], {(0, 0)}),\n           \"C\": (want[0], {(2, 0)}),\n           \"D\": ({seg((0, 0), (2, 1))}, {(0, 0)})}\nassert [k for k, v in options.items() if v == got] == [\"C\"]\n# constructed: a vertical line wholly in the top half lands mirrored in the bottom half\nassert fold_down([((1, Fr(3, 2)), (1, 2))], [], 1, 2)[0] == {frozenset({(1, Fr(1, 2)), (1, 0)})}\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.embedded-figure",
+  "topic": "Figure-based",
+  "subtopic": "Embedded figure",
+  "name": "Embedded figure trace",
+  "statement": "\\text{Find the most distinctive corner or line of the target and trace it in each option, same size and same orientation.}",
+  "conditions": [],
+  "derivation": [
+   "List the parts of the target figure: outline, inner lines, special points (a tip, a curl, an odd angle).",
+   "Start with the rarest part: it rules out most options quickly.",
+   "In each option, check that every line of the target is drawn, with no gap, in the same direction.",
+   "Extra lines in the option are allowed; a missing piece or a rotated copy is not."
+  ],
+  "visual_proof": "The target rectangle with midline and lower half-diagonals is drawn inside the option figure; the option's extra lines (upper half-diagonals, vertical midline, circles) are ignored.",
+  "shortcut": "Look for the line that options differ on (a half-diagonal, a midline) and test only that line.",
+  "worked_example": {
+   "question_key": "2024-09-13_0900_R25",
+   "answer": "D",
+   "steps": [
+    "X: rectangle with point, full horizontal midline, and lines from both bottom corners to the centre.",
+    "Fig 2 lacks the centre-to-bottom-right half; fig 4 lacks the bottom-left-to-centre half.",
+    "Fig 3 has no complete horizontal midline inside the rectangle.",
+    "Fig 1 contains every line of X: option D."
+   ]
+  },
+  "common_traps": [
+   "Accepting a rotated or flipped copy when rotation is not allowed.",
+   "Stopping at the outline: every option has the same rectangle and point, so all look right.",
+   "Treating a line broken by a circle as complete: picks fig 3 (A)."
+  ],
+  "related_ids": [
+   "counting.lines-shapes",
+   "figure.pattern-completion"
+  ],
+  "diagram": {
+   "alt_text": "Figure X: a 4 by 2 rectangle with a pointed tip on the right, a horizontal midline, and lines from both bottom corners to the centre.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "B": [
+      4,
+      0
+     ],
+     "C": [
+      4,
+      2
+     ],
+     "D": [
+      0,
+      2
+     ],
+     "P": [
+      5,
+      1
+     ],
+     "L": [
+      0,
+      1
+     ],
+     "R": [
+      4,
+      1
+     ],
+     "O": [
+      2,
+      1
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "D"
+     ],
+     [
+      "D",
+      "A"
+     ],
+     [
+      "C",
+      "P"
+     ],
+     [
+      "P",
+      "B"
+     ],
+     [
+      "L",
+      "R"
+     ],
+     [
+      "A",
+      "O"
+     ],
+     [
+      "B",
+      "O"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [],
+    "to_scale": false
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as Fr\n\ndef cross(o, a, b):\n    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])\n\ndef covered(seg, segs):\n    \"\"\"Is the target segment fully drawn by collinear option segments (same orientation, no rotation)?\"\"\"\n    a, b = seg\n    d = (b[0] - a[0], b[1] - a[1])\n    L = d[0] * d[0] + d[1] * d[1]\n    spans = []\n    for p, q in segs:\n        if cross(a, b, p) == 0 and cross(a, b, q) == 0:\n            tp = Fr((p[0] - a[0]) * d[0] + (p[1] - a[1]) * d[1], L)\n            tq = Fr((q[0] - a[0]) * d[0] + (q[1] - a[1]) * d[1], L)\n            spans.append((min(tp, tq), max(tp, tq)))\n    reach = 0\n    for lo, hi in sorted(spans):\n        if lo <= reach:\n            reach = max(reach, hi)\n    return reach >= 1\n\ndef embedded(target, option):\n    return all(covered(s, option) for s in target)\n\n# 2024-09-13_0900_R25: rectangle 0..4 x 0..2 (y up), pointed tip at (5, 1)\nrect = [((0, 0), (4, 0)), ((4, 0), (4, 2)), ((4, 2), (0, 2)), ((0, 2), (0, 0))]\ntip = [((4, 2), (5, 1)), ((5, 1), (4, 0))]\nmid_h, mid_v = ((0, 1), (4, 1)), ((2, 0), (2, 2))\ndl_lo, dl_hi = ((0, 0), (2, 1)), ((2, 1), (4, 2))      # diagonal bottom-left to top-right, in halves\ndr_lo, dr_hi = ((4, 0), (2, 1)), ((2, 1), (0, 2))      # diagonal bottom-right to top-left, in halves\nX = rect + tip + [mid_h, dl_lo, dr_lo]\nfull = rect + tip + [mid_h, mid_v, dl_lo, dl_hi, dr_lo, dr_hi]\nfigs = {1: full,\n        2: [s for s in full if s != dr_lo],             # no centre-to-bottom-right half\n        3: [s for s in full if s != mid_h] + [((0, 1), (Fr(3, 2), 1))],   # midline broken inside\n        4: [s for s in full if s != dl_lo]}             # no bottom-left-to-centre half\noptions = {\"A\": 3, \"B\": 4, \"C\": 2, \"D\": 1}\nhits = [k for k, f in options.items() if embedded(X, figs[f])]\nassert hits == [\"D\"], hits\n# rotation is not allowed: X turned upside down is not found in figure 1 drawn without the upper diagonal halves\nflipped = [((p[0], 2 - p[1]), (q[0], 2 - q[1])) for p, q in X]\nassert not embedded(flipped, [s for s in full if s not in (dl_hi, dr_hi)])\nassert embedded(X, [s for s in full if s not in (dl_hi, dr_hi)])\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "figure.pattern-completion",
+  "topic": "Figure-based",
+  "subtopic": "Pattern completion",
+  "name": "Symmetry pattern completion",
+  "statement": "\\text{Use the figure's line(s) of symmetry: the missing quarter is the mirror image of its partner across that line.}",
+  "conditions": [],
+  "derivation": [
+   "Look at the complete half: find the line it is symmetric about (vertical, horizontal or diagonal).",
+   "The missing quarter's partner is the quarter on the other side of that same line.",
+   "Reflect each line of the partner: same distance from the axis, on the other side.",
+   "Match the reflected set of lines with the options, line by line."
+  ],
+  "visual_proof": "The circle's top-left and top-right quarters are mirror images across the vertical diameter, so the bottom-right quarter is the bottom-left quarter reflected across it.",
+  "shortcut": "Check the one line that differs between options (here the short slanted line) after reflecting it.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_R10",
+   "answer": "A",
+   "steps": [
+    "Top-left and top-right quarters mirror each other across the vertical diameter.",
+    "So bottom-right = bottom-left reflected across the vertical diameter.",
+    "Bottom-left has two square sides, centre-to-corner line, chord, and the line from the axis midpoint to the corner.",
+    "Option A shows the same five lines reflected."
+   ]
+  },
+  "common_traps": [
+   "Reflecting across the horizontal diameter (copying the top-right quarter): gives an option with half lines like B or C.",
+   "Copying the bottom-left quarter without reflecting it: slanted lines point the wrong way.",
+   "Missing a short line that starts on the axis: picks D, whose square side is cut short."
+  ],
+  "related_ids": [
+   "figure.mirror-image",
+   "figure.embedded-figure",
+   "figure.paper-fold-unfold"
+  ],
+  "diagram": {
+   "alt_text": "Bottom half of the circle: the bottom-left quarter's lines and their mirror images in the bottom-right quarter across the vertical diameter.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "S1": [
+      -140,
+      0
+     ],
+     "S2": [
+      -140,
+      -136
+     ],
+     "S3": [
+      0,
+      -136
+     ],
+     "C1": [
+      -195,
+      0
+     ],
+     "C2": [
+      0,
+      -195
+     ],
+     "M1": [
+      -70,
+      0
+     ],
+     "T1": [
+      140,
+      0
+     ],
+     "T2": [
+      140,
+      -136
+     ],
+     "D1": [
+      195,
+      0
+     ],
+     "N1": [
+      70,
+      0
+     ]
+    },
+    "segments": [
+     [
+      "S1",
+      "S2"
+     ],
+     [
+      "S2",
+      "S3"
+     ],
+     [
+      "O",
+      "S2"
+     ],
+     [
+      "C1",
+      "C2"
+     ],
+     [
+      "M1",
+      "S2"
+     ],
+     [
+      "T1",
+      "T2"
+     ],
+     [
+      "T2",
+      "S3"
+     ],
+     [
+      "O",
+      "T2"
+     ],
+     [
+      "D1",
+      "C2"
+     ],
+     [
+      "N1",
+      "T2"
+     ],
+     [
+      "C1",
+      "D1"
+     ],
+     [
+      "O",
+      "C2"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 195
+     }
+    ],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       -100,
+       20
+      ],
+      "text": "given"
+     },
+     {
+      "at": [
+       100,
+       20
+      ],
+      "text": "mirror"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "def mirror_x(segs):\n    return {frozenset((-x, y) for x, y in s) for s in segs}\n\ndef norm(segs):\n    return {frozenset(s) for s in segs}\n\n# 2024-09-09_1600_R10. Centre of the circle at the origin, x right, y down, radius 195.\n# The top half is symmetric about the vertical diameter, so the missing bottom-right quarter\n# is the mirror image of the bottom-left quarter across that diameter.\nBL = norm([((-140, 0), (-140, 136)),          # square side\n           ((-140, 136), (0, 136)),           # square side\n           ((0, 0), (-140, 136)),             # centre to square corner\n           ((-195, 0), (0, 195)),             # chord across the quarter\n           ((-70, 0), (-140, 136))])          # axis midpoint to square corner\nwant = mirror_x(BL)\noptions = {\n    \"A\": norm([((140, 0), (140, 136)), ((140, 136), (0, 136)), ((0, 0), (140, 136)),\n               ((195, 0), (0, 195)), ((70, 0), (140, 136))]),\n    \"B\": norm([((140, 0), (140, 136)), ((140, 136), (0, 136)), ((0, 0), (95, 95)),\n               ((195, 0), (0, 195)), ((50, 48), (0, 134))]),\n    \"C\": norm([((140, 0), (140, 136)), ((140, 136), (0, 136)), ((0, 0), (95, 95)),\n               ((195, 0), (0, 195)), ((67, 0), (0, 136))]),\n    \"D\": norm([((135, 55), (135, 136)), ((135, 136), (0, 136)), ((0, 0), (135, 136)),\n               ((195, 0), (0, 195)), ((67, 0), (0, 136))]),\n}\nassert [k for k, v in options.items() if v == want] == [\"A\"]\n# reflecting across the wrong (horizontal) axis gives a different picture\nassert {frozenset((x, -y) for x, y in seg) for seg in BL} != options[\"A\"]\nassert {frozenset((-x, -y) for x, y in seg) for seg in BL} != options[\"A\"]\n# constructed: an L-shape in the left half mirrors to a reversed L\nassert mirror_x(norm([((-2, 0), (-2, 2)), ((-2, 2), (-1, 2))])) == norm([((2, 0), (2, 2)), ((2, 2), (1, 2))])\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

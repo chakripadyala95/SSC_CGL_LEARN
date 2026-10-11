@@ -1,0 +1,2155 @@
+{
+ "section": "QUANT",
+ "status": "APPROVED",
+ "topics": [
+  {
+   "topic": "Number System",
+   "slug": "number-system",
+   "subtopics": [
+    {
+     "name": "Divisibility",
+     "question_types": [
+      "find missing digit for divisibility",
+      "divisibility by 11",
+      "divisibility by 6 / 36 / 40",
+      "divisibility by 8",
+      "largest multiple of n",
+      "a^n - b^n divisibility"
+     ],
+     "question_count": 23
+    },
+    {
+     "name": "Remainders",
+     "question_types": [
+      "remainder of large power",
+      "remainder by divisor factor",
+      "remainder by digit sum",
+      "remainder of expression"
+     ],
+     "question_count": 6
+    },
+    {
+     "name": "Fractions",
+     "question_types": [
+      "largest/smallest fraction"
+     ],
+     "question_count": 2
+    },
+    {
+     "name": "Series sums",
+     "question_types": [
+      "sum of first n naturals"
+     ],
+     "question_count": 1
+    },
+    {
+     "name": "LCM & HCF",
+     "question_types": [],
+     "question_count": 0
+    }
+   ],
+   "question_count": 32
+  },
+  {
+   "topic": "Simplification",
+   "slug": "simplification",
+   "subtopics": [
+    {
+     "name": "BODMAS",
+     "question_types": [
+      "BODMAS with 'of'",
+      "fraction BODMAS",
+      "vinculum expression",
+      "nested brackets",
+      "mixed fractions"
+     ],
+     "question_count": 24
+    },
+    {
+     "name": "Decimals",
+     "question_types": [
+      "decimal BODMAS"
+     ],
+     "question_count": 1
+    },
+    {
+     "name": "Surds",
+     "question_types": [
+      "surd simplification"
+     ],
+     "question_count": 1
+    }
+   ],
+   "question_count": 26
+  },
+  {
+   "topic": "Percentage",
+   "slug": "percentage",
+   "subtopics": [
+    {
+     "name": "Basic percentage",
+     "question_types": [
+      "percent more/less",
+      "percent of total",
+      "reverse percentage",
+      "percent change"
+     ],
+     "question_count": 8
+    },
+    {
+     "name": "Successive change & discount",
+     "question_types": [
+      "single equivalent of two changes",
+      "successive discounts",
+      "buy x get y free",
+      "constant growth",
+      "net change after rise and fall"
+     ],
+     "question_count": 16
+    },
+    {
+     "name": "Income, expenditure & savings",
+     "question_types": [
+      "percent change in savings",
+      "percent change in expenditure"
+     ],
+     "question_count": 7
+    },
+    {
+     "name": "Elections",
+     "question_types": [
+      "total votes from margin",
+      "valid/invalid votes",
+      "votes with non-voters"
+     ],
+     "question_count": 7
+    },
+    {
+     "name": "Price & consumption",
+     "question_types": [
+      "consumption cut for fixed expenditure",
+      "expenditure change"
+     ],
+     "question_count": 2
+    }
+   ],
+   "question_count": 40
+  },
+  {
+   "topic": "Ratio & Proportion",
+   "slug": "ratio-proportion",
+   "subtopics": [
+    {
+     "name": "Ratio basics",
+     "question_types": [
+      "numbers from ratio and difference",
+      "equal-ratio expression",
+      "coins in ratio"
+     ],
+     "question_count": 4
+    },
+    {
+     "name": "Compound ratio",
+     "question_types": [
+      "combine a:b and b:c"
+     ],
+     "question_count": 4
+    },
+    {
+     "name": "Proportionals",
+     "question_types": [
+      "mean proportional",
+      "fourth proportional",
+      "missing term in proportion"
+     ],
+     "question_count": 8
+    },
+    {
+     "name": "Ratio change",
+     "question_types": [
+      "new ratio after adding",
+      "initial count from ratio change"
+     ],
+     "question_count": 4
+    },
+    {
+     "name": "Variation",
+     "question_types": [
+      "direct/inverse variation",
+      "joint variation",
+      "unitary method"
+     ],
+     "question_count": 6
+    },
+    {
+     "name": "Partnership",
+     "question_types": [
+      "profit share by capital"
+     ],
+     "question_count": 2
+    },
+    {
+     "name": "Income & expenditure ratio",
+     "question_types": [
+      "savings from income and expense ratios"
+     ],
+     "question_count": 2
+    }
+   ],
+   "question_count": 30
+  },
+  {
+   "topic": "Average",
+   "slug": "average",
+   "subtopics": [
+    {
+     "name": "Basic average",
+     "question_types": [
+      "average of marks",
+      "age of added member"
+     ],
+     "question_count": 2
+    },
+    {
+     "name": "Weighted & combined average",
+     "question_types": [
+      "combined class average",
+      "average of two groups",
+      "ratio from combined average"
+     ],
+     "question_count": 13
+    },
+    {
+     "name": "Average of series",
+     "question_types": [
+      "average of first n squares",
+      "average of first n naturals",
+      "consecutive numbers"
+     ],
+     "question_count": 6
+    },
+    {
+     "name": "Replacement",
+     "question_types": [
+      "new member after replacement"
+     ],
+     "question_count": 1
+    }
+   ],
+   "question_count": 22
+  },
+  {
+   "topic": "Profit & Loss",
+   "slug": "profit-loss",
+   "subtopics": [
+    {
+     "name": "Profit & loss basics",
+     "question_types": [
+      "profit % from CP/SP",
+      "gain as fraction of SP",
+      "overall gain on two items",
+      "SP for target profit"
+     ],
+     "question_count": 19
+    },
+    {
+     "name": "Discount & marked price",
+     "question_types": [
+      "SP from MP and discount",
+      "markup then discount",
+      "CP from MP, discount, gain"
+     ],
+     "question_count": 10
+    },
+    {
+     "name": "Successive discount",
+     "question_types": [
+      "single equivalent discount",
+      "compare discount schemes",
+      "find second discount",
+      "SP after successive discounts"
+     ],
+     "question_count": 15
+    },
+    {
+     "name": "False weight",
+     "question_types": [
+      "false weight profit %",
+      "false weight with markup"
+     ],
+     "question_count": 8
+    }
+   ],
+   "question_count": 52
+  },
+  {
+   "topic": "SI/CI",
+   "slug": "si-ci",
+   "subtopics": [
+    {
+     "name": "Simple interest",
+     "question_types": [
+      "rate from principal and amount",
+      "time from SI",
+      "principal from amount",
+      "split sum at two rates",
+      "part repayment of principal"
+     ],
+     "question_count": 29
+    },
+    {
+     "name": "Instalments & present value",
+     "question_types": [
+      "present worth to settle debt",
+      "instalment rate"
+     ],
+     "question_count": 2
+    },
+    {
+     "name": "Compound interest",
+     "question_types": [],
+     "question_count": 0
+    }
+   ],
+   "question_count": 31
+  },
+  {
+   "topic": "Time & Work",
+   "slug": "time-work",
+   "subtopics": [
+    {
+     "name": "Pipes & cisterns",
+     "question_types": [
+      "combined filling time",
+      "fill and leak",
+      "pipe closed midway",
+      "alternate turns",
+      "inlets and outlets"
+     ],
+     "question_count": 28
+    },
+    {
+     "name": "Work & efficiency",
+     "question_types": [
+      "partner's solo time",
+      "fraction of work left"
+     ],
+     "question_count": 3
+    }
+   ],
+   "question_count": 31
+  },
+  {
+   "topic": "Time-Speed-Distance",
+   "slug": "time-speed-distance",
+   "subtopics": [
+    {
+     "name": "Relative speed & chase",
+     "question_types": [
+      "thief and police chase",
+      "catch-up distance",
+      "meeting time"
+     ],
+     "question_count": 11
+    },
+    {
+     "name": "Circular track",
+     "question_types": [
+      "first meeting same direction",
+      "first meeting opposite direction",
+      "meeting at starting point"
+     ],
+     "question_count": 9
+    },
+    {
+     "name": "Boats & streams",
+     "question_types": [
+      "speed in still water",
+      "speed of stream",
+      "upstream/downstream time"
+     ],
+     "question_count": 8
+    },
+    {
+     "name": "Trains",
+     "question_types": [
+      "trains crossing"
+     ],
+     "question_count": 2
+    },
+    {
+     "name": "Average speed",
+     "question_types": [
+      "average speed equal distances"
+     ],
+     "question_count": 1
+    }
+   ],
+   "question_count": 31
+  },
+  {
+   "topic": "Mixture & Alligation",
+   "slug": "mixture-alligation",
+   "subtopics": [
+    {
+     "name": "Alligation",
+     "question_types": [
+      "mean price of mixture",
+      "quantity of cheaper ingredient",
+      "price of costlier variety"
+     ],
+     "question_count": 8
+    },
+    {
+     "name": "Mixture ratios & concentration",
+     "question_types": [
+      "add water to reach ratio",
+      "combine two containers"
+     ],
+     "question_count": 4
+    }
+   ],
+   "question_count": 12
+  },
+  {
+   "topic": "Algebra",
+   "slug": "algebra",
+   "subtopics": [
+    {
+     "name": "Linear equations",
+     "question_types": [
+      "solve linear equation",
+      "word problem in two variables",
+      "infinite/no solution condition",
+      "three-variable system"
+     ],
+     "question_count": 31
+    },
+    {
+     "name": "Algebraic identities",
+     "question_types": [
+      "a^3+b^3+c^3-3abc",
+      "value from a+b and ab",
+      "cube expansion",
+      "difference of squares simplification"
+     ],
+     "question_count": 33
+    },
+    {
+     "name": "Reciprocal identities",
+     "question_types": [
+      "x^2+1/x^2 from x+1/x",
+      "x-1/x from x+1/x",
+      "higher powers of x+1/x"
+     ],
+     "question_count": 5
+    },
+    {
+     "name": "Factorisation & polynomials",
+     "question_types": [
+      "remainder of polynomial division",
+      "quadratic factorisation"
+     ],
+     "question_count": 7
+    },
+    {
+     "name": "Progressions & means",
+     "question_types": [
+      "nth term of AP",
+      "AP instalments",
+      "mean proportional",
+      "minimum of reciprocal sum"
+     ],
+     "question_count": 4
+    },
+    {
+     "name": "Age problems",
+     "question_types": [
+      "ratios at two time points",
+      "age multiples past/future",
+      "family age relations"
+     ],
+     "question_count": 13
+    }
+   ],
+   "question_count": 93
+  },
+  {
+   "topic": "Geometry",
+   "slug": "geometry",
+   "subtopics": [
+    {
+     "name": "Triangles",
+     "question_types": [
+      "angle chasing",
+      "isosceles exterior angle",
+      "triangle inequality / integer sides",
+      "angle bisector theorem",
+      "altitude on hypotenuse",
+      "similar triangles"
+     ],
+     "question_count": 34
+    },
+    {
+     "name": "Congruence",
+     "question_types": [
+      "congruence criteria",
+      "CPCT"
+     ],
+     "question_count": 10
+    },
+    {
+     "name": "Circles: chords & angles",
+     "question_types": [
+      "chord distance from centre",
+      "angle at centre vs circumference",
+      "angle in semicircle",
+      "cyclic quadrilateral angle",
+      "circle through three points"
+     ],
+     "question_count": 29
+    },
+    {
+     "name": "Circles: tangents",
+     "question_types": [
+      "tangent length from external point",
+      "direct common tangent length",
+      "angle between tangents",
+      "alternate segment theorem",
+      "tangent-secant segments"
+     ],
+     "question_count": 18
+    },
+    {
+     "name": "Quadrilaterals",
+     "question_types": [
+      "kite angle chasing",
+      "diagonal division ratio",
+      "rhombus diagonals"
+     ],
+     "question_count": 5
+    }
+   ],
+   "question_count": 96
+  },
+  {
+   "topic": "Mensuration",
+   "slug": "mensuration",
+   "subtopics": [
+    {
+     "name": "Circle & sector",
+     "question_types": [
+      "sector perimeter",
+      "sector area from arc length",
+      "arc length",
+      "radius from circumference",
+      "clock hand angle"
+     ],
+     "question_count": 23
+    },
+    {
+     "name": "Triangles & quadrilaterals",
+     "question_types": [
+      "equilateral triangle area",
+      "rectangle area from perimeter",
+      "triangle area"
+     ],
+     "question_count": 7
+    },
+    {
+     "name": "Cylinder & cone",
+     "question_types": [
+      "volume of cylinder",
+      "cone volume",
+      "curved surface area",
+      "TSA to CSA ratio"
+     ],
+     "question_count": 20
+    },
+    {
+     "name": "Cube & cuboid",
+     "question_types": [
+      "cuboid volume",
+      "longest diagonal",
+      "cube side from surface area"
+     ],
+     "question_count": 8
+    },
+    {
+     "name": "Sphere & hemisphere",
+     "question_types": [],
+     "question_count": 0
+    }
+   ],
+   "question_count": 58
+  },
+  {
+   "topic": "Trigonometry",
+   "slug": "trigonometry",
+   "subtopics": [
+    {
+     "name": "Identities",
+     "question_types": [
+      "simplify trig expression",
+      "value given tan/sec",
+      "sec^2-tan^2 expressions",
+      "sin^4+cos^4",
+      "double-angle simplification"
+     ],
+     "question_count": 46
+    },
+    {
+     "name": "Multiple & compound angles",
+     "question_types": [
+      "triple angle identity",
+      "multiple-angle reduction"
+     ],
+     "question_count": 2
+    },
+    {
+     "name": "Complementary angles",
+     "question_types": [
+      "complementary pair evaluation",
+      "sin A = cos B find angle",
+      "tan product equals one"
+     ],
+     "question_count": 11
+    },
+    {
+     "name": "Standard values",
+     "question_types": [
+      "evaluate at standard angles",
+      "angle where sin = cos"
+     ],
+     "question_count": 7
+    },
+    {
+     "name": "Trig equations",
+     "question_types": [
+      "solve for angle",
+      "tan + cot = 2",
+      "quadratic in sin"
+     ],
+     "question_count": 8
+    },
+    {
+     "name": "Ratios from a right triangle",
+     "question_types": [
+      "ratios from given ratio",
+      "expression from cosec/tan value"
+     ],
+     "question_count": 7
+    },
+    {
+     "name": "Maximum & minimum",
+     "question_types": [
+      "max of a sin + b cos"
+     ],
+     "question_count": 3
+    },
+    {
+     "name": "Heights & distances",
+     "question_types": [
+      "ladder against wall"
+     ],
+     "question_count": 1
+    }
+   ],
+   "question_count": 85
+  },
+  {
+   "topic": "Data Interpretation",
+   "slug": "data-interpretation",
+   "subtopics": [
+    {
+     "name": "Table",
+     "question_types": [
+      "average of column",
+      "percentage from table",
+      "ratio of totals",
+      "percent change",
+      "count meeting condition"
+     ],
+     "question_count": 66
+    },
+    {
+     "name": "Pie chart",
+     "question_types": [
+      "value from percentage",
+      "central angle",
+      "difference of shares",
+      "degrees to value"
+     ],
+     "question_count": 20
+    },
+    {
+     "name": "Bar graph",
+     "question_types": [
+      "average from bar graph",
+      "ratio of sums",
+      "percent increase/decrease",
+      "compare totals"
+     ],
+     "question_count": 24
+    }
+   ],
+   "question_count": 110
+  },
+  {
+   "topic": "Statistics",
+   "slug": "statistics",
+   "subtopics": [
+    {
+     "name": "Mean, median & mode",
+     "question_types": [
+      "mean and mode from frequency graph"
+     ],
+     "question_count": 1
+    }
+   ],
+   "question_count": 1
+  }
+ ],
+ "entries": [
+  {
+   "id": "number-system.divisibility-rules",
+   "topic": "Number System",
+   "subtopic": "Divisibility",
+   "name": "Divisibility rules (2, 3, 4, 5, 8, 9)",
+   "statement": "2/5/10: last digit;\\ 4: last two digits;\\ 8: last three digits;\\ 3/9: digit sum;\\ \\text{largest } n\\text{-digit multiple of } d=(10^n-1)-((10^n-1)\\bmod d)",
+   "visual": false,
+   "seen": true,
+   "question_count": 16
+  },
+  {
+   "id": "number-system.divisibility-by-11",
+   "topic": "Number System",
+   "subtopic": "Divisibility",
+   "name": "Divisibility by 11",
+   "statement": "11\\mid N \\iff (\\text{sum of odd-place digits}) - (\\text{sum of even-place digits}) \\equiv 0 \\pmod{11}",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "number-system.divisibility-composite",
+   "topic": "Number System",
+   "subtopic": "Divisibility",
+   "name": "Divisibility by composite numbers",
+   "statement": "\\text{If } n=ab,\\ \\gcd(a,b)=1:\\ n\\mid N \\iff a\\mid N \\text{ and } b\\mid N\\ (6=2\\cdot3,\\ 36=4\\cdot9,\\ 40=8\\cdot5)",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "number-system.an-bn-divisibility",
+   "topic": "Number System",
+   "subtopic": "Divisibility",
+   "name": "Divisibility of a^n - b^n",
+   "statement": "(a-b)\\mid a^n-b^n \\ \\forall n;\\ (a+b)\\mid a^n-b^n \\text{ for even } n;\\ (a+b)\\mid a^n+b^n \\text{ for odd } n",
+   "visual": false,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "number-system.remainder-cyclicity",
+   "topic": "Number System",
+   "subtopic": "Remainders",
+   "name": "Remainder cycles of powers",
+   "statement": "a^n \\bmod m \\text{ repeats with a cycle; reduce } n \\text{ modulo the cycle length}",
+   "visual": false,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "number-system.remainder-theorem",
+   "topic": "Number System",
+   "subtopic": "Remainders",
+   "name": "Remainder rules (substitution, divisor factor)",
+   "statement": "(a\\cdot b)\\bmod m=(a\\bmod m)(b\\bmod m)\\bmod m;\\ N\\equiv r \\pmod D,\\ d\\mid D \\Rightarrow N\\equiv r \\pmod d",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "number-system.compare-fractions",
+   "topic": "Number System",
+   "subtopic": "Fractions",
+   "name": "Comparing fractions",
+   "statement": "\\frac ab > \\frac cd \\iff ad > bc\\ (b,d>0)",
+   "visual": false,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "number-system.natural-number-sums",
+   "topic": "Number System",
+   "subtopic": "Series sums",
+   "name": "Sums of first n naturals, squares, cubes",
+   "statement": "\\Sigma k=\\frac{n(n+1)}2;\\ \\Sigma k^2=\\frac{n(n+1)(2n+1)}6;\\ \\Sigma k^3=\\left(\\frac{n(n+1)}2\\right)^2",
+   "visual": false,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "number-system.lcm-hcf",
+   "topic": "Number System",
+   "subtopic": "LCM & HCF",
+   "name": "LCM and HCF",
+   "statement": "\\mathrm{LCM}(a,b)\\times\\mathrm{HCF}(a,b)=ab;\\ \\text{events repeating every } t_1,t_2 \\text{ coincide every } \\mathrm{LCM}(t_1,t_2)",
+   "visual": false,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "simplification.bodmas",
+   "topic": "Simplification",
+   "subtopic": "BODMAS",
+   "name": "VBODMAS order of operations",
+   "statement": "\\text{Vinculum} \\to (\\,)\\{\\,\\}[\\,] \\to \\text{Of} \\to \\div \\to \\times \\to + \\to -;\\ a\\div b \\text{ of } c=\\frac{a}{bc}",
+   "visual": false,
+   "seen": true,
+   "question_count": 25
+  },
+  {
+   "id": "simplification.fraction-decimal-operations",
+   "topic": "Simplification",
+   "subtopic": "Decimals",
+   "name": "Fraction and decimal arithmetic",
+   "statement": "\\frac ab \\pm \\frac cd=\\frac{ad\\pm bc}{bd};\\ \\text{convert mixed numbers and decimals to fractions before combining}",
+   "visual": false,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "simplification.surd-rationalisation",
+   "topic": "Simplification",
+   "subtopic": "Surds",
+   "name": "Rationalising surds",
+   "statement": "\\frac{1}{\\sqrt a+\\sqrt b}=\\frac{\\sqrt a-\\sqrt b}{a-b}",
+   "visual": false,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "percentage.percent-of-quantity",
+   "topic": "Percentage",
+   "subtopic": "Basic percentage",
+   "name": "Percent of a quantity",
+   "statement": "x\\%\\text{ of } N=\\frac{x}{100}N;\\ x\\%\\text{ of } y\\%\\text{ of } N=\\frac{xy}{10^4}N;\\ \\text{share}\\%=\\frac{\\text{part}}{\\text{whole}}\\times100",
+   "visual": true,
+   "seen": true,
+   "question_count": 32
+  },
+  {
+   "id": "percentage.percent-change",
+   "topic": "Percentage",
+   "subtopic": "Basic percentage",
+   "name": "Percentage change",
+   "statement": "\\%\\text{ change}=\\frac{\\text{new}-\\text{old}}{\\text{old}}\\times100",
+   "visual": true,
+   "seen": true,
+   "question_count": 18
+  },
+  {
+   "id": "percentage.more-than-less-than",
+   "topic": "Percentage",
+   "subtopic": "Basic percentage",
+   "name": "A is r% more than B, so B is ?% less than A",
+   "statement": "\\text{If } A=B(1+\\tfrac r{100}) \\text{ then } B \\text{ is } \\frac{r}{100+r}\\times100\\%\\text{ less than } A",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "percentage.reverse-percentage",
+   "topic": "Percentage",
+   "subtopic": "Basic percentage",
+   "name": "Reverse percentage (find the original)",
+   "statement": "\\text{original}=\\frac{\\text{final}}{1\\pm r/100}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "percentage.successive-change",
+   "topic": "Percentage",
+   "subtopic": "Successive change & discount",
+   "name": "Successive change and constant growth",
+   "statement": "\\text{net }\\%=a+b+\\frac{ab}{100}\\ (- \\text{ for decreases});\\ P_n=P_0\\left(1+\\frac r{100}\\right)^n",
+   "visual": true,
+   "seen": true,
+   "question_count": 27
+  },
+  {
+   "id": "percentage.free-items-discount",
+   "topic": "Percentage",
+   "subtopic": "Successive change & discount",
+   "name": "Buy x get y free",
+   "statement": "\\text{effective discount}=\\frac{y}{x+y}\\times100\\%",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "percentage.income-expenditure-savings",
+   "topic": "Percentage",
+   "subtopic": "Income, expenditure & savings",
+   "name": "Income = expenditure + savings",
+   "statement": "I=E+S;\\ \\Delta S=\\Delta I-\\Delta E\\ (\\text{in absolute terms})",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "percentage.election",
+   "topic": "Percentage",
+   "subtopic": "Elections",
+   "name": "Election vote equations",
+   "statement": "\\text{valid}=\\text{polled}\\times(1-\\text{invalid}\\%);\\ \\text{margin}=(p_1-p_2)\\%\\times\\text{valid}",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "percentage.price-consumption",
+   "topic": "Percentage",
+   "subtopic": "Price & consumption",
+   "name": "Price x consumption = expenditure",
+   "statement": "\\text{To keep expenditure fixed after a } r\\%\\text{ price rise, cut consumption by } \\frac{r}{100+r}\\times100\\%",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "ratio-proportion.ratio-to-parts",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Ratio basics",
+   "name": "Dividing a quantity in a ratio",
+   "statement": "\\text{In } a:b,\\ \\text{parts}=\\frac{a}{a+b}T,\\ \\frac{b}{a+b}T",
+   "visual": true,
+   "seen": true,
+   "question_count": 16
+  },
+  {
+   "id": "ratio-proportion.simplify-ratio",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Ratio basics",
+   "name": "Forming and simplifying a ratio",
+   "statement": "a:b=\\frac{a}{\\gcd(a,b)}:\\frac{b}{\\gcd(a,b)};\\ \\text{ratio of totals}=\\Sigma a_i:\\Sigma b_i",
+   "visual": true,
+   "seen": true,
+   "question_count": 12
+  },
+  {
+   "id": "ratio-proportion.equal-ratios",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Ratio basics",
+   "name": "Equal ratios (addendo, componendo-dividendo)",
+   "statement": "\\frac ab=\\frac cd=k \\Rightarrow \\frac{a+c}{b+d}=k,\\ \\frac{a+b}{a-b}=\\frac{c+d}{c-d}",
+   "visual": false,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "ratio-proportion.combine-ratios",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Compound ratio",
+   "name": "Combining a:b and b:c",
+   "statement": "a:b=p:q,\\ b:c=r:s \\Rightarrow a:b:c=pr:qr:qs",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "ratio-proportion.proportionals",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Proportionals",
+   "name": "Mean, third and fourth proportional",
+   "statement": "\\text{mean}=\\sqrt{ab};\\ \\text{third}=\\frac{b^2}a;\\ a:b=c:x \\Rightarrow x=\\frac{bc}a",
+   "visual": false,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "ratio-proportion.proportion-unitary",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Proportionals",
+   "name": "Proportion and the unitary method",
+   "statement": "a:b=c:d \\iff ad=bc;\\ \\text{value of 1 unit}=\\frac{\\text{total}}{\\text{units}}",
+   "visual": false,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "ratio-proportion.ratio-change",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Ratio change",
+   "name": "Ratio after adding/removing",
+   "statement": "\\frac{a+x}{b+y}=\\frac pq\\ \\text{with } a=ka_0,\\ b=kb_0 \\Rightarrow \\text{solve for } k",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "ratio-proportion.variation",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Variation",
+   "name": "Direct, inverse and joint variation",
+   "statement": "y\\propto x \\Rightarrow y=kx;\\ y\\propto \\tfrac1x \\Rightarrow xy=k;\\ y\\propto \\tfrac{x}{z} \\Rightarrow y=k\\tfrac{x}{z}",
+   "visual": false,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "ratio-proportion.partnership",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Partnership",
+   "name": "Partnership profit sharing",
+   "statement": "\\text{profit share}\\propto \\text{capital}\\times\\text{time}",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "ratio-proportion.income-expenditure-ratio",
+   "topic": "Ratio & Proportion",
+   "subtopic": "Income & expenditure ratio",
+   "name": "Income and expenditure in ratios",
+   "statement": "I_1:I_2=a:b,\\ E_1:E_2=c:d \\Rightarrow S_i=I_i-E_i;\\ \\text{set } I_1=ax, I_2=bx, E_1=cy, E_2=dy",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "average.arithmetic-mean",
+   "topic": "Average",
+   "subtopic": "Basic average",
+   "name": "Arithmetic mean",
+   "statement": "\\bar x=\\frac{\\Sigma x_i}{n};\\ \\text{sum}=n\\times\\bar x",
+   "visual": false,
+   "seen": true,
+   "question_count": 18
+  },
+  {
+   "id": "average.weighted-average",
+   "topic": "Average",
+   "subtopic": "Weighted & combined average",
+   "name": "Weighted / combined average",
+   "statement": "\\bar x=\\frac{n_1\\bar x_1+n_2\\bar x_2}{n_1+n_2}",
+   "visual": true,
+   "seen": true,
+   "question_count": 14
+  },
+  {
+   "id": "average.replacement",
+   "topic": "Average",
+   "subtopic": "Replacement",
+   "name": "Replacement of a member",
+   "statement": "\\text{new}-\\text{old}=n\\times(\\text{change in average})",
+   "visual": false,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "average.ap-mean-middle-term",
+   "topic": "Average",
+   "subtopic": "Average of series",
+   "name": "Average of an AP / consecutive numbers",
+   "statement": "\\text{mean of an AP}=\\frac{\\text{first}+\\text{last}}{2}=\\text{middle term};\\ \\text{mean of } 1..n=\\frac{n+1}{2}",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "profit-loss.profit-percent",
+   "topic": "Profit & Loss",
+   "subtopic": "Profit & loss basics",
+   "name": "Profit / loss percent and CP from SP",
+   "statement": "P\\%=\\frac{SP-CP}{CP}\\times100;\\ SP=CP\\left(1\\pm\\frac P{100}\\right) \\iff CP=\\frac{SP}{1\\pm P/100}",
+   "visual": true,
+   "seen": true,
+   "question_count": 25
+  },
+  {
+   "id": "profit-loss.gain-fraction-of-sp",
+   "topic": "Profit & Loss",
+   "subtopic": "Profit & loss basics",
+   "name": "Gain as a fraction of SP",
+   "statement": "\\text{If gain}=\\tfrac{a}{b}SP \\text{ then } CP=\\tfrac{b-a}{b}SP,\\ \\text{gain}\\%=\\frac{a}{b-a}\\times100",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "profit-loss.overall-gain",
+   "topic": "Profit & Loss",
+   "subtopic": "Profit & loss basics",
+   "name": "Overall gain on parts sold at different rates",
+   "statement": "\\text{overall }\\%=\\frac{\\Sigma CP_i\\,p_i}{\\Sigma CP_i};\\ \\text{target SP of rest}=\\text{target total}-\\text{SP already realised}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "profit-loss.discount-on-marked-price",
+   "topic": "Profit & Loss",
+   "subtopic": "Discount & marked price",
+   "name": "Discount on marked price",
+   "statement": "SP=MP\\left(1-\\frac d{100}\\right);\\ d\\%=\\frac{MP-SP}{MP}\\times100",
+   "visual": true,
+   "seen": true,
+   "question_count": 10
+  },
+  {
+   "id": "profit-loss.markup-discount",
+   "topic": "Profit & Loss",
+   "subtopic": "Discount & marked price",
+   "name": "Markup then discount",
+   "statement": "\\frac{SP}{CP}=\\left(1+\\frac m{100}\\right)\\left(1-\\frac d{100}\\right);\\ \\frac{MP}{CP}=\\frac{100+p}{100-d}",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "profit-loss.successive-discount",
+   "topic": "Profit & Loss",
+   "subtopic": "Successive discount",
+   "name": "Successive discounts / gains",
+   "statement": "\\text{single equivalent of } d_1,d_2=d_1+d_2-\\frac{d_1d_2}{100};\\ \\text{successive gains } a,b: a+b+\\frac{ab}{100}",
+   "visual": true,
+   "seen": true,
+   "question_count": 9
+  },
+  {
+   "id": "profit-loss.false-weight",
+   "topic": "Profit & Loss",
+   "subtopic": "False weight",
+   "name": "False weights",
+   "statement": "\\text{gain}\\%=\\frac{\\text{true}-\\text{false}}{\\text{false}}\\times100;\\ \\text{with profit } p:\\ \\frac{SP}{CP}=(1+p)\\frac{\\text{true}}{\\text{false}}",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "si-ci.simple-interest",
+   "topic": "SI/CI",
+   "subtopic": "Simple interest",
+   "name": "Simple interest",
+   "statement": "SI=\\frac{PRT}{100};\\ A=P\\left(1+\\frac{RT}{100}\\right);\\ \\text{equal interest on split: } P_1R_1T_1=P_2R_2T_2",
+   "visual": true,
+   "seen": true,
+   "question_count": 30
+  },
+  {
+   "id": "si-ci.instalment-reducing-principal",
+   "topic": "SI/CI",
+   "subtopic": "Instalments & present value",
+   "name": "Instalments and reducing principal",
+   "statement": "\\text{interest each period on outstanding principal; equal instalment } x:\\ \\Sigma x\\left(1+\\tfrac{R t_k}{100}\\right)=A",
+   "visual": true,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "si-ci.present-value",
+   "topic": "SI/CI",
+   "subtopic": "Instalments & present value",
+   "name": "Present worth / true discount",
+   "statement": "PW=\\frac{100A}{100+RT};\\ TD=A-PW",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "si-ci.compound-interest",
+   "topic": "SI/CI",
+   "subtopic": "Compound interest",
+   "name": "Compound interest amount",
+   "statement": "A=P\\left(1+\\frac{R/k}{100}\\right)^{nk}\\ (k=1,2,4 \\text{ per year}),\\ CI=A-P",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "si-ci.ci-si-difference",
+   "topic": "SI/CI",
+   "subtopic": "Compound interest",
+   "name": "CI - SI for 2 and 3 years",
+   "statement": "2\\text{ yr}: P\\left(\\frac R{100}\\right)^2;\\ 3\\text{ yr}: P\\left(\\frac R{100}\\right)^2\\left(3+\\frac R{100}\\right)",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "time-work.combined-rate",
+   "topic": "Time & Work",
+   "subtopic": "Work & efficiency",
+   "name": "Combined work rate",
+   "statement": "\\frac1T=\\frac1a+\\frac1b;\\ T=\\frac{ab}{a+b}",
+   "visual": true,
+   "seen": true,
+   "question_count": 21
+  },
+  {
+   "id": "time-work.lcm-total-work",
+   "topic": "Time & Work",
+   "subtopic": "Work & efficiency",
+   "name": "Total work as LCM; efficiency ratio",
+   "statement": "W=\\mathrm{LCM}(t_i);\\ e_i=\\frac W{t_i};\\ e_1:e_2=t_2:t_1",
+   "visual": true,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "time-work.pipes-net-rate",
+   "topic": "Time & Work",
+   "subtopic": "Pipes & cisterns",
+   "name": "Inlets and outlets: net rate",
+   "statement": "\\frac1T=\\Sigma\\frac1{\\text{fill}_i}-\\Sigma\\frac1{\\text{empty}_j}",
+   "visual": true,
+   "seen": true,
+   "question_count": 16
+  },
+  {
+   "id": "time-work.partial-work",
+   "topic": "Time & Work",
+   "subtopic": "Pipes & cisterns",
+   "name": "Joining, leaving and alternating",
+   "statement": "\\Sigma(\\text{rate}_i\\times\\text{time worked}_i)=1;\\ \\text{alternating: work per cycle}=\\Sigma\\text{rates, then finish the remainder}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "time-work.mdh-formula",
+   "topic": "Time & Work",
+   "subtopic": "Work & efficiency",
+   "name": "Man-days-hours rule",
+   "statement": "\\frac{M_1D_1H_1}{W_1}=\\frac{M_2D_2H_2}{W_2}",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "time-speed-distance.unit-conversion",
+   "topic": "Time-Speed-Distance",
+   "subtopic": "Relative speed & chase",
+   "name": "km/h to m/s conversion",
+   "statement": "1\\ \\text{km/h}=\\frac5{18}\\ \\text{m/s}",
+   "visual": false,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "time-speed-distance.relative-speed",
+   "topic": "Time-Speed-Distance",
+   "subtopic": "Relative speed & chase",
+   "name": "Relative speed (chase and meeting)",
+   "statement": "\\text{same direction: } t=\\frac{\\text{gap}}{v_1-v_2};\\ \\text{opposite: } t=\\frac d{v_1+v_2}",
+   "visual": true,
+   "seen": true,
+   "question_count": 11
+  },
+  {
+   "id": "time-speed-distance.speed-time-inverse",
+   "topic": "Time-Speed-Distance",
+   "subtopic": "Relative speed & chase",
+   "name": "Speed and time inversely proportional",
+   "statement": "\\text{fixed } d:\\ \\frac{t_1}{t_2}=\\frac{v_2}{v_1};\\ \\text{fixed } t:\\ \\frac{d_1}{d_2}=\\frac{v_1}{v_2}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "time-speed-distance.circular-track",
+   "topic": "Time-Speed-Distance",
+   "subtopic": "Circular track",
+   "name": "Meeting on a circular track",
+   "statement": "t_{\\text{first meet}}=\\frac{L}{|v_1\\mp v_2|}\\ (- \\text{ same direction},\\ + \\text{ opposite});\\ \\text{at start: } \\mathrm{LCM}\\left(\\tfrac L{v_1},\\tfrac L{v_2}\\right)",
+   "visual": true,
+   "seen": true,
+   "question_count": 9
+  },
+  {
+   "id": "time-speed-distance.boats-streams",
+   "topic": "Time-Speed-Distance",
+   "subtopic": "Boats & streams",
+   "name": "Boats and streams",
+   "statement": "D=b+s,\\ U=b-s;\\ b=\\frac{D+U}2,\\ s=\\frac{D-U}2",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "time-speed-distance.train-crossing",
+   "topic": "Time-Speed-Distance",
+   "subtopic": "Trains",
+   "name": "Trains crossing",
+   "statement": "t=\\frac{L_1+L_2}{v_1\\pm v_2}\\ (+\\text{ opposite},\\ -\\text{ same direction})",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "time-speed-distance.average-speed-equal-distance",
+   "topic": "Time-Speed-Distance",
+   "subtopic": "Average speed",
+   "name": "Average speed over equal distances",
+   "statement": "\\bar v=\\frac{2v_1v_2}{v_1+v_2}",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "mixture-alligation.alligation-rule",
+   "topic": "Mixture & Alligation",
+   "subtopic": "Alligation",
+   "name": "Rule of alligation",
+   "statement": "\\frac{q_{\\text{cheap}}}{q_{\\text{dear}}}=\\frac{d-m}{m-c}",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "mixture-alligation.weighted-mean-price",
+   "topic": "Mixture & Alligation",
+   "subtopic": "Alligation",
+   "name": "Mean price of a mixture",
+   "statement": "m=\\frac{q_1c_1+q_2c_2}{q_1+q_2}",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "mixture-alligation.add-to-mixture",
+   "topic": "Mixture & Alligation",
+   "subtopic": "Mixture ratios & concentration",
+   "name": "Adding to or combining mixtures",
+   "statement": "\\frac{a+x}{b}=\\frac pq;\\ \\text{combined component}_k=\\Sigma_i V_i\\frac{r_{ik}}{\\Sigma_j r_{ij}}",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "mixture-alligation.repeated-replacement",
+   "topic": "Mixture & Alligation",
+   "subtopic": "Mixture ratios & concentration",
+   "name": "Repeated replacement",
+   "statement": "\\text{left}=V\\left(1-\\frac xV\\right)^n",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "algebra.linear-one-variable",
+   "topic": "Algebra",
+   "subtopic": "Linear equations",
+   "name": "Linear equation in one variable",
+   "statement": "ax+b=c \\Rightarrow x=\\frac{c-b}{a}",
+   "visual": false,
+   "seen": true,
+   "question_count": 12
+  },
+  {
+   "id": "algebra.linear-equations-system",
+   "topic": "Algebra",
+   "subtopic": "Linear equations",
+   "name": "Simultaneous linear equations",
+   "statement": "\\text{eliminate or substitute; } x=\\frac{c_1b_2-c_2b_1}{a_1b_2-a_2b_1};\\ \\text{cyclic 3-variable systems: add all equations first}",
+   "visual": false,
+   "seen": true,
+   "question_count": 24
+  },
+  {
+   "id": "algebra.linear-system-consistency",
+   "topic": "Algebra",
+   "subtopic": "Linear equations",
+   "name": "Unique / no / infinite solutions",
+   "statement": "\\frac{a_1}{a_2}\\neq\\frac{b_1}{b_2}: \\text{unique};\\ \\frac{a_1}{a_2}=\\frac{b_1}{b_2}\\neq\\frac{c_1}{c_2}: \\text{none};\\ \\text{all equal}: \\text{infinite}",
+   "visual": true,
+   "seen": true,
+   "question_count": 14
+  },
+  {
+   "id": "algebra.square-of-sum-difference",
+   "topic": "Algebra",
+   "subtopic": "Algebraic identities",
+   "name": "Square of a sum / difference",
+   "statement": "(a\\pm b)^2=a^2\\pm2ab+b^2;\\ (a+b)^2-(a-b)^2=4ab;\\ (a+b+c)^2=\\Sigma a^2+2\\Sigma ab",
+   "visual": true,
+   "seen": true,
+   "question_count": 15
+  },
+  {
+   "id": "algebra.difference-of-squares",
+   "topic": "Algebra",
+   "subtopic": "Algebraic identities",
+   "name": "Difference of squares",
+   "statement": "a^2-b^2=(a+b)(a-b);\\ x^4+x^2+1=(x^2+1)^2-x^2=(x^2+x+1)(x^2-x+1)",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "algebra.cube-of-sum",
+   "topic": "Algebra",
+   "subtopic": "Algebraic identities",
+   "name": "Cube of a sum / difference",
+   "statement": "(a\\pm b)^3=a^3\\pm b^3\\pm3ab(a\\pm b)",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "algebra.sum-difference-of-cubes",
+   "topic": "Algebra",
+   "subtopic": "Algebraic identities",
+   "name": "Sum / difference of cubes",
+   "statement": "a^3\\pm b^3=(a\\pm b)(a^2\\mp ab+b^2)",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "algebra.a3-b3-c3-3abc",
+   "topic": "Algebra",
+   "subtopic": "Algebraic identities",
+   "name": "a^3+b^3+c^3-3abc",
+   "statement": "a^3+b^3+c^3-3abc=(a+b+c)(a^2+b^2+c^2-ab-bc-ca);\\ a+b+c=0 \\Rightarrow a^3+b^3+c^3=3abc",
+   "visual": false,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "algebra.sum-of-squares-zero",
+   "topic": "Algebra",
+   "subtopic": "Algebraic identities",
+   "name": "Sum of squares equals zero",
+   "statement": "a^2+b^2+c^2=0 \\Rightarrow a=b=c=0;\\ a^2+b^2+c^2-ab-bc-ca=0 \\Rightarrow a=b=c",
+   "visual": false,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "algebra.reciprocal-square",
+   "topic": "Algebra",
+   "subtopic": "Reciprocal identities",
+   "name": "x + 1/x squared",
+   "statement": "x^2+\\frac1{x^2}=\\left(x+\\frac1x\\right)^2-2=\\left(x-\\frac1x\\right)^2+2;\\ x+\\frac1x=2 \\Rightarrow x=1",
+   "visual": false,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "algebra.reciprocal-cube",
+   "topic": "Algebra",
+   "subtopic": "Reciprocal identities",
+   "name": "x + 1/x cubed",
+   "statement": "x^3+\\frac1{x^3}=k^3-3k \\text{ where } k=x+\\frac1x;\\ x^3-\\frac1{x^3}=m^3+3m,\\ m=x-\\frac1x",
+   "visual": false,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "algebra.quadratic-factorisation",
+   "topic": "Algebra",
+   "subtopic": "Factorisation & polynomials",
+   "name": "Factorising a quadratic",
+   "statement": "ax^2+bx+c=a(x-\\alpha)(x-\\beta),\\ \\alpha+\\beta=-\\tfrac ba,\\ \\alpha\\beta=\\tfrac ca",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "algebra.remainder-theorem",
+   "topic": "Algebra",
+   "subtopic": "Factorisation & polynomials",
+   "name": "Remainder theorem",
+   "statement": "p(x)\\div(x-a) \\text{ leaves remainder } p(a)",
+   "visual": false,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "algebra.arithmetic-progression",
+   "topic": "Algebra",
+   "subtopic": "Progressions & means",
+   "name": "Arithmetic progression",
+   "statement": "a_n=a+(n-1)d;\\ S_n=\\frac n2[2a+(n-1)d]=\\frac n2(a+l)",
+   "visual": false,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "algebra.am-gm-hm-inequality",
+   "topic": "Algebra",
+   "subtopic": "Progressions & means",
+   "name": "AM >= GM >= HM",
+   "statement": "\\frac{a+b}2\\ge\\sqrt{ab}\\ge\\frac{2ab}{a+b};\\ (a_1+\\dots+a_n)\\left(\\tfrac1{a_1}+\\dots+\\tfrac1{a_n}\\right)\\ge n^2",
+   "visual": false,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "algebra.age-ratio-time-shift",
+   "topic": "Algebra",
+   "subtopic": "Age problems",
+   "name": "Age ratios at two points in time",
+   "statement": "\\frac{a-t}{b-t}=\\frac pq \\text{ with } a=kx,\\ b=lx;\\ \\text{the age difference never changes}",
+   "visual": true,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "algebra.age-linear-relations",
+   "topic": "Algebra",
+   "subtopic": "Age problems",
+   "name": "Age multiples and linear relations",
+   "statement": "\\text{If } A=mB \\text{ now and } A+t=n(B+t),\\ \\text{then } B=\\frac{(n-1)t}{m-n}",
+   "visual": true,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "geometry.triangle-angle-sum",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Angle sums (lines, triangle, polygon)",
+   "statement": "\\text{angles on a line}=180^\\circ;\\ \\triangle: A+B+C=180^\\circ;\\ n\\text{-gon}: (n-2)180^\\circ",
+   "visual": true,
+   "seen": true,
+   "question_count": 20
+  },
+  {
+   "id": "geometry.exterior-angle",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Exterior angle theorem",
+   "statement": "\\text{exterior angle}=\\text{sum of the two interior opposite angles}",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "geometry.isosceles-triangle",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Isosceles triangle properties",
+   "statement": "AB=AC \\Rightarrow \\angle B=\\angle C;\\ \\text{altitude from } A \\text{ bisects } BC \\text{ and } \\angle A",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "geometry.equilateral-triangle",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Equilateral triangle properties",
+   "statement": "h=\\frac{\\sqrt3}2a;\\ R=\\frac a{\\sqrt3},\\ r=\\frac a{2\\sqrt3};\\ \\text{a chord equal to the radius subtends } 60^\\circ",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "geometry.pythagoras",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Pythagoras theorem",
+   "statement": "c^2=a^2+b^2;\\ 45\\text{-}45\\text{-}90 \\text{ sides } 1:1:\\sqrt2",
+   "visual": true,
+   "seen": true,
+   "question_count": 23
+  },
+  {
+   "id": "geometry.triangle-inequality",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Triangle inequality",
+   "statement": "|b-c|<a<b+c",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "geometry.altitude-on-hypotenuse",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Altitude on the hypotenuse",
+   "statement": "h=\\frac{ab}{c};\\ h^2=pq \\text{ (segments of the hypotenuse)}",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "geometry.angle-bisector-theorem",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Angle bisector theorem",
+   "statement": "\\frac{BD}{DC}=\\frac{AB}{AC}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "geometry.incentre-angle",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Angle at the incentre",
+   "statement": "\\angle BIC=90^\\circ+\\frac{\\angle A}2",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "geometry.median-apollonius",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Medians and Apollonius theorem",
+   "statement": "AB^2+AC^2=2(AD^2+BD^2);\\ \\text{centroid divides each median } 2:1",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "geometry.midpoint-bpt",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Midpoint theorem and BPT",
+   "statement": "DE\\parallel BC \\Rightarrow \\frac{AD}{DB}=\\frac{AE}{EC};\\ \\text{midpoint join}\\parallel\\text{third side}=\\tfrac12\\text{ of it}",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "geometry.similar-triangles",
+   "topic": "Geometry",
+   "subtopic": "Triangles",
+   "name": "Similar triangles: ratios",
+   "statement": "\\triangle\\sim\\triangle' \\Rightarrow \\frac{\\text{sides}}{\\text{sides}'}=\\frac{\\text{perimeters}}{\\text{perimeters}'}=\\frac{\\text{altitudes}}{\\text{altitudes}'}=k,\\ \\frac{\\text{areas}}{\\text{areas}'}=k^2",
+   "visual": true,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "geometry.congruence-criteria",
+   "topic": "Geometry",
+   "subtopic": "Congruence",
+   "name": "Congruence criteria and CPCT",
+   "statement": "SSS,\\ SAS,\\ ASA,\\ AAS,\\ RHS \\Rightarrow \\text{corresponding parts are equal (CPCT)};\\ SSA, AAA \\text{ are not criteria}",
+   "visual": true,
+   "seen": true,
+   "question_count": 13
+  },
+  {
+   "id": "geometry.circle-basics",
+   "topic": "Geometry",
+   "subtopic": "Circles: chords & angles",
+   "name": "Circle basics",
+   "statement": "\\text{one circle through 3 non-collinear points; diameter is the longest chord; equal chords} \\iff \\text{equal arcs}",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "geometry.chord-perpendicular-from-centre",
+   "topic": "Geometry",
+   "subtopic": "Circles: chords & angles",
+   "name": "Perpendicular from centre bisects a chord",
+   "statement": "\\left(\\frac{\\text{chord}}2\\right)^2+d^2=r^2;\\ \\text{common chord} \\perp \\text{line of centres and bisected by it}",
+   "visual": true,
+   "seen": true,
+   "question_count": 9
+  },
+  {
+   "id": "geometry.central-angle-theorem",
+   "topic": "Geometry",
+   "subtopic": "Circles: chords & angles",
+   "name": "Angle at centre = twice angle at circumference",
+   "statement": "\\angle AOB=2\\angle ACB;\\ \\text{arc length}\\propto\\text{central angle}",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "geometry.angle-in-semicircle",
+   "topic": "Geometry",
+   "subtopic": "Circles: chords & angles",
+   "name": "Angle in a semicircle",
+   "statement": "\\text{angle in a semicircle}=90^\\circ;\\ \\text{so a right triangle's circumradius}=\\frac{\\text{hypotenuse}}2",
+   "visual": true,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "geometry.cyclic-quadrilateral",
+   "topic": "Geometry",
+   "subtopic": "Circles: chords & angles",
+   "name": "Cyclic quadrilateral",
+   "statement": "\\angle A+\\angle C=\\angle B+\\angle D=180^\\circ;\\ \\text{exterior angle}=\\text{interior opposite angle}",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "geometry.tangent-radius",
+   "topic": "Geometry",
+   "subtopic": "Circles: tangents",
+   "name": "Tangent perpendicular to radius",
+   "statement": "OT\\perp PT;\\ \\text{angle between two tangents from } P=180^\\circ-\\angle AOB",
+   "visual": true,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "geometry.tangent-length",
+   "topic": "Geometry",
+   "subtopic": "Circles: tangents",
+   "name": "Length of tangent from an external point",
+   "statement": "PT=\\sqrt{d^2-r^2};\\ \\text{the two tangents from } P \\text{ are equal}",
+   "visual": true,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "geometry.alternate-segment",
+   "topic": "Geometry",
+   "subtopic": "Circles: tangents",
+   "name": "Alternate segment theorem",
+   "statement": "\\text{angle between tangent and chord}=\\text{inscribed angle in the alternate segment}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "geometry.common-tangent-length",
+   "topic": "Geometry",
+   "subtopic": "Circles: tangents",
+   "name": "Common tangents and touching circles",
+   "statement": "\\text{direct}=\\sqrt{d^2-(r_1-r_2)^2};\\ \\text{transverse}=\\sqrt{d^2-(r_1+r_2)^2};\\ \\text{touching externally } d=r_1+r_2,\\ \\text{direct}=2\\sqrt{r_1r_2}",
+   "visual": true,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "geometry.power-of-point",
+   "topic": "Geometry",
+   "subtopic": "Circles: tangents",
+   "name": "Power of a point (tangent-secant, chords)",
+   "statement": "PA\\cdot PB=PC\\cdot PD=PT^2",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "geometry.tangent-secant-angle",
+   "topic": "Geometry",
+   "subtopic": "Circles: tangents",
+   "name": "Angle between secants / tangent and secant",
+   "statement": "\\angle P=\\frac12(\\text{far arc}-\\text{near arc})",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "geometry.quadrilateral-diagonals",
+   "topic": "Geometry",
+   "subtopic": "Quadrilaterals",
+   "name": "Diagonals of special quadrilaterals",
+   "statement": "\\text{parallelogram: bisect each other; rhombus/kite: perpendicular; rhombus } d_1^2+d_2^2=4a^2",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "mensuration.circle-area-circumference",
+   "topic": "Mensuration",
+   "subtopic": "Circle & sector",
+   "name": "Circle area and circumference",
+   "statement": "A=\\pi r^2,\\ C=2\\pi r;\\ \\text{ring}=\\pi(R^2-r^2)",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "mensuration.arc-length",
+   "topic": "Mensuration",
+   "subtopic": "Circle & sector",
+   "name": "Arc length and sector perimeter",
+   "statement": "l=\\frac{\\theta}{360^\\circ}2\\pi r;\\ \\text{sector perimeter}=2r+l",
+   "visual": true,
+   "seen": true,
+   "question_count": 11
+  },
+  {
+   "id": "mensuration.sector-area",
+   "topic": "Mensuration",
+   "subtopic": "Circle & sector",
+   "name": "Area of a sector",
+   "statement": "A=\\frac{\\theta}{360^\\circ}\\pi r^2=\\frac12 lr",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "mensuration.clock-hand-angle",
+   "topic": "Mensuration",
+   "subtopic": "Circle & sector",
+   "name": "Clock hand angles",
+   "statement": "\\text{minute hand: } 6^\\circ/\\text{min};\\ \\text{hour hand: } 0.5^\\circ/\\text{min};\\ \\theta=|30H-5.5M|",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "mensuration.triangle-area",
+   "topic": "Mensuration",
+   "subtopic": "Triangles & quadrilaterals",
+   "name": "Area of a triangle",
+   "statement": "A=\\frac12 bh",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "mensuration.heron-formula",
+   "topic": "Mensuration",
+   "subtopic": "Triangles & quadrilaterals",
+   "name": "Heron's formula",
+   "statement": "A=\\sqrt{s(s-a)(s-b)(s-c)},\\ s=\\frac{a+b+c}2",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "mensuration.equilateral-triangle",
+   "topic": "Mensuration",
+   "subtopic": "Triangles & quadrilaterals",
+   "name": "Equilateral triangle area and height",
+   "statement": "A=\\frac{\\sqrt3}4a^2,\\ h=\\frac{\\sqrt3}2a",
+   "visual": true,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "mensuration.quadrilateral-areas",
+   "topic": "Mensuration",
+   "subtopic": "Triangles & quadrilaterals",
+   "name": "Quadrilateral areas",
+   "statement": "\\text{rectangle } lb,\\ P=2(l+b);\\ \\text{parallelogram } bh;\\ \\text{rhombus } \\tfrac12d_1d_2;\\ \\text{trapezium } \\tfrac12(a+b)h",
+   "visual": true,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "mensuration.cylinder",
+   "topic": "Mensuration",
+   "subtopic": "Cylinder & cone",
+   "name": "Cylinder volume and surface area",
+   "statement": "V=\\pi r^2h;\\ CSA=2\\pi rh;\\ TSA=2\\pi r(r+h)",
+   "visual": true,
+   "seen": true,
+   "question_count": 13
+  },
+  {
+   "id": "mensuration.cone",
+   "topic": "Mensuration",
+   "subtopic": "Cylinder & cone",
+   "name": "Cone volume and surface area",
+   "statement": "l=\\sqrt{r^2+h^2};\\ V=\\tfrac13\\pi r^2h;\\ CSA=\\pi rl;\\ TSA=\\pi r(r+l)",
+   "visual": true,
+   "seen": true,
+   "question_count": 7
+  },
+  {
+   "id": "mensuration.unit-conversion",
+   "topic": "Mensuration",
+   "subtopic": "Cylinder & cone",
+   "name": "Volume unit conversion",
+   "statement": "1\\ \\text{m}^3=1000\\ \\text{L};\\ 1\\ \\text{L}=1000\\ \\text{cm}^3",
+   "visual": false,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "mensuration.cube-cuboid",
+   "topic": "Mensuration",
+   "subtopic": "Cube & cuboid",
+   "name": "Cube and cuboid volume and surface area",
+   "statement": "\\text{cuboid } V=lbh,\\ TSA=2(lb+bh+hl),\\ LSA=2h(l+b);\\ \\text{cube } V=a^3,\\ TSA=6a^2",
+   "visual": true,
+   "seen": true,
+   "question_count": 6
+  },
+  {
+   "id": "mensuration.cuboid-diagonal",
+   "topic": "Mensuration",
+   "subtopic": "Cube & cuboid",
+   "name": "Diagonal of a cuboid / cube",
+   "statement": "d=\\sqrt{l^2+b^2+h^2};\\ \\text{cube: } a\\sqrt3",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "mensuration.sphere-hemisphere",
+   "topic": "Mensuration",
+   "subtopic": "Sphere & hemisphere",
+   "name": "Sphere and hemisphere",
+   "statement": "\\text{sphere } V=\\tfrac43\\pi r^3,\\ S=4\\pi r^2;\\ \\text{hemisphere } V=\\tfrac23\\pi r^3,\\ TSA=3\\pi r^2",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "trigonometry.pythagorean-identities",
+   "topic": "Trigonometry",
+   "subtopic": "Identities",
+   "name": "Pythagorean identities",
+   "statement": "\\sin^2\\theta+\\cos^2\\theta=1;\\ \\sec^2\\theta-\\tan^2\\theta=1;\\ \\csc^2\\theta-\\cot^2\\theta=1",
+   "visual": true,
+   "seen": true,
+   "question_count": 40
+  },
+  {
+   "id": "trigonometry.conjugate-pairs",
+   "topic": "Trigonometry",
+   "subtopic": "Identities",
+   "name": "sec + tan and cosec + cot conjugates",
+   "statement": "(\\sec\\theta+\\tan\\theta)(\\sec\\theta-\\tan\\theta)=1;\\ (\\csc\\theta+\\cot\\theta)(\\csc\\theta-\\cot\\theta)=1",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "trigonometry.reciprocal-quotient",
+   "topic": "Trigonometry",
+   "subtopic": "Identities",
+   "name": "Reciprocal and quotient identities",
+   "statement": "\\tan\\theta=\\frac{\\sin\\theta}{\\cos\\theta},\\ \\sec\\theta=\\frac1{\\cos\\theta};\\ \\tan\\theta+\\cot\\theta=\\frac1{\\sin\\theta\\cos\\theta}",
+   "visual": false,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "trigonometry.sin-cos-power-sums",
+   "topic": "Trigonometry",
+   "subtopic": "Identities",
+   "name": "Squares and fourth powers of sin and cos",
+   "statement": "(\\sin\\theta\\pm\\cos\\theta)^2=1\\pm2\\sin\\theta\\cos\\theta;\\ \\sin^4\\theta+\\cos^4\\theta=1-2\\sin^2\\theta\\cos^2\\theta",
+   "visual": false,
+   "seen": true,
+   "question_count": 3
+  },
+  {
+   "id": "trigonometry.reciprocal-sum-two",
+   "topic": "Trigonometry",
+   "subtopic": "Identities",
+   "name": "Trig ratio + its reciprocal = 2",
+   "statement": "\\tan\\theta+\\cot\\theta=2 \\Rightarrow \\theta=45^\\circ;\\ \\sin\\theta+\\csc\\theta=2 \\Rightarrow \\theta=90^\\circ",
+   "visual": false,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "trigonometry.divide-by-cos",
+   "topic": "Trigonometry",
+   "subtopic": "Identities",
+   "name": "Divide through by cos to get tan",
+   "statement": "\\frac{a\\sin\\theta+b\\cos\\theta}{c\\sin\\theta+d\\cos\\theta}=\\frac{a\\tan\\theta+b}{c\\tan\\theta+d}",
+   "visual": false,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "trigonometry.multiple-angle",
+   "topic": "Trigonometry",
+   "subtopic": "Multiple & compound angles",
+   "name": "Double and triple angle formulas",
+   "statement": "\\sin2\\theta=2\\sin\\theta\\cos\\theta;\\ \\cos2\\theta=1-2\\sin^2\\theta;\\ \\sin3\\theta=3\\sin\\theta-4\\sin^3\\theta;\\ \\cos3\\theta=4\\cos^3\\theta-3\\cos\\theta",
+   "visual": true,
+   "seen": true,
+   "question_count": 5
+  },
+  {
+   "id": "trigonometry.compound-angle",
+   "topic": "Trigonometry",
+   "subtopic": "Multiple & compound angles",
+   "name": "Compound angle and product-to-sum",
+   "statement": "\\sin(A\\pm B)=\\sin A\\cos B\\pm\\cos A\\sin B;\\ \\tan(A+B)=\\frac{\\tan A+\\tan B}{1-\\tan A\\tan B};\\ 2\\sin A\\sin B=\\cos(A-B)-\\cos(A+B)",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "trigonometry.complementary-angles",
+   "topic": "Trigonometry",
+   "subtopic": "Complementary angles",
+   "name": "Complementary angles",
+   "statement": "\\sin(90^\\circ-\\theta)=\\cos\\theta,\\ \\tan(90^\\circ-\\theta)=\\cot\\theta,\\ \\sec(90^\\circ-\\theta)=\\csc\\theta;\\ \\tan\\theta\\tan(90^\\circ-\\theta)=1",
+   "visual": true,
+   "seen": true,
+   "question_count": 13
+  },
+  {
+   "id": "trigonometry.standard-values",
+   "topic": "Trigonometry",
+   "subtopic": "Standard values",
+   "name": "Standard angle values",
+   "statement": "\\sin 0^\\circ,30^\\circ,45^\\circ,60^\\circ,90^\\circ=\\tfrac{\\sqrt0}2,\\tfrac{\\sqrt1}2,\\tfrac{\\sqrt2}2,\\tfrac{\\sqrt3}2,\\tfrac{\\sqrt4}2;\\ \\cos \\text{ in reverse}",
+   "visual": true,
+   "seen": true,
+   "question_count": 13
+  },
+  {
+   "id": "trigonometry.equation-solving",
+   "topic": "Trigonometry",
+   "subtopic": "Trig equations",
+   "name": "Solving trig equations",
+   "statement": "\\text{Convert to one ratio (e.g. } \\cos^2=1-\\sin^2), \\text{ solve the resulting quadratic, keep } 0^\\circ\\le\\theta\\le90^\\circ",
+   "visual": false,
+   "seen": true,
+   "question_count": 4
+  },
+  {
+   "id": "trigonometry.right-triangle-ratios",
+   "topic": "Trigonometry",
+   "subtopic": "Ratios from a right triangle",
+   "name": "Ratios from a right triangle",
+   "statement": "\\sin\\theta=\\frac PH,\\ \\cos\\theta=\\frac BH,\\ \\tan\\theta=\\frac PB;\\ \\text{use triplets } (3,4,5),(5,12,13),(8,15,17),(7,24,25)",
+   "visual": true,
+   "seen": true,
+   "question_count": 9
+  },
+  {
+   "id": "trigonometry.max-a-sin-b-cos",
+   "topic": "Trigonometry",
+   "subtopic": "Maximum & minimum",
+   "name": "Range of a sin + b cos",
+   "statement": "-\\sqrt{a^2+b^2}\\le a\\sin\\theta+b\\cos\\theta\\le\\sqrt{a^2+b^2}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "trigonometry.heights-distances",
+   "topic": "Trigonometry",
+   "subtopic": "Heights & distances",
+   "name": "Heights and distances",
+   "statement": "h=d\\tan\\theta \\text{ (angle of elevation } \\theta \\text{ at horizontal distance } d)",
+   "visual": true,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "data-interpretation.read-and-total",
+   "topic": "Data Interpretation",
+   "subtopic": "Table",
+   "name": "Read values and totals",
+   "statement": "\\text{Read the needed cells/bars, add row or column totals, compare or rank}",
+   "visual": true,
+   "seen": true,
+   "question_count": 38
+  },
+  {
+   "id": "data-interpretation.average-from-chart",
+   "topic": "Data Interpretation",
+   "subtopic": "Table",
+   "name": "Averages from a chart",
+   "statement": "\\text{average}=\\frac{\\text{sum of selected values}}{\\text{count}};\\ \\text{compare averages via totals when counts are equal}",
+   "visual": true,
+   "seen": true,
+   "question_count": 20
+  },
+  {
+   "id": "data-interpretation.percentage-from-chart",
+   "topic": "Data Interpretation",
+   "subtopic": "Table",
+   "name": "Percentages and percent change from a chart",
+   "statement": "\\text{share}\\%=\\frac{\\text{value}}{\\text{total}}\\times100;\\ \\%\\Delta=\\frac{V_2-V_1}{V_1}\\times100",
+   "visual": true,
+   "seen": true,
+   "question_count": 23
+  },
+  {
+   "id": "data-interpretation.ratio-from-chart",
+   "topic": "Data Interpretation",
+   "subtopic": "Bar graph",
+   "name": "Ratios from a chart",
+   "statement": "\\text{ratio}=\\frac{\\Sigma\\text{ selected } A}{\\Sigma\\text{ selected } B} \\text{ simplified}",
+   "visual": true,
+   "seen": true,
+   "question_count": 13
+  },
+  {
+   "id": "data-interpretation.derived-quantity",
+   "topic": "Data Interpretation",
+   "subtopic": "Table",
+   "name": "Derived quantities from given relations",
+   "statement": "\\text{Combine table values with a stated relation (e.g. income}=\\text{expenditure}\\times(1+p)) \\text{ to find the unknown}",
+   "visual": true,
+   "seen": true,
+   "question_count": 2
+  },
+  {
+   "id": "data-interpretation.pie-central-angle",
+   "topic": "Data Interpretation",
+   "subtopic": "Pie chart",
+   "name": "Pie chart central angles",
+   "statement": "\\theta=\\frac{\\%}{100}\\times360^\\circ;\\ \\text{value}=\\frac{\\theta}{360^\\circ}\\times\\text{total}",
+   "visual": true,
+   "seen": true,
+   "question_count": 8
+  },
+  {
+   "id": "data-interpretation.pie-percent-value",
+   "topic": "Data Interpretation",
+   "subtopic": "Pie chart",
+   "name": "Pie chart percent to value",
+   "statement": "\\text{value}=\\frac{\\%}{100}\\times\\text{total};\\ \\text{difference of sectors}=\\frac{\\%_1-\\%_2}{100}\\times\\text{total}",
+   "visual": true,
+   "seen": true,
+   "question_count": 12
+  },
+  {
+   "id": "statistics.mean",
+   "topic": "Statistics",
+   "subtopic": "Mean, median & mode",
+   "name": "Mean of grouped data",
+   "statement": "\\bar x=\\frac{\\Sigma f_ix_i}{\\Sigma f_i}",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "statistics.mode",
+   "topic": "Statistics",
+   "subtopic": "Mean, median & mode",
+   "name": "Mode and the empirical relation",
+   "statement": "\\text{mode}=\\text{most frequent value};\\ \\text{mode}=3\\,\\text{median}-2\\,\\text{mean}\\ (\\text{symmetric: all equal})",
+   "visual": true,
+   "seen": true,
+   "question_count": 1
+  },
+  {
+   "id": "statistics.median",
+   "topic": "Statistics",
+   "subtopic": "Mean, median & mode",
+   "name": "Median",
+   "statement": "\\text{sorted data: middle value } \\left(\\tfrac{n+1}2\\right)^{\\text{th}};\\ \\text{even } n: \\text{ mean of the two middle values}",
+   "visual": false,
+   "seen": false,
+   "question_count": 0
+  },
+  {
+   "id": "statistics.range-deviation",
+   "topic": "Statistics",
+   "subtopic": "Mean, median & mode",
+   "name": "Range and standard deviation",
+   "statement": "\\text{range}=\\max-\\min;\\ \\sigma=\\sqrt{\\frac{\\Sigma(x_i-\\bar x)^2}{n}}",
+   "visual": false,
+   "seen": false,
+   "question_count": 0
+  }
+ ]
+}

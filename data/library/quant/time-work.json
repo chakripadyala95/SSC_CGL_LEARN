@@ -1,0 +1,387 @@
+[
+ {
+  "id": "time-work.combined-rate",
+  "topic": "Time & Work",
+  "subtopic": "Work & efficiency",
+  "name": "Combined work rate",
+  "statement": "\\frac1T=\\frac1a+\\frac1b;\\ T=\\frac{ab}{a+b}",
+  "conditions": [],
+  "derivation": [
+   "A worker who finishes in $a$ days does $\\frac1a$ of the work per day.",
+   "Working together, rates add: $\\frac1a+\\frac1b$ of the work per day.",
+   "Time for the whole job is 1 over the rate: $\\frac1T=\\frac1a+\\frac1b$.",
+   "Combine the fractions: $T=\\frac{ab}{a+b}$."
+  ],
+  "visual_proof": "One tank split into units: the faster pipe fills more units each minute, and together they fill the sum of both shares every minute.",
+  "shortcut": "Two workers: $T=\\frac{ab}{a+b}$ (product over sum). If one is $k$ times faster than the other who takes $b$: $T=\\frac{b}{k+1}$.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q07",
+   "answer": "B",
+   "steps": [
+    "Q's rate $=\\frac1{110}$ per min; P is 21 times faster: $\\frac{21}{110}$.",
+    "Together: $\\frac{1+21}{110}=\\frac{22}{110}=\\frac15$ per min.",
+    "Time $=5$ minutes (B)."
+   ]
+  },
+  "common_traps": [
+   "Adding the times (or averaging them) instead of the rates.",
+   "Reading '21 times faster' as P's time = 21 × 110.",
+   "Forgetting to invert the combined rate to get time."
+  ],
+  "related_ids": [
+   "time-work.lcm-total-work",
+   "time-work.pipes-net-rate",
+   "time-work.partial-work"
+  ],
+  "diagram": {
+   "alt_text": "A 110-unit tank: Q fills 1 unit and P fills 21 units per minute, 22 units per minute together, so 5 minutes of 22 units each.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Tank = 110 units",
+      "parts": [
+       {
+        "value": 22,
+        "label": "min 1: 22"
+       },
+       {
+        "value": 22,
+        "label": "min 2: 22"
+       },
+       {
+        "value": 22,
+        "label": "min 3: 22"
+       },
+       {
+        "value": 22,
+        "label": "min 4: 22"
+       },
+       {
+        "value": 22,
+        "label": "min 5: 22"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef simulate(a, b):\n    # standard: rates add; time = 1 / (1/a + 1/b)\n    return 1 / (F(1, 1) / a + F(1, 1) / b)\n\nn = 0\nfor _ in range(1500):\n    a = F(random.randint(1, 500), random.randint(1, 4)); b = F(random.randint(1, 500), random.randint(1, 4))\n    T = a * b / (a + b)\n    assert T == simulate(a, b)\n    assert T * (1 / a) + T * (1 / b) == 1\n    assert T < min(a, b)\n    n += 1\n# worked example 2024-09-09_0900_Q07: Q 110 min, P 21 times faster -> 110/21 min\nT = simulate(F(110, 21), F(110))\nassert T == 5\nassert {3, 4, 6} & {T} == set()\n# 2024-09-09_0900_Q20: 17/27 in 34 days -> 54 days\nassert F(34) / F(17, 27) == 54\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-work.lcm-total-work",
+  "topic": "Time & Work",
+  "subtopic": "Work & efficiency",
+  "name": "Total work as LCM; efficiency ratio",
+  "statement": "W=\\mathrm{LCM}(t_i);\\ e_i=\\frac W{t_i};\\ e_1:e_2=t_2:t_1",
+  "conditions": [],
+  "derivation": [
+   "Take the total work as a number of units divisible by every time: $W=\\mathrm{LCM}(t_i)$.",
+   "Efficiency is units per day: $e_i=\\frac W{t_i}$, a whole number.",
+   "For fixed work, efficiency and time are inversely proportional: $e_1:e_2=t_2:t_1$.",
+   "Together time $=\\frac W{\\Sigma e_i}$, the same as $\\frac1{\\Sigma 1/t_i}$ but without fractions."
+  ],
+  "visual_proof": "The job as a bar of W units; each worker's efficiency is how many units they shade per day.",
+  "shortcut": "Given an efficiency ratio $e_1:e_2$ and joint time $T$: $W=(e_1+e_2)T$, then $t_1=\\frac W{e_1}$.",
+  "worked_example": {
+   "question_key": "2024-09-13_0900_Q07",
+   "answer": "D",
+   "steps": [
+    "Faster is 2.5 times the slower: efficiencies $5:2$.",
+    "Together $7$ units/min for 20 min: $W=140$ units.",
+    "Faster pipe alone: $\\frac{140}{5}=28$ min (D)."
+   ]
+  },
+  "common_traps": [
+   "Taking the faster pipe's time as $20\\times2.5=50$ (multiplying time by the speed factor).",
+   "Writing efficiency ratio equal to time ratio instead of its inverse.",
+   "Using 2.5 : 1 for times rather than efficiencies (gives the slower pipe's time, 70 min)."
+  ],
+  "related_ids": [
+   "time-work.combined-rate",
+   "time-work.pipes-net-rate",
+   "time-work.mdh-formula"
+  ],
+  "diagram": {
+   "alt_text": "Tank of 140 units shared between pipes of efficiency 5 and 2 units per minute; together 7 per minute for 20 minutes.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Together, 20 min",
+      "parts": [
+       {
+        "value": 100,
+        "label": "faster: 5×20 = 100"
+       },
+       {
+        "value": 40,
+        "label": "slower: 2×20 = 40"
+       }
+      ]
+     },
+     {
+      "label": "Faster alone",
+      "parts": [
+       {
+        "value": 140,
+        "label": "140 ÷ 5 = 28 min"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom math import lcm\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    k = random.randint(2, 4)\n    t = [random.randint(1, 60) for _ in range(k)]\n    W = lcm(*t)\n    e = [W // ti for ti in t]\n    assert all(W % ti == 0 for ti in t)       # whole-number efficiencies\n    # time together with LCM units equals time from fractions\n    assert F(W, sum(e)) == 1 / sum(F(1, ti) for ti in t)\n    # efficiency ratio is inverse of time ratio\n    assert F(e[0], e[1]) == F(t[1], t[0])\n    n += 1\n# worked example 2024-09-13_0900_Q07: rates 5 : 2 units, together 20 min\nW = (5 + 2) * 20\nfast = F(W, 5)\nassert fast == 28\nassert {34, 30, 32} & {fast} == set()\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-work.pipes-net-rate",
+  "topic": "Time & Work",
+  "subtopic": "Pipes & cisterns",
+  "name": "Inlets and outlets: net rate",
+  "statement": "\\frac1T=\\Sigma\\frac1{\\text{fill}_i}-\\Sigma\\frac1{\\text{empty}_j}",
+  "conditions": [
+   "\\Sigma\\frac1{\\text{fill}_i}>\\Sigma\\frac1{\\text{empty}_j}\\ \\text{(else the tank never fills)}"
+  ],
+  "derivation": [
+   "A filling pipe adds $\\frac1{\\text{fill}}$ of the tank per hour; a leak or outlet removes $\\frac1{\\text{empty}}$.",
+   "Open together, the net rate is inflow minus outflow.",
+   "Time to fill is 1 over the net rate: $\\frac1T=\\Sigma\\frac1{\\text{fill}_i}-\\Sigma\\frac1{\\text{empty}_j}$.",
+   "If the net rate is 0 or negative, the tank never fills."
+  ],
+  "visual_proof": "A tank of LCM units: the inlet adds units each hour, the leak takes some away, and the net units per hour set the filling time.",
+  "shortcut": "Fill in $a$, with leak in $b$: leak alone empties in $\\frac{ab}{b-a}$.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_Q23",
+   "answer": "A",
+   "steps": [
+    "Leak rate $=\\frac1{12}-\\frac1{18}=\\frac{3-2}{36}=\\frac1{36}$ per hour.",
+    "Leak empties the full tank in 36 hours (A)."
+   ]
+  },
+  "common_traps": [
+   "Subtracting times ($18-12=6$) instead of rates.",
+   "Adding the leak's rate instead of subtracting it.",
+   "Answering 7.2 h by using $\\frac{ab}{a+b}$ (the combined-fill formula)."
+  ],
+  "related_ids": [
+   "time-work.combined-rate",
+   "time-work.partial-work",
+   "time-work.lcm-total-work"
+  ],
+  "diagram": {
+   "alt_text": "Tank of 36 units: the pipe adds 3 units per hour, the leak removes 1, net 2 per hour, filling in 18 hours; the leak alone empties 36 units in 36 hours.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Pipe, per hour",
+      "parts": [
+       {
+        "value": 3,
+        "label": "+3"
+       }
+      ]
+     },
+     {
+      "label": "Leak, per hour",
+      "parts": [
+       {
+        "value": 1,
+        "label": "−1"
+       }
+      ]
+     },
+     {
+      "label": "Net, per hour",
+      "parts": [
+       {
+        "value": 2,
+        "label": "+2 → 36/2 = 18 h"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef fill_time(fill, empty, step=None):\n    net = sum(F(1) / f for f in fill) - sum(F(1) / e for e in empty)\n    return None if net <= 0 else 1 / net\n\nn = 0\nfor _ in range(1500):\n    fill = [random.randint(1, 60) for _ in range(random.randint(1, 3))]\n    empty = [random.randint(1, 120) for _ in range(random.randint(0, 2))]\n    T = fill_time(fill, empty)\n    if T is None:\n        continue\n    # after T, filled amount = sum of inflow - outflow = exactly one tank\n    assert T * sum(F(1, f) for f in fill) - T * sum(F(1, e) for e in empty) == 1\n    n += 1\n# boundary: fill rate = empty rate -> tank never fills; just above -> very long but finite\nassert fill_time([12], [12]) is None\nassert fill_time([12], [13]) == 156\nassert fill_time([12], [11]) is None\n# worked example 2024-09-09_1600_Q23: fills in 12, with leak 18 -> leak alone 36\nleak = 1 / (F(1, 12) - F(1, 18))\nassert leak == 36\nassert fill_time([12], [leak]) == 18\nassert {F(72, 10), 63, F(36, 10)} & {leak} == set()\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-work.partial-work",
+  "topic": "Time & Work",
+  "subtopic": "Pipes & cisterns",
+  "name": "Joining, leaving and alternating",
+  "statement": "\\Sigma(\\text{rate}_i\\times\\text{time worked}_i)=1;\\ \\text{alternating: work per cycle}=\\Sigma\\text{rates, then finish the remainder}",
+  "conditions": [],
+  "derivation": [
+   "Each worker or pipe contributes rate $\\times$ the time it actually worked.",
+   "The job is done when the contributions add to the whole: $\\Sigma(\\text{rate}_i\\times t_i)=1$.",
+   "Alternating turns: one cycle (each takes one turn) does $\\Sigma\\text{rates}$.",
+   "Run whole cycles while work remains after them, then finish the remainder turn by turn in the same order."
+  ],
+  "visual_proof": "A tank of 63 units filled in 2-hour cycles of 7 + 3 units: six cycles reach 60 units and X's next turn finishes the last 3.",
+  "shortcut": "Joined/left problems: write each person's working time in terms of the unknown and solve one linear equation.",
+  "worked_example": {
+   "question_key": "2024-09-19_0900_Q25",
+   "answer": "D",
+   "steps": [
+    "Tank $=\\mathrm{LCM}(9,21)=63$ units; X $=7$/h, Y $=3$/h.",
+    "One 2-hour cycle $=10$ units; 6 cycles (12 h) $=60$ units.",
+    "X finishes 3 units in $\\frac37$ h: total $12\\frac37$ h (D)."
+   ]
+  },
+  "common_traps": [
+   "Dividing 63 by 10 units per cycle as 6.3 cycles = 12.6 h: the last part is done by X alone at 7 units/h, not at the cycle average.",
+   "Using the combined rate as if both ran every hour (6.3 h).",
+   "Letting Y finish the remainder when it is X's turn."
+  ],
+  "related_ids": [
+   "time-work.combined-rate",
+   "time-work.lcm-total-work",
+   "time-work.pipes-net-rate"
+  ],
+  "diagram": {
+   "alt_text": "63-unit tank: six 2-hour cycles of 10 units reach 60, then X fills the last 3 units in 3/7 hour.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Tank = 63 units",
+      "parts": [
+       {
+        "value": 10,
+        "label": "1–2 h"
+       },
+       {
+        "value": 10,
+        "label": "3–4 h"
+       },
+       {
+        "value": 10,
+        "label": "5–6 h"
+       },
+       {
+        "value": 10,
+        "label": "7–8 h"
+       },
+       {
+        "value": 10,
+        "label": "9–10 h"
+       },
+       {
+        "value": 10,
+        "label": "11–12 h"
+       },
+       {
+        "value": 3,
+        "label": "X: 3/7 h"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef alternate(rates):\n    # simulate hour by hour, taking turns in the given order\n    done, t, i = F(0), F(0), 0\n    while True:\n        r = rates[i % len(rates)]\n        if done + r >= 1:\n            return t + (1 - done) / r\n        done += r; t += 1; i += 1\n\ndef by_cycles(rates):\n    # method: full cycles first, then finish the remainder turn by turn\n    c = sum(rates)\n    k = int((1 - F(1, 10**9)) // c)        # whole cycles that leave work remaining\n    left, t = 1 - k * c, F(k * len(rates))\n    for r in rates:\n        if r >= left:\n            return t + left / r\n        left -= r; t += 1\n\nn = 0\nfor _ in range(1200):\n    rates = [F(1, random.randint(2, 40)) for _ in range(random.randint(2, 3))]\n    assert alternate(rates) == by_cycles(rates)\n    n += 1\n# worked example 2024-09-19_0900_Q25: X 9 h, Y 21 h, alternate, X first\nans = alternate([F(1, 9), F(1, 21)])\nassert ans == 12 + F(3, 7)\nassert {10 + F(3, 7), 11 + F(3, 7), 9 + F(3, 7)} & {ans} == set()\n# 2024-09-12_1230_Q14: A 48, B 66, tank full in 32 -> B closed after 22\nassert (1 - F(32, 48)) * 66 == 22\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-work.mdh-formula",
+  "topic": "Time & Work",
+  "subtopic": "Work & efficiency",
+  "name": "Man-days-hours rule",
+  "statement": "\\frac{M_1D_1H_1}{W_1}=\\frac{M_2D_2H_2}{W_2}",
+  "conditions": [],
+  "derivation": [
+   "With equal efficiency per man-hour, work done is proportional to total man-hours $M\\times D\\times H$.",
+   "So man-hours per unit of work is the same for both groups: $\\frac{M_1D_1H_1}{W_1}=\\frac{M_2D_2H_2}{W_2}$.",
+   "Cross-multiply and solve for the one unknown."
+  ],
+  "visual_proof": "A table of men, days, hours and work for two groups; total man-hours per unit of work is the same in both rows.",
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Putting W on the same side as M, D, H (inverts the answer).",
+   "Mixing groups with different efficiencies (women, boys) without converting them to men first.",
+   "Forgetting the hours-per-day factor when it changes between the groups."
+  ],
+  "related_ids": [
+   "time-work.lcm-total-work",
+   "ratio-proportion.variation",
+   "time-work.combined-rate"
+  ],
+  "diagram": {
+   "alt_text": "Table: 12 men, 10 days, 8 hours per day build 1 wall; 16 men working 6 hours per day need 10 days for the same wall.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Group",
+     "Men",
+     "Days",
+     "Hours/day",
+     "Work"
+    ],
+    "rows": [
+     [
+      "1",
+      "12",
+      "10",
+      "8",
+      "1 wall"
+     ],
+     [
+      "2",
+      "16",
+      "D₂ = 12×10×8 ÷ (16×6) = 10",
+      "6",
+      "1 wall"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    rate = F(random.randint(1, 50), random.randint(50, 500))   # work per man-hour, same for both groups\n    M1, D1, H1 = random.randint(1, 60), random.randint(1, 60), random.randint(1, 12)\n    W1 = M1 * D1 * H1 * rate\n    M2, H2 = random.randint(1, 60), random.randint(1, 12)\n    W2 = F(random.randint(1, 50), 7)\n    D2 = W2 / (M2 * H2 * rate)                 # days needed from the work rate directly\n    assert F(M1 * D1 * H1) / W1 == M2 * D2 * H2 / W2\n    n += 1\n# 12 men, 10 days, 8 h -> 1 wall; 16 men, 6 h/day -> 10 days for the same wall\nassert F(12 * 10 * 8, 16 * 6) == 10\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ }
+]

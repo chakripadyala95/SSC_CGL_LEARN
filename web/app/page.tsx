@@ -1,4 +1,5 @@
 import { getMocks, type Mock, type Section } from "@/lib/api";
+import { shiftLabel } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -6,11 +7,6 @@ const SECTIONS: { key: Section; name: string }[] = [
   { key: "QUANT", name: "Quantitative Aptitude" },
   { key: "REASONING", name: "General Intelligence & Reasoning" },
 ];
-
-function shiftLabel(paperId: string) {
-  const [date, slot] = paperId.split("_");
-  return `${date} · ${slot.slice(0, 2)}:${slot.slice(2)}`;
-}
 
 function MockRow({ mock }: { mock: Mock }) {
   const published = mock.status === "PUBLISHED";

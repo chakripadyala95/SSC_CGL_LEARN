@@ -1,0 +1,488 @@
+[
+ {
+  "id": "time-speed-distance.unit-conversion",
+  "topic": "Time-Speed-Distance",
+  "subtopic": "Relative speed & chase",
+  "name": "km/h to m/s conversion",
+  "statement": "1\\ \\text{km/h}=\\frac5{18}\\ \\text{m/s}",
+  "conditions": [],
+  "derivation": [
+   "$1$ km $=1000$ m and $1$ h $=3600$ s.",
+   "$1\\ \\text{km/h}=\\frac{1000}{3600}\\ \\text{m/s}=\\frac5{18}\\ \\text{m/s}$.",
+   "Reverse: $1\\ \\text{m/s}=\\frac{18}5\\ \\text{km/h}$."
+  ],
+  "visual_proof": null,
+  "shortcut": "km/h $\\to$ m/s: $\\times\\frac5{18}$ (so 18 → 5, 36 → 10, 54 → 15, 72 → 20, 90 → 25); m/s $\\to$ km/h: $\\times\\frac{18}5$.",
+  "worked_example": {
+   "question_key": "2024-09-18_1230_Q12",
+   "answer": "C",
+   "steps": [
+    "$36$ km/h $=10$ m/s, $54$ km/h $=15$ m/s.",
+    "Opposite directions: relative speed $=25$ m/s.",
+    "First meeting $=\\frac{4800}{25}=192$ s (C)."
+   ]
+  },
+  "common_traps": [
+   "Multiplying by 18/5 when converting km/h to m/s (answer about 13 times too small or large).",
+   "Mixing m with km/h without converting (track in m, speed in km/h).",
+   "Converting each speed but forgetting to add them for opposite directions."
+  ],
+  "related_ids": [
+   "time-speed-distance.relative-speed",
+   "time-speed-distance.circular-track",
+   "time-speed-distance.train-crossing",
+   "mensuration.unit-conversion"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    v = F(random.randint(1, 5000), random.randint(1, 8))       # km/h\n    ms = v * 1000 / 3600                                        # standard: metres per km / seconds per hour\n    assert ms == v * F(5, 18)\n    assert ms * F(18, 5) == v\n    n += 1\n# worked example 2024-09-18_1230_Q12: 36, 54 km/h opposite on 4800 m\nrel = (36 + 54) * F(5, 18)\nassert rel == 25\nt = 4800 / rel\nassert t == 192\nassert {200, 205, 178} & {t} == set()\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:39+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-speed-distance.relative-speed",
+  "topic": "Time-Speed-Distance",
+  "subtopic": "Relative speed & chase",
+  "name": "Relative speed (chase and meeting)",
+  "statement": "\\text{same direction: } t=\\frac{\\text{gap}}{v_1-v_2};\\ \\text{opposite: } t=\\frac d{v_1+v_2}",
+  "conditions": [
+   "\\text{same direction: } v_1>v_2\\ \\text{(else the gap never closes)}"
+  ],
+  "derivation": [
+   "Watch from the slower runner: the chaser gains $v_1-v_2$ every unit of time.",
+   "The gap closes when the gain equals it: $(v_1-v_2)t=\\text{gap}$.",
+   "Moving towards each other, both shrink the distance: $(v_1+v_2)t=d$.",
+   "If $v_1=v_2$ in the same direction, the gap stays fixed."
+  ],
+  "visual_proof": "A number line with the chaser at 0 and the runner ahead by the gap; both move right and the chaser closes the gap at the speed difference.",
+  "shortcut": "Distance the leader runs before being caught $=\\text{gap}\\times\\frac{v_2}{v_1-v_2}$ (speed-ratio units).",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_Q06",
+   "answer": "C",
+   "steps": [
+    "Relative speed $=15-12=3$ km/h $=\\frac{3000}{60}=50$ m/min.",
+    "Time $=\\frac{600}{50}=12$ min (C)."
+   ]
+  },
+  "common_traps": [
+   "Adding the speeds in a chase (27 km/h gives about 1.3 min).",
+   "Leaving km/h with a gap in metres.",
+   "Answering in hours or seconds when minutes are asked."
+  ],
+  "related_ids": [
+   "time-speed-distance.unit-conversion",
+   "time-speed-distance.circular-track",
+   "time-speed-distance.train-crossing",
+   "time-speed-distance.speed-time-inverse"
+  ],
+  "diagram": {
+   "alt_text": "Number line in metres: policeman starts at 0, thief at 600; after 12 minutes both are at 3000, the policeman having run 3000 m and the thief 2400 m.",
+   "spec": {
+    "type": "number-line",
+    "min": 0,
+    "max": 3000,
+    "marks": [
+     0,
+     600,
+     3000
+    ],
+    "segments": [
+     {
+      "from": 0,
+      "to": 600,
+      "label": "gap 600 m"
+     },
+     {
+      "from": 600,
+      "to": 3000,
+      "label": "thief 2400 m in 12 min"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef catch_time(gap, fast, slow, dt=None):\n    # positions: chaser at 0, other at gap; solve fast*t = gap + slow*t\n    if fast <= slow:\n        return None\n    return gap / (fast - slow)\n\nn = 0\nfor _ in range(1500):\n    gap = F(random.randint(1, 5000)); v1 = F(random.randint(1, 200)); v2 = F(random.randint(1, 200))\n    t = catch_time(gap, v1, v2)\n    if t is not None:\n        assert v1 * t == gap + v2 * t                  # same position at time t\n    d = F(random.randint(1, 5000))\n    tm = d / (v1 + v2)\n    assert v1 * tm + v2 * tm == d                      # meeting: distances add to d\n    n += 1\n# boundary: equal speeds never close the gap; slightly faster does\nassert catch_time(F(600), F(12), F(12)) is None\nassert catch_time(F(600), F(13), F(12)) == 600\nprint(\"BOUNDARY_OK\")\n# worked example 2024-09-09_1600_Q06: 600 m, 15 vs 12 km/h, answer in minutes\nrel = F(15 - 12) * 1000 / 60          # m per min\nt = catch_time(F(600), F(15) * 1000 / 60, F(12) * 1000 / 60)\nassert rel == 50 and t == 12\nassert {8, 10, 15} & {t} == set()\n# 2024-09-17_0900_Q14: 72 km, 8 and 10 km/h, meet after combined 144 km\nassert 8 * F(144, 18) == 64\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-speed-distance.speed-time-inverse",
+  "topic": "Time-Speed-Distance",
+  "subtopic": "Relative speed & chase",
+  "name": "Speed and time inversely proportional",
+  "statement": "\\text{fixed } d:\\ \\frac{t_1}{t_2}=\\frac{v_2}{v_1};\\ \\text{fixed } t:\\ \\frac{d_1}{d_2}=\\frac{v_1}{v_2}",
+  "conditions": [],
+  "derivation": [
+   "$d=vt$ always.",
+   "Same distance: $v_1t_1=v_2t_2$, so $\\frac{t_1}{t_2}=\\frac{v_2}{v_1}$.",
+   "Same time: $\\frac{d_1}{d_2}=\\frac{v_1t}{v_2t}=\\frac{v_1}{v_2}$."
+  ],
+  "visual_proof": "Two bars of equal distance: the faster one is split into fewer, longer time steps; time ratio is the speed ratio flipped.",
+  "shortcut": "Swap the ratio: times $a:b$ over the same distance mean speeds $b:a$.",
+  "worked_example": {
+   "question_key": "2024-09-17_1230_Q12",
+   "answer": "B",
+   "steps": [
+    "Same distance, times down : up $=18:36$, so speeds down : up $=36:18=2:1$.",
+    "$b+s=2$ units, $b-s=1$ unit: $b=1.5$, $s=0.5$.",
+    "$b:s=3:1$ (B)."
+   ]
+  },
+  "common_traps": [
+   "Keeping the time ratio as the speed ratio (down : up = 1 : 2) gives an impossible negative stream.",
+   "Answering the downstream : upstream ratio 2 : 1 instead of boat : stream.",
+   "Using the ratio rule when the distances differ."
+  ],
+  "related_ids": [
+   "time-speed-distance.boats-streams",
+   "time-speed-distance.relative-speed",
+   "ratio-proportion.variation"
+  ],
+  "diagram": {
+   "alt_text": "Table: downstream takes 18 h, upstream 36 h over the same distance, so speeds are 2 and 1 units; boat 1.5, stream 0.5.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "",
+     "Downstream",
+     "Upstream"
+    ],
+    "rows": [
+     [
+      "Time",
+      "18 h",
+      "36 h"
+     ],
+     [
+      "Speed (units)",
+      "2",
+      "1"
+     ],
+     [
+      "Formula",
+      "b + s = 2",
+      "b − s = 1"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    d = F(random.randint(1, 10**4)); v1 = F(random.randint(1, 300)); v2 = F(random.randint(1, 300))\n    t1, t2 = d / v1, d / v2\n    assert t1 / t2 == v2 / v1\n    t = F(random.randint(1, 100), random.randint(1, 6))\n    assert (v1 * t) / (v2 * t) == v1 / v2\n    n += 1\n# worked example 2024-09-17_1230_Q12: down 18 h, up 36 h -> D : U = 36 : 18 = 2 : 1 -> b : s = 3 : 1\nD, U = F(36), F(18)\nb, s = (D + U) / 2, (D - U) / 2\nassert b / s == 3\nassert {F(3, 2), F(2), F(2, 3)} & {b / s} == set()\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-speed-distance.circular-track",
+  "topic": "Time-Speed-Distance",
+  "subtopic": "Circular track",
+  "name": "Meeting on a circular track",
+  "statement": "t_{\\text{first meet}}=\\frac{L}{|v_1\\mp v_2|}\\ (- \\text{ same direction},\\ + \\text{ opposite});\\ \\text{at start: } \\mathrm{LCM}\\left(\\tfrac L{v_1},\\tfrac L{v_2}\\right)",
+  "conditions": [
+   "\\text{same direction: } v_1\\neq v_2"
+  ],
+  "derivation": [
+   "Same direction: they meet again when the faster has gained one full lap $L$ on the slower.",
+   "Gain per second $=|v_1-v_2|$, so $t=\\frac L{|v_1-v_2|}$.",
+   "Opposite directions: they meet when together they have covered one lap, $t=\\frac L{v_1+v_2}$.",
+   "Both back at the start together: a whole number of laps each, so $t=\\mathrm{LCM}$ of the lap times $\\frac L{v_1}$ and $\\frac L{v_2}$."
+  ],
+  "visual_proof": "The track unrolled into a straight line of length L: the gap between the runners grows at the relative speed and they meet each time it reaches a full lap.",
+  "shortcut": "Same direction: time $=\\frac{L}{\\text{difference}}$; opposite: $\\frac{L}{\\text{sum}}$; convert km/h with $\\times\\frac5{18}$ first.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_Q03",
+   "answer": "A",
+   "steps": [
+    "Same direction: relative speed $=12-6=6$ m/s.",
+    "Faster gains one lap of 840 m: $t=\\frac{840}6=140$ s (A)."
+   ]
+  },
+  "common_traps": [
+   "Adding speeds for the same direction (840/18 ≈ 46.7 s).",
+   "Using the LCM of lap times (140 s here by coincidence, but generally the meeting at the start point, not the first meeting).",
+   "Not converting km/h to m/s when the track is in metres."
+  ],
+  "related_ids": [
+   "time-speed-distance.relative-speed",
+   "time-speed-distance.unit-conversion",
+   "number-system.lcm-hcf"
+  ],
+  "diagram": {
+   "alt_text": "Gap between the runners growing at 6 m/s from 0 to the full 840 m lap at 140 seconds, when they meet.",
+   "spec": {
+    "type": "number-line",
+    "min": 0,
+    "max": 840,
+    "marks": [
+     0,
+     420,
+     840
+    ],
+    "segments": [
+     {
+      "from": 0,
+      "to": 840,
+      "label": "gap grows 6 m/s → one lap at 140 s"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom math import gcd\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef first_meet(L, v1, v2, same):\n    rel = abs(v1 - v2) if same else v1 + v2\n    return None if rel == 0 else F(L) / rel\n\ndef brute(L, v1, v2, same):\n    # smallest t > 0 with positions equal mod L; the gap changes by rel*t, meet when it is a multiple of L\n    rel = abs(v1 - v2) if same else v1 + v2\n    if rel == 0:\n        return None\n    # check candidate times k*L/rel: first k that works is 1, and nothing smaller works\n    t = F(L, 1) / rel\n    p1, p2 = (v1 * t) % L, ((v2 if same else -v2) * t) % L\n    assert p1 == p2\n    for j in range(1, 24):                  # no earlier meeting on a grid of 23 earlier times\n        tt = t * j / 24\n        assert (v1 * tt) % L != ((v2 if same else -v2) * tt) % L\n    return t\n\ndef lcm_frac(a, b):\n    num = a.numerator * b.denominator; den = a.denominator * b.numerator\n    g = gcd(num, den)\n    return a * (den // g)\n\nn = 0\nfor _ in range(1500):\n    L = random.randint(100, 5000); v1 = random.randint(1, 40); v2 = random.randint(1, 40)\n    same = random.random() < 0.5\n    assert first_meet(L, v1, v2, same) == brute(L, v1, v2, same)\n    # meeting at the start point: LCM of the lap times\n    if v1 != v2:\n        T = lcm_frac(F(L, v1), F(L, v2))\n        assert (T * v1) % L == 0 and (T * v2) % L == 0\n        for k in range(1, 50):\n            tt = T / k\n            if k > 1:\n                assert (tt * v1) % L != 0 or (tt * v2) % L != 0\n    n += 1\n# boundary: equal speeds in the same direction never meet again\nassert first_meet(840, 6, 6, True) is None\nassert first_meet(840, 6, 6, False) == 70\nprint(\"BOUNDARY_OK\")\n# worked example 2024-09-09_0900_Q03: 840 m, 6 and 12 m/s, same direction\nt = first_meet(840, 6, 12, True)\nassert t == 140\nassert {40, 70, 20} & {t} == set()\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-speed-distance.boats-streams",
+  "topic": "Time-Speed-Distance",
+  "subtopic": "Boats & streams",
+  "name": "Boats and streams",
+  "statement": "D=b+s,\\ U=b-s;\\ b=\\frac{D+U}2,\\ s=\\frac{D-U}2",
+  "conditions": [
+   "b>s\\ \\text{(else the boat cannot move upstream)}"
+  ],
+  "derivation": [
+   "Downstream the stream helps: $D=b+s$.",
+   "Upstream the stream opposes: $U=b-s$.",
+   "Add the two: $D+U=2b$, so $b=\\frac{D+U}2$.",
+   "Subtract: $D-U=2s$, so $s=\\frac{D-U}2$."
+  ],
+  "visual_proof": "Downstream bar = boat speed plus stream; upstream bar = boat speed minus stream; still water is midway between them.",
+  "shortcut": "Still-water speed is the average of $D$ and $U$; stream speed is half their difference.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q13",
+   "answer": "A",
+   "steps": [
+    "Upstream $U=\\frac21=2$ km/h; downstream $D=\\frac{1}{10/60}=6$ km/h.",
+    "$b=\\frac{6+2}2=4$ km/h.",
+    "6 km in still water: $\\frac64=1.5$ h $=1$ hr 30 min (A)."
+   ]
+  },
+  "common_traps": [
+   "Using the stream speed $\\frac{6-2}2=2$ as the boat speed (gives 3 h).",
+   "Taking 1 km in 10 min as 1 km/h, or 10 km/h, instead of 6 km/h.",
+   "Using downstream speed for still water (gives 1 h)."
+  ],
+  "related_ids": [
+   "time-speed-distance.speed-time-inverse",
+   "time-speed-distance.relative-speed",
+   "average.arithmetic-mean"
+  ],
+  "diagram": {
+   "alt_text": "Bars: downstream 6 km/h made of boat 4 plus stream 2; upstream 2 km/h equals boat 4 minus stream 2; still water 4 km/h.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Downstream D = 6",
+      "parts": [
+       {
+        "value": 4,
+        "label": "b = 4"
+       },
+       {
+        "value": 2,
+        "label": "s = 2"
+       }
+      ]
+     },
+     {
+      "label": "Still water b = 4",
+      "parts": [
+       {
+        "value": 4,
+        "label": "b = 4"
+       }
+      ]
+     },
+     {
+      "label": "Upstream U = 2",
+      "parts": [
+       {
+        "value": 2,
+        "label": "b − s = 2"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    b = F(random.randint(2, 400), 4); s = F(random.randint(0, int(b * 4) - 1), 4)\n    assert s < b\n    D, U = b + s, b - s\n    assert (D + U) / 2 == b and (D - U) / 2 == s\n    n += 1\n# boundary: b = s -> upstream speed 0, the boat cannot go up\ndef upstream_time(d, b, s):\n    return None if b - s <= 0 else d / (b - s)\nassert upstream_time(F(10), F(5), F(5)) is None        # b = s: never gets upstream\nassert upstream_time(F(10), F(5), F(4)) == 10           # b just above s: finite\nprint(\"BOUNDARY_OK\")\n# worked example 2024-09-12_1600_Q13: up 2 km in 1 h, down 1 km in 10 min\nU, D = F(2), F(1) / F(10, 60)\nb = (D + U) / 2\nt = 6 / b\nassert D == 6 and b == 4 and t == F(3, 2)          # 1 h 30 min\nassert {F(5, 4), F(5, 2), F(7, 4)} & {t} == set()\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-speed-distance.train-crossing",
+  "topic": "Time-Speed-Distance",
+  "subtopic": "Trains",
+  "name": "Trains crossing",
+  "statement": "t=\\frac{L_1+L_2}{v_1\\pm v_2}\\ (+\\text{ opposite},\\ -\\text{ same direction})",
+  "conditions": [
+   "\\text{same direction: } v_1\\neq v_2"
+  ],
+  "derivation": [
+   "Crossing starts when the fronts meet and ends when the rears separate.",
+   "Relative to the other train, one train must cover both lengths: $L_1+L_2$.",
+   "Relative speed is $v_1+v_2$ (opposite) or $v_1-v_2$ (same direction).",
+   "$t=\\frac{L_1+L_2}{v_1\\pm v_2}$; a pole or man has $L_2=0$, $v_2=0$; a platform has $v_2=0$."
+  ],
+  "visual_proof": "Two trains side by side on parallel tracks: the distance to clear is the two lengths laid end to end, covered at the relative speed.",
+  "shortcut": "Same-direction and opposite times $t_s,t_o$ give $v_1-v_2=\\frac{L_1+L_2}{t_s}$ and $v_1+v_2=\\frac{L_1+L_2}{t_o}$.",
+  "worked_example": {
+   "question_key": "2024-09-24_1230_Q05",
+   "answer": "A",
+   "steps": [
+    "Towards each other: relative speed $=32+40=72$ km/h $=20$ m/s.",
+    "Distance $=132+108=240$ m.",
+    "Time $=\\frac{240}{20}=12$ s (A)."
+   ]
+  },
+  "common_traps": [
+   "Using only one train's length (132/20 = 6.6 s).",
+   "Subtracting speeds for trains moving towards each other (240/(8×5/18) = 108 s).",
+   "Forgetting the km/h to m/s conversion."
+  ],
+  "related_ids": [
+   "time-speed-distance.relative-speed",
+   "time-speed-distance.unit-conversion"
+  ],
+  "diagram": {
+   "alt_text": "Distance line of 240 m made of the 132 m train and the 108 m train, covered at 20 m/s in 12 s.",
+   "spec": {
+    "type": "number-line",
+    "min": 0,
+    "max": 240,
+    "marks": [
+     0,
+     132,
+     240
+    ],
+    "segments": [
+     {
+      "from": 0,
+      "to": 132,
+      "label": "train 1: 132 m"
+     },
+     {
+      "from": 132,
+      "to": 240,
+      "label": "train 2: 108 m"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef cross_time(L1, L2, v1, v2, same):\n    rel = abs(v1 - v2) if same else v1 + v2\n    return None if rel == 0 else (L1 + L2) / rel\n\ndef simulate(L1, L2, v1, v2, same):\n    # front of train 1 meets front/rear of train 2; crossing ends when rear of 1 clears the far end of 2\n    # in train 2's frame, train 1 moves at the relative speed and must travel L1 + L2\n    rel = abs(v1 - v2) if same else v1 + v2\n    if rel == 0:\n        return None\n    pos_rear1 = -L1                 # rear of train 1 starts L1 behind the contact point\n    target = L2                     # must pass the far end of train 2\n    return (target - pos_rear1) / rel\n\nn = 0\nfor _ in range(1500):\n    L1, L2 = F(random.randint(50, 600)), F(random.randint(0, 600))\n    v1, v2 = F(random.randint(1, 50)), F(random.randint(0, 50))\n    same = random.random() < 0.5\n    assert cross_time(L1, L2, v1, v2, same) == simulate(L1, L2, v1, v2, same)\n    n += 1\n# boundary: equal speeds in the same direction never cross; a pole/man is L2 = 0, v2 = 0\nassert cross_time(F(100), F(100), F(20), F(20), True) is None\nassert cross_time(F(100), F(0), F(20), F(0), True) == 5\nprint(\"BOUNDARY_OK\")\n# worked example 2024-09-24_1230_Q05: 132 m and 108 m, 32 and 40 km/h towards each other\nt = cross_time(F(132), F(108), F(32) * F(5, 18), F(40) * F(5, 18), False)\nassert t == 12\nassert {15, 10, 13} & {t} == set()\n# 2024-09-19_0900_Q21: 400 m, same dir 20 s, opposite 5 s -> 180 and 108 km/h\na = (F(400, 20) + F(400, 5)) / 2; b = (F(400, 5) - F(400, 20)) / 2\nassert a * F(18, 5) == 180 and b * F(18, 5) == 108\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ },
+ {
+  "id": "time-speed-distance.average-speed-equal-distance",
+  "topic": "Time-Speed-Distance",
+  "subtopic": "Average speed",
+  "name": "Average speed over equal distances",
+  "statement": "\\bar v=\\frac{2v_1v_2}{v_1+v_2};\\ n\\text{ equal distances: }\\bar v=\\frac{n}{\\Sigma\\frac1{v_i}}",
+  "conditions": [
+   "\\text{equal distances (equal times give } \\tfrac{v_1+v_2}2)",
+   "v_1=v_2\\Rightarrow\\bar v=v_1"
+  ],
+  "derivation": [
+   "Average speed $=\\frac{\\text{total distance}}{\\text{total time}}$.",
+   "Two equal distances $d$: time $=\\frac d{v_1}+\\frac d{v_2}$.",
+   "$\\bar v=\\frac{2d}{\\frac d{v_1}+\\frac d{v_2}}=\\frac{2v_1v_2}{v_1+v_2}$, the harmonic mean.",
+   "$n$ equal parts: $\\bar v=\\frac{n}{\\Sigma\\frac1{v_i}}$."
+  ],
+  "visual_proof": "Three equal stretches of road with the time each takes: the slow stretch takes longest, so the average is pulled below the simple mean.",
+  "shortcut": "Take the distance as the LCM of the speeds, add the times, divide.",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_Q17",
+   "answer": "A",
+   "steps": [
+    "Three equal thirds: $\\bar v=\\frac3{\\frac1{40}+\\frac1{50}+\\frac1{60}}$.",
+    "$\\frac1{40}+\\frac1{50}+\\frac1{60}=\\frac{15+12+10}{600}=\\frac{37}{600}$.",
+    "$\\bar v=\\frac{1800}{37}\\approx48.65$ km/h (A)."
+   ]
+  },
+  "common_traps": [
+   "Taking the simple average (40 + 50 + 60)/3 = 50 km/h.",
+   "Using the two-speed formula on three parts.",
+   "Applying the harmonic mean when equal times (not distances) are given."
+  ],
+  "related_ids": [
+   "average.arithmetic-mean",
+   "algebra.am-gm-hm-inequality",
+   "time-speed-distance.speed-time-inverse"
+  ],
+  "diagram": {
+   "alt_text": "Distance 600 km split into three 200 km thirds taking 5 h at 40, 4 h at 50 and 10/3 h at 60 km/h; total 37/3 h.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Time for 600 km (h)",
+      "parts": [
+       {
+        "value": 5,
+        "label": "200 km @40: 5 h"
+       },
+       {
+        "value": 4,
+        "label": "200 km @50: 4 h"
+       },
+       {
+        "value": 3.333,
+        "label": "200 km @60: 10/3 h"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1500):\n    v1, v2 = F(random.randint(1, 300)), F(random.randint(1, 300))\n    d = F(random.randint(1, 1000))\n    avg = 2 * d / (d / v1 + d / v2)                  # total distance / total time\n    assert avg == 2 * v1 * v2 / (v1 + v2)\n    k = random.randint(2, 5)\n    vs = [F(random.randint(1, 300)) for _ in range(k)]\n    assert k * d / sum(d / v for v in vs) == k / sum(1 / v for v in vs)\n    n += 1\n# boundary: v1 = v2 gives the same speed; harmonic mean is below the arithmetic mean otherwise\nassert 2 * F(40) * 40 / (40 + 40) == 40\nassert 2 * F(40) * 60 / (40 + 60) < 50\nprint(\"BOUNDARY_OK\")\n# worked example 2024-09-10_0900_Q17: thirds at 40, 50, 60 km/h\navg = 3 / (F(1, 40) + F(1, 50) + F(1, 60))\nassert avg == F(3600, 74)\nassert round(float(avg), 2) == 48.65\nassert all(abs(float(avg) - o) > 0.1 for o in (54.13, 51.43, 46.85))\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:40+00:00"
+   }
+  }
+ }
+]

@@ -1,0 +1,79 @@
+[
+ {
+  "id": "ranking.position-both-ends",
+  "topic": "Ranking/Order",
+  "subtopic": "Position in row",
+  "name": "Rank from both ends",
+  "statement": "\\text{Total}=L+R-1;\\quad \\text{persons between }A,B=|p_A-p_B|-1",
+  "conditions": [],
+  "derivation": [
+   "A person who is $L$-th from the left has $L-1$ people on the left.",
+   "Being $R$-th from the right leaves $R-1$ people on the right.",
+   "Total $= (L-1) + (R-1) + 1 = L + R - 1$.",
+   "With both positions counted from the same end, the people strictly between are $|p_A - p_B| - 1$.",
+   "A rank from the other end converts by $p = \\text{Total} - R + 1$."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Adding $L + R$ and forgetting to subtract the person counted twice (gives one too many).",
+   "Subtracting a left rank from a right rank without converting to the same end.",
+   "Answering $|p_A - p_B|$ for the number between (one too many).",
+   "In 'top/bottom' rank questions, treating rank 1 as the bottom."
+  ],
+  "related_ids": [
+   "ranking.comparison-chain",
+   "alphabet.letters-between",
+   "seating.linear-arrangement"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\n\nrandom.seed(0)\nn = 0\nfor _ in range(2000):\n    total = random.randint(2, 200)\n    row = list(range(total))\n    random.shuffle(row)\n    a, b = random.sample(row, 2)\n    pa, pb = row.index(a), row.index(b)\n    left_a, right_a = pa + 1, total - pa\n    assert left_a + right_a - 1 == total                  # total from both-end ranks of one person\n    between = len(row[min(pa, pb) + 1:max(pa, pb)])\n    assert between == abs(pa - pb) - 1                    # persons between two ranks from the same end\n    # B's rank from the right converted to the left before subtracting\n    left_b = total - (total - pb) + 1\n    assert abs(left_a - left_b) - 1 == between\n    n += 1\n# Constructed: A is 12th from left and 9th from right -> 20 in the row\nassert 12 + 9 - 1 == 20\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "ranking.comparison-chain",
+  "topic": "Ranking/Order",
+  "subtopic": "Comparison order",
+  "name": "Comparison chain",
+  "statement": "\\text{Write all comparisons as one chain (A > B > C) and read the extreme or middle element; check every clue is used.}",
+  "conditions": [],
+  "derivation": [
+   "Turn each sentence into '>' pieces: 'P is taller than Q but shorter than R' = R > P > Q.",
+   "Join pieces that share a person into one chain.",
+   "Insert the remaining clues: S < Q extends the right end, T > R the left end.",
+   "Read the answer only if its place is fixed; if two persons can swap, that position is not determined."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": null,
+  "common_traps": [
+   "Reading 'shorter than' in the same direction as 'taller than'.",
+   "Answering a position that two orderings disagree on as if it were fixed.",
+   "Dropping a 'but' clause (P shorter than R) and losing one link of the chain."
+  ],
+  "related_ids": [
+   "ranking.position-both-ends",
+   "syllogism.venn-cases"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import permutations\n\ndef orders(people, facts):\n    \"\"\"All tallest-first orders consistent with facts [(x, y)] meaning x is taller than y.\"\"\"\n    return [p for p in permutations(people) if all(p.index(x) < p.index(y) for x, y in facts)]\n\n# Constructed: P taller than Q but shorter than R; S shorter than Q; T taller than R.\nfacts = [(\"P\", \"Q\"), (\"R\", \"P\"), (\"Q\", \"S\"), (\"T\", \"R\")]\nres = orders(\"PQRST\", facts)\nassert res == [tuple(\"TRPQS\")]                      # one chain: T > R > P > Q > S\ntallest = {o[0] for o in res}\nmiddle = {o[2] for o in res}\nassert tallest == {\"T\"} and middle == {\"P\"}\noptions = {\"A\": \"R\", \"B\": \"T\", \"C\": \"P\", \"D\": \"S\"}\nassert [k for k, v in options.items() if {v} == tallest] == [\"B\"]\n\n# Constructed: A > B, A > C, C > D -> the tallest is fixed (A) but the 2nd is not (B or C)\nres = orders(\"ABCD\", [(\"A\", \"B\"), (\"A\", \"C\"), (\"C\", \"D\")])\nassert {o[0] for o in res} == {\"A\"} and {o[1] for o in res} == {\"B\", \"C\"}\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

@@ -1,0 +1,684 @@
+[
+ {
+  "id": "percentage.percent-of-quantity",
+  "topic": "Percentage",
+  "subtopic": "Basic percentage",
+  "name": "Percent of a quantity",
+  "statement": "x\\%\\text{ of } N=\\frac{x}{100}N;\\ x\\%\\text{ of } y\\%\\text{ of } N=\\frac{xy}{10^4}N;\\ \\text{share}\\%=\\frac{\\text{part}}{\\text{whole}}\\times100",
+  "conditions": [],
+  "derivation": [
+   "Per cent means per hundred: $x\\% = \\frac{x}{100}$.",
+   "'Of' means multiply: $x\\%$ of $N = \\frac{x}{100}\\times N$.",
+   "Taking $x\\%$ of $y\\%$ of $N$ multiplies two such factors: $\\frac{x}{100}\\cdot\\frac{y}{100}N = \\frac{xy}{10^4}N$.",
+   "Reading it backwards: if part $= \\frac{x}{100}\\times$ whole, then $x = \\frac{\\text{part}}{\\text{whole}}\\times 100$."
+  ],
+  "visual_proof": "A bar for the whole split into 100 equal cells; x% of it is x of those cells.",
+  "shortcut": "$x\\%$ of $N$ = $N\\%$ of $x$ (e.g. $16\\%$ of $25$ = $25\\%$ of $16 = 4$); $10\\%$ = shift the decimal one place.",
+  "worked_example": {
+   "question_key": "2024-09-13_1600_Q24",
+   "answer": "B",
+   "steps": [
+    "List price of 6 phones = $6\\times 25000 = 1{,}50{,}000$.",
+    "Trade discount = $30\\%$ of $1{,}50{,}000 = \\frac{30}{100}\\times150000 = 45{,}000$.",
+    "Answer: ₹45,000 (B)."
+   ]
+  },
+  "common_traps": [
+   "Taking 30% of one phone (₹7,500) and forgetting the quantity.",
+   "Answering the amount paid (70%, ₹1,05,000) when the discount is asked.",
+   "Dividing part by the wrong whole for share%: the base is the quantity after 'of'."
+  ],
+  "related_ids": [
+   "percentage.percent-change",
+   "percentage.reverse-percentage",
+   "profit-loss.discount-on-marked-price"
+  ],
+  "diagram": {
+   "alt_text": "A bar for the list price ₹1,50,000 split into the 30% discount ₹45,000 and the 70% paid ₹1,05,000.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "List price",
+      "parts": [
+       {
+        "value": 45000,
+        "label": "30%: ₹45,000"
+       },
+       {
+        "value": 105000,
+        "label": "70%: ₹1,05,000"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    x, y, N = rq(0, 300), rq(0, 300), rq(1, 100000)\n    part = x / 100 * N\n    assert part == N * x / 100\n    assert x / 100 * N == N / 100 * x            # x% of N = N% of x\n    assert x / 100 * (y / 100 * N) == x * y / 10**4 * N\n    assert part / N * 100 == x                   # share% recovers x\n    n += 1\nassert F(30, 100) * 6 * 25000 == 45000\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.percent-change",
+  "topic": "Percentage",
+  "subtopic": "Basic percentage",
+  "name": "Percentage change",
+  "statement": "\\%\\text{ change}=\\frac{\\text{new}-\\text{old}}{\\text{old}}\\times100",
+  "conditions": [
+   "\\text{old} \\neq 0"
+  ],
+  "derivation": [
+   "The change is $\\text{new}-\\text{old}$ (negative for a fall).",
+   "Per cent change compares that change with the starting value, so divide by old.",
+   "Multiply by 100: $\\frac{\\text{new}-\\text{old}}{\\text{old}}\\times100$, which also equals $\\left(\\frac{\\text{new}}{\\text{old}}-1\\right)\\times100$."
+  ],
+  "visual_proof": "A number line from old to new; the gap between them, measured in hundredths of old, is the % change.",
+  "shortcut": "Use the multiplier: % change $= (\\frac{\\text{new}}{\\text{old}}-1)\\times100$; a sign tells rise or fall.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_Q20",
+   "answer": "B",
+   "steps": [
+    "Old = MP = ₹10,490, new = SP = ₹9,441.",
+    "Change = $9441-10490 = -1049$.",
+    "$\\frac{1049}{10490}\\times100 = 10\\%$ fall, so the discount is 10% (B)."
+   ]
+  },
+  "common_traps": [
+   "Dividing by the new value: $1049/9441 \\approx 11.1\\%$.",
+   "Mixing percentage points with per cent: 20% to 25% is a 5-point rise but a 25% rise.",
+   "Adding the % changes of parts (income +24%, expense −10%) to get the change in savings."
+  ],
+  "related_ids": [
+   "percentage.more-than-less-than",
+   "percentage.successive-change",
+   "percentage.income-expenditure-savings"
+  ],
+  "diagram": {
+   "alt_text": "Number line from 9,000 to 10,500 marking the sale price 9,441 and marked price 10,490; the gap of 1,049 is 10% of 10,490.",
+   "spec": {
+    "type": "number-line",
+    "min": 9000,
+    "max": 10500,
+    "marks": [
+     9441,
+     10490
+    ],
+    "segments": [
+     {
+      "from": 9441,
+      "to": 10490,
+      "label": "1049 = 10% of 10490"
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    old, new = rq(1, 100000), rq(0, 200000)\n    pct = (new - old) / old * 100\n    assert pct == (new / old - 1) * 100\n    assert old * (1 + pct / 100) == new          # applying the change gives back new\n    n += 1\n# boundary: old = 0 has no percentage change\ntry:\n    (F(5) - 0) / F(0)\n    raise SystemExit(\"old=0 should be undefined\")\nexcept ZeroDivisionError:\n    pass\nassert (F(9441) - 10490) / 10490 * 100 == -10\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.more-than-less-than",
+  "topic": "Percentage",
+  "subtopic": "Basic percentage",
+  "name": "A is r% more than B, so B is ?% less than A",
+  "statement": "\\text{If } A=B(1+\\tfrac r{100}) \\text{ then } B \\text{ is } \\frac{r}{100+r}\\times100\\%\\text{ less than } A;\\ \\text{if } A=B(1-\\tfrac r{100}) \\text{ then } B \\text{ is } \\frac{r}{100-r}\\times100\\%\\text{ more than } A",
+  "conditions": [
+   "r > 0",
+   "r < 100 \\text{ in the 'less than' case}"
+  ],
+  "derivation": [
+   "Take $B = 100$, so $A = 100 + r$.",
+   "The gap is $r$ either way; only the base changes.",
+   "'B less than A' is measured on A: $\\frac{r}{100+r}\\times100$.",
+   "If $A = 100 - r$, 'B more than A' is measured on A: $\\frac{r}{100-r}\\times100$."
+  ],
+  "visual_proof": "Two bars, B = 100 and A = 100 + r; the same extra piece r is a smaller share of the longer bar.",
+  "shortcut": "Write $r\\% = \\frac{a}{b}$: more by $\\frac{a}{b}$ means less by $\\frac{a}{a+b}$ (25% more ⇒ 20% less).",
+  "worked_example": {
+   "question_key": "2024-09-19_1600_Q24",
+   "answer": "A",
+   "steps": [
+    "Take Y's votes as base: X = 1.3Y, Z = 1.25Y.",
+    "X − Z = 0.05Y = 5000, so Y = 1,00,000.",
+    "Votes cast = (1.3 + 1 + 1.25)Y = 3,55,000.",
+    "Voters = 3,55,000 / 0.71 = 5,00,000 (A)."
+   ]
+  },
+  "common_traps": [
+   "Assuming 'r% more' reverses to 'r% less' (2.5% more is 2.439% less, not 2.5%).",
+   "Measuring the gap on the wrong base: the base is the quantity after 'than'.",
+   "Taking X − Z as 5% of Z instead of 5% of Y."
+  ],
+  "related_ids": [
+   "percentage.percent-change",
+   "percentage.reverse-percentage",
+   "percentage.price-consumption"
+  ],
+  "diagram": {
+   "alt_text": "Bars for Y = 100, Z = 125 and X = 130 votes; X exceeds Z by 5 units of Y, which equal 5,000 votes.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Y",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       }
+      ]
+     },
+     {
+      "label": "Z",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       },
+       {
+        "value": 25,
+        "label": "+25"
+       }
+      ]
+     },
+     {
+      "label": "X",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       },
+       {
+        "value": 30,
+        "label": "+30"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    B = rq(1, 10000)\n    r = rq(0, 500)\n    A = B * (1 + r / 100)\n    assert (A - B) / A * 100 == r / (100 + r) * 100     # B is r/(100+r) less than A\n    s = rq(0, 99)\n    A2 = B * (1 - s / 100)\n    assert (B - A2) / A2 * 100 == s / (100 - s) * 100   # B is s/(100-s) more than A2\n    n += 1\n# boundary: r = 0 gives 0 both ways; s = 100 makes A2 = 0 and 'more than' undefined\nassert F(0) / (100 + 0) == 0\ntry:\n    F(100) / (100 - 100)\n    raise SystemExit(\"s=100 should be undefined\")\nexcept ZeroDivisionError:\n    pass\nY = F(5000) / F(5, 100)\nassert Y == 100000 and (Y * (F(130) + 100 + 125) / 100) / F(71, 100) == 500000\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.reverse-percentage",
+  "topic": "Percentage",
+  "subtopic": "Basic percentage",
+  "name": "Reverse percentage (find the original)",
+  "statement": "\\text{original}=\\frac{\\text{final}}{1\\pm r/100}",
+  "conditions": [
+   "r < 100 \\text{ for a decrease}"
+  ],
+  "derivation": [
+   "An $r\\%$ rise multiplies by $1+\\frac r{100}$; an $r\\%$ fall multiplies by $1-\\frac r{100}$.",
+   "So final $= \\text{original}\\times(1\\pm\\frac r{100})$.",
+   "Divide back: original $= \\frac{\\text{final}}{1\\pm r/100}$.",
+   "Same thing in words: if final is $k\\%$ of original, original $= \\text{final}\\times\\frac{100}{k}$."
+  ],
+  "visual_proof": "A bar for the unknown original split into 100 cells; the known final fills k of them, so one cell is final ÷ k.",
+  "shortcut": "If the known value is $k\\%$ of the whole, whole $= \\text{value}\\times\\frac{100}{k}$ (unitary method: 1% first).",
+  "worked_example": {
+   "question_key": "2024-09-13_1600_Q25",
+   "answer": "A",
+   "steps": [
+    "Literate M : F = 5 : 6, so literate males are $\\frac5{11}$ of literates.",
+    "Literates = $5{,}00{,}000\\times\\frac{11}{5} = 11{,}00{,}000$.",
+    "Literates are 55% of the population: total = $\\frac{11{,}00{,}000}{0.55} = 20{,}00{,}000$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Taking 55% of the known part ($0.55\\times11{,}00{,}000$) instead of dividing by 0.55.",
+   "Adding the missing 45% to the part ($11{,}00{,}000\\times1.45 = 15{,}95{,}000$).",
+   "Reversing an r% rise by an r% cut (₹110 after a 10% rise came from ₹100, not ₹99)."
+  ],
+  "related_ids": [
+   "percentage.percent-of-quantity",
+   "percentage.more-than-less-than",
+   "profit-loss.discount-on-marked-price"
+  ],
+  "diagram": {
+   "alt_text": "A bar for the total population 20,00,000 split into literates 11,00,000 (55%) and illiterates 9,00,000 (45%).",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Population",
+      "parts": [
+       {
+        "value": 1100000,
+        "label": "Literate 55%: 11,00,000"
+       },
+       {
+        "value": 900000,
+        "label": "Illiterate 45%: 9,00,000"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    orig = rq(1, 100000)\n    r = rq(0, 99)\n    up, down = orig * (1 + r / 100), orig * (1 - r / 100)\n    assert up / (1 + r / 100) == orig\n    assert down / (1 - r / 100) == orig\n    k = 100 - r                                   # final is k% of original\n    assert down * 100 / k == orig\n    n += 1\n# boundary: a 100% decrease leaves 0 and the original cannot be recovered\ntry:\n    F(0) / (1 - F(100, 100))\n    raise SystemExit(\"r=100 decrease should be undefined\")\nexcept ZeroDivisionError:\n    pass\nlit = F(500000) * 11 / 5\nassert lit == 1100000 and lit / F(55, 100) == 2000000\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.successive-change",
+  "topic": "Percentage",
+  "subtopic": "Successive change & discount",
+  "name": "Successive change and constant growth",
+  "statement": "\\text{net }\\%=a+b+\\frac{ab}{100}\\ (- \\text{ for decreases});\\ P_n=P_0\\left(1+\\frac r{100}\\right)^n",
+  "conditions": [],
+  "derivation": [
+   "A change of $a\\%$ multiplies by $1+\\frac a{100}$ (use $-a$ for a decrease).",
+   "Two changes in a row multiply: $(1+\\frac a{100})(1+\\frac b{100}) = 1 + \\frac{a+b+ab/100}{100}$.",
+   "So the single equivalent change is $a+b+\\frac{ab}{100}$.",
+   "The same rate $r\\%$ applied $n$ times gives $(1+\\frac r{100})^n$, so $P_n = P_0(1+\\frac r{100})^n$."
+  ],
+  "visual_proof": "A rectangle 100 by 100 grown by a% on one side and b% on the other; the extra area is a + b plus the corner piece ab/100.",
+  "shortcut": "For three or more changes, multiply the multipliers: $1.12\\times1.23\\times0.66$, then subtract 1.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_Q01",
+   "answer": "C",
+   "steps": [
+    "Multipliers: +12% → 1.12, +23% → 1.23, −34% → 0.66.",
+    "Net multiplier = $1.12\\times1.23\\times0.66 = 0.909216$.",
+    "Net change = $-9.08\\% \\approx 9\\%$ decrease (C)."
+   ]
+  },
+  "common_traps": [
+   "Adding the rates: $12+23-34 = 1\\%$ increase, ignoring the cross terms.",
+   "Using $+ab/100$ when one change is a decrease: put $b$ in with its minus sign.",
+   "Using $P_0(1+nr/100)$ (simple growth) for a constant yearly rate."
+  ],
+  "related_ids": [
+   "percentage.percent-change",
+   "profit-loss.successive-discount",
+   "si-ci.compound-interest"
+  ],
+  "diagram": {
+   "alt_text": "Bar chart of the value after each change: 100, then 112 after +12%, 137.76 after +23%, 90.92 after −34%.",
+   "spec": {
+    "type": "chart",
+    "kind": "bar",
+    "series": [
+     {
+      "label": "Value",
+      "points": [
+       [
+        0,
+        100
+       ],
+       [
+        1,
+        112
+       ],
+       [
+        2,
+        137.76
+       ],
+       [
+        3,
+        90.92
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    a, b = rq(-99, 200), rq(-99, 200)\n    P = rq(1, 10000)\n    assert P * (1 + a / 100) * (1 + b / 100) == P * (1 + (a + b + a * b / 100) / 100)\n    r, k = rq(-50, 50), random.randint(0, 8)\n    v = P\n    for _ in range(k):\n        v = v * (1 + r / 100)\n    assert v == P * (1 + r / 100) ** k\n    n += 1\nnet = (F(112, 100) * F(123, 100) * F(66, 100) - 1) * 100\nassert net == F(-90784, 10000) and round(net) == -9\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.free-items-discount",
+  "topic": "Percentage",
+  "subtopic": "Successive change & discount",
+  "name": "Buy x get y free",
+  "statement": "\\text{effective discount}=\\frac{y}{x+y}\\times100\\%",
+  "conditions": [
+   "x \\geq 1,\\ y \\geq 0"
+  ],
+  "derivation": [
+   "The customer takes $x+y$ items and pays for $x$.",
+   "Value received $= (x+y)$ prices; discount $= y$ prices.",
+   "Discount % is measured on the value received: $\\frac{y}{x+y}\\times100$."
+  ],
+  "visual_proof": "A row of x + y items with x shaded as paid; the unshaded y out of x + y is the discount.",
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-25_1230_Q18",
+   "answer": "A",
+   "steps": [
+    "Buy 5, get 2 free: takes 7, pays for 5.",
+    "Discount = $\\frac{2}{7}\\times100 = 28\\frac47\\%$ (A)."
+   ]
+  },
+  "common_traps": [
+   "Dividing by items paid for: $\\frac25 = 40\\%$.",
+   "Treating the free items as a markup on cost: the base is the marked value of all items taken."
+  ],
+  "related_ids": [
+   "percentage.percent-of-quantity",
+   "profit-loss.discount-on-marked-price"
+  ],
+  "diagram": {
+   "alt_text": "A row of 7 sweaters: 5 paid and 2 free; the 2 free are 2/7 of the value taken.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Sweaters taken",
+      "parts": [
+       {
+        "value": 5,
+        "label": "5 paid"
+       },
+       {
+        "value": 2,
+        "label": "2 free"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    x, y = random.randint(1, 50), random.randint(0, 50)\n    price = rq(1, 5000)\n    paid, worth = x * price, (x + y) * price\n    assert (worth - paid) / worth * 100 == F(y, x + y) * 100\n    n += 1\n# boundary: y = 0 is no discount; x = 0 would be 100% (nothing paid)\nassert F(0, 5 + 0) == 0 and F(3, 0 + 3) == 1\nd = F(2, 7) * 100\nassert d == 28 + F(4, 7)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.income-expenditure-savings",
+  "topic": "Percentage",
+  "subtopic": "Income, expenditure & savings",
+  "name": "Income = expenditure + savings",
+  "statement": "I=E+S;\\ \\Delta S=\\Delta I-\\Delta E\\ (\\text{in absolute terms})",
+  "conditions": [
+   "S \\neq 0 \\text{ for a percentage change in savings}"
+  ],
+  "derivation": [
+   "Income is split into what is spent and what is saved: $I = E + S$.",
+   "After changes, $I' = E' + S'$ too.",
+   "Subtract: $S' - S = (I'-I) - (E'-E)$.",
+   "Percentages of different bases do not subtract; convert each change to an amount first."
+  ],
+  "visual_proof": "A bar for income split into expenditure and savings; the new, longer bar keeps the same split rule.",
+  "shortcut": "% change in $S = \\frac{I\\,i - E\\,e}{S}$, where $i, e$ are the % rises of income and expenditure (take $I = 100$).",
+  "worked_example": {
+   "question_key": "2024-09-13_1600_Q11",
+   "answer": "C",
+   "steps": [
+    "Take $I = 100$: $E = 80$, $S = 20$.",
+    "New $I = 115$, new $E = 80\\times1.05 = 84$.",
+    "New $S = 31$; rise $= \\frac{11}{20}\\times100 = 55\\%$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Subtracting the percentages: $15\\% - 5\\% = 10\\%$.",
+   "Applying the income % to savings directly (assuming savings rise by 15%).",
+   "Dividing the change in savings by income instead of old savings."
+  ],
+  "related_ids": [
+   "percentage.percent-change",
+   "ratio-proportion.income-expenditure-ratio"
+  ],
+  "diagram": {
+   "alt_text": "Old income 100 = expenditure 80 + savings 20; new income 115 = expenditure 84 + savings 31.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Old income",
+      "parts": [
+       {
+        "value": 80,
+        "label": "E 80"
+       },
+       {
+        "value": 20,
+        "label": "S 20"
+       }
+      ]
+     },
+     {
+      "label": "New income",
+      "parts": [
+       {
+        "value": 84,
+        "label": "E 84"
+       },
+       {
+        "value": 31,
+        "label": "S 31"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    I = rq(1, 100000)\n    E = I * rq(0, 99) / 100\n    S = I - E\n    i, e = rq(-50, 100), rq(-50, 100)\n    I2, E2 = I * (1 + i / 100), E * (1 + e / 100)\n    S2 = I2 - E2\n    assert S2 - S == (I2 - I) - (E2 - E)\n    assert (S2 - S) / S * 100 == (I * i - E * e) / S        # shortcut\n    n += 1\n# boundary: S = 0 (spends everything) has no percentage change in savings\ntry:\n    F(1) / (F(100) - 100)\n    raise SystemExit(\"S=0 should be undefined\")\nexcept ZeroDivisionError:\n    pass\nassert (F(100) * 15 - F(80) * 5) / 20 == 55\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.election",
+  "topic": "Percentage",
+  "subtopic": "Elections",
+  "name": "Election vote equations",
+  "statement": "\\text{valid}=\\text{polled}\\times(1-\\text{invalid}\\%);\\ \\text{margin}=(p_1-p_2)\\%\\times\\text{valid}",
+  "conditions": [
+   "\\text{invalid}\\% \\leq 100",
+   "p_1, p_2 \\text{ are shares of valid votes}"
+  ],
+  "derivation": [
+   "Polled = turnout% of voters on the list.",
+   "Invalid votes are removed first: valid $=$ polled $\\times(1-\\text{invalid}\\%)$.",
+   "Each candidate's votes are a share of valid votes: $p_1\\%$ and $p_2\\%$ of valid.",
+   "Margin = difference: $(p_1 - p_2)\\%$ of valid; with two candidates $p_2 = 100 - p_1$."
+  ],
+  "visual_proof": "Nested bars: voters, then polled, then valid, then the valid bar split between the two candidates with the margin marked.",
+  "shortcut": "Chain the multipliers: margin $= V\\times t\\times(1-i)\\times(p_1-p_2)$; divide the given margin by that product.",
+  "worked_example": {
+   "question_key": "2024-09-17_1230_Q22",
+   "answer": "C",
+   "steps": [
+    "Valid = $0.8\\times0.95\\,V = 0.76V$.",
+    "Winner 70%, loser 30% of valid: margin = 40% of valid = $0.304V$.",
+    "$0.304V = 36480 \\Rightarrow V = 1{,}20{,}000$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Taking the margin as 70% of valid (forgetting to subtract the loser's 30%).",
+   "Applying the vote shares to all voters or to polled votes instead of valid votes.",
+   "Adding the invalid 5% to the 20% abstentions instead of multiplying."
+  ],
+  "related_ids": [
+   "percentage.percent-of-quantity",
+   "percentage.reverse-percentage",
+   "percentage.more-than-less-than"
+  ],
+  "diagram": {
+   "alt_text": "Voters 100, polled 80, valid 76; valid split into winner 53.2 and loser 22.8, a margin of 30.4 per 100 voters.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Voters",
+      "parts": [
+       {
+        "value": 100,
+        "label": "100"
+       }
+      ]
+     },
+     {
+      "label": "Polled",
+      "parts": [
+       {
+        "value": 80,
+        "label": "80"
+       }
+      ]
+     },
+     {
+      "label": "Valid",
+      "parts": [
+       {
+        "value": 76,
+        "label": "76"
+       }
+      ]
+     },
+     {
+      "label": "Votes",
+      "parts": [
+       {
+        "value": 53.2,
+        "label": "Winner 53.2"
+       },
+       {
+        "value": 22.8,
+        "label": "Loser 22.8"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    voters = random.randint(100, 10**6)\n    turnout = rq(1, 100)\n    invalid = rq(0, 99)\n    polled = voters * turnout / 100\n    valid = polled * (1 - invalid / 100)\n    p1 = rq(0, 100)\n    p2 = 100 - p1\n    w, l = valid * p1 / 100, valid * p2 / 100\n    assert w + l == valid\n    assert w - l == (p1 - p2) / 100 * valid\n    assert w - l == (2 * p1 - 100) / 100 * valid\n    n += 1\n# boundary: a 100% invalid poll leaves no valid votes and no margin\nassert F(1000) * (1 - F(100, 100)) == 0\nV = F(36480) / (F(80, 100) * F(95, 100) * F(40, 100))\nassert V == 120000\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:35+00:00"
+   }
+  }
+ },
+ {
+  "id": "percentage.price-consumption",
+  "topic": "Percentage",
+  "subtopic": "Price & consumption",
+  "name": "Price x consumption = expenditure",
+  "statement": "\\text{To keep expenditure fixed after a } r\\%\\text{ price rise, cut consumption by } \\frac{r}{100+r}\\times100\\%",
+  "conditions": [
+   "r > -100"
+  ],
+  "derivation": [
+   "Expenditure = price $\\times$ consumption.",
+   "Price rises by $r\\%$: new price $= P(1+\\frac r{100})$.",
+   "Fixed expenditure needs new consumption $= \\frac{C}{1+r/100}$.",
+   "Cut $= 1 - \\frac{100}{100+r} = \\frac{r}{100+r}$, i.e. $\\frac{r}{100+r}\\times100\\%$ (a price fall of $r\\%$ allows a rise of $\\frac{r}{100-r}\\times100\\%$)."
+  ],
+  "visual_proof": "A price-by-consumption rectangle: a longer price side must pair with a shorter consumption side to keep the same area.",
+  "shortcut": "If price and consumption change by $p\\%$ and $c\\%$, expenditure changes by $p + c + \\frac{pc}{100}$ %.",
+  "worked_example": {
+   "question_key": "2024-09-19_0900_Q17",
+   "answer": "B",
+   "steps": [
+    "Price +300%: multiplier 4.",
+    "Consumption −70%: multiplier 0.3.",
+    "Expenditure multiplier $= 4\\times0.3 = 1.2$: increases by 20% (B)."
+   ]
+  },
+  "common_traps": [
+   "Cutting consumption by the same r% as the price rise (25% rise needs a 20% cut, not 25%).",
+   "Adding the rates: $300 - 70 = 230\\%$ increase.",
+   "Reading a 300% increase as a multiplier of 3 instead of 4."
+  ],
+  "related_ids": [
+   "percentage.more-than-less-than",
+   "percentage.successive-change"
+  ],
+  "diagram": {
+   "alt_text": "Old expenditure 1 × 1 = 1; new expenditure 4 × 0.3 = 1.2, a 20% increase.",
+   "spec": {
+    "type": "bar-model",
+    "bars": [
+     {
+      "label": "Old expenditure",
+      "parts": [
+       {
+        "value": 1,
+        "label": "1 × 1 = 1"
+       }
+      ]
+     },
+     {
+      "label": "New expenditure",
+      "parts": [
+       {
+        "value": 1,
+        "label": "1"
+       },
+       {
+        "value": 0.2,
+        "label": "+0.2"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\ndef rq(lo, hi, den=4):\n    return F(random.randint(lo * den, hi * den), den)\n\nn = 0\nfor _ in range(1500):\n    P, C = rq(1, 1000), rq(1, 1000)\n    r = rq(-99, 400)\n    cut = r / (100 + r) * 100\n    assert P * (1 + r / 100) * C * (1 - cut / 100) == P * C   # expenditure unchanged\n    p, c = rq(-99, 400), rq(-99, 400)\n    assert P * (1 + p / 100) * C * (1 + c / 100) == P * C * (1 + (p + c + p * c / 100) / 100)\n    n += 1\n# boundary: r = -100 (price falls to 0) makes the needed change undefined\ntry:\n    F(-100) / (100 + F(-100))\n    raise SystemExit(\"r=-100 should be undefined\")\nexcept ZeroDivisionError:\n    pass\nassert F(4) * F(3, 10) == F(12, 10)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:36+00:00"
+   }
+  }
+ }
+]

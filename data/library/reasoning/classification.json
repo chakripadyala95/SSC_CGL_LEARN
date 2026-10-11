@@ -1,0 +1,239 @@
+[
+ {
+  "id": "classification.letter-gap-pattern",
+  "topic": "Classification",
+  "subtopic": "Letter-cluster odd one out",
+  "name": "Letter-cluster gap pattern",
+  "statement": "\\text{Write each cluster as alphabet positions, list the gaps between neighbours; the cluster whose gap pattern differs is the odd one.}",
+  "conditions": [],
+  "derivation": [
+   "Convert letters to positions: A = 1, ..., Z = 26 (EJOTY = 5, 10, 15, 20, 25 helps).",
+   "For each cluster write the gaps between consecutive letters, with sign: PSUV = $16,19,21,22 \\to +3,+2,+1$.",
+   "For a pair of clusters (EJ - OT) read the gaps across all four letters, including the jump between the clusters.",
+   "Three clusters share one gap pattern; the fourth breaks it."
+  ],
+  "visual_proof": null,
+  "shortcut": "Memorise EJOTY ($5,10,15,20,25$) and count gaps from the nearest anchor.",
+  "worked_example": {
+   "question_key": "2024-09-09_1600_R13",
+   "answer": "B",
+   "steps": [
+    "PSUV $=16,19,21,22$: gaps $+3,+2,+1$.",
+    "FIKL $=6,9,11,12$ and TWYZ $=20,23,25,26$: gaps $+3,+2,+1$.",
+    "BEHI $=2,5,8,9$: gaps $+3,+3,+1$, the pattern breaks.",
+    "Odd one: BEHI (B)."
+   ]
+  },
+  "common_traps": [
+   "Comparing only the first gap: BEHI and PSUV both start $+3$ but differ at the second gap.",
+   "Counting gaps without sign: a backward step ($-10$ in PF) looks like $+10$ and hides the odd one.",
+   "Miscounting positions near the middle of the alphabet (M = 13, N = 14); anchor on EJOTY.",
+   "Grouping by vowels/consonants, which the question note rules out."
+  ],
+  "related_ids": [
+   "analogy.letter-cluster-shift",
+   "series.letter-position-steps",
+   "alphabet.letters-between"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "def gaps(cluster):\n    p = [ord(c) - 64 for c in cluster.replace(\" \", \"\")]\n    return tuple(b - a for a, b in zip(p, p[1:]))\n\ndef odd_one(options):\n    pats = {k: gaps(v) for k, v in options.items()}\n    odd = [k for k, g in pats.items() if list(pats.values()).count(g) == 1]\n    others = {g for g in pats.values() if list(pats.values()).count(g) > 1}\n    assert len(odd) == 1 and len(others) == 1, pats\n    return odd[0]\n\n# Worked example 2024-09-09_1600_R13: +3,+2,+1 pattern\nassert gaps(\"PSUV\") == (3, 2, 1) and gaps(\"BEHI\") == (3, 3, 1)\nassert odd_one({\"A\": \"PSUV\", \"B\": \"BEHI\", \"C\": \"FIKL\", \"D\": \"TWYZ\"}) == \"B\"\n# 2024-09-10_0900_R05: +5,+5 pattern\nassert odd_one({\"A\": \"AFK\", \"B\": \"LQV\", \"C\": \"PTX\", \"D\": \"DIN\"}) == \"C\"\n# 2024-09-09_1230_R21: pair clusters, read the gaps across the whole pair\nassert odd_one({\"A\": \"EJOT\", \"B\": \"KPUZ\", \"C\": \"PFOI\", \"D\": \"CHMR\"}) == \"C\"\n# Constructed case\nassert odd_one({\"A\": \"ACFJ\", \"B\": \"KMPT\", \"C\": \"BDGK\", \"D\": \"MOQT\"}) == \"D\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "classification.number-pair-rule",
+  "topic": "Classification",
+  "subtopic": "Number pair/triad odd one out",
+  "name": "Number pair odd-one-out rule",
+  "statement": "\\text{Find one rule } y=f(x) \\text{ (difference, ratio, } kx+c, x^2, x(x+1)\\text{) that 3 pairs obey; the pair that breaks it is odd.}",
+  "conditions": [],
+  "derivation": [
+   "Try a constant difference first: $y - x$ for every pair.",
+   "Then a constant ratio: $y/x$ in lowest terms.",
+   "Then a linear rule $y = kx + c$: get $k$ from two pairs ($k = \\frac{y_2 - y_1}{x_2 - x_1}$), then $c$, then test the rest.",
+   "Then powers: $x^2$, $x^3$, $x(x+1)$, $x^2 \\pm 1$.",
+   "The rule must fit exactly three pairs; the fourth is the answer."
+  ],
+  "visual_proof": null,
+  "shortcut": "Two pairs give $k$ and $c$ of $y = kx + c$; plug in the other two and the misfit is the answer.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_R18",
+   "answer": "D",
+   "steps": [
+    "From 12 : 39 and 13 : 42: $k = \\frac{42-39}{13-12} = 3$, $c = 39 - 36 = 3$, so $y = 3x + 3$.",
+    "$15 \\times 3 + 3 = 48$ fits.",
+    "$11 \\times 3 + 3 = 36 \\ne 35$.",
+    "Odd pair: 11 : 35 (D)."
+   ]
+  },
+  "common_traps": [
+   "Stopping at a rule that fits only two pairs and picking between the other two at random.",
+   "Breaking numbers into digits, which the question note forbids.",
+   "Checking the ratio $72/33$ as decimals and missing that it is $24/11$, not $7/3$.",
+   "Testing $3x+3$ on only one pair and calling the rule confirmed."
+  ],
+  "related_ids": [
+   "classification.number-triad-rule",
+   "analogy.number-arithmetic-rule",
+   "analogy.number-power-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nfrom itertools import combinations\n\ndef fits_line(pairs):\n    \"\"\"Is there one rule y = k*x + c through all these (x, y)?\"\"\"\n    (x1, y1), (x2, y2) = pairs[0], pairs[1]\n    if x1 == x2:\n        return False\n    k = F(y2 - y1, x2 - x1)\n    c = y1 - k * x1\n    return all(y == k * x + c for x, y in pairs)\n\nRULES = {\n    \"square\": lambda x, y: y == x * x,\n    \"n(n+1)\": lambda x, y: y == x * (x + 1),\n    \"cube\": lambda x, y: y == x ** 3,\n}\n\ndef odd_pair(options):\n    odd = set()\n    keys = list(options)\n    for trio in combinations(keys, 3):\n        if fits_line([options[k] for k in trio]) and not fits_line([options[k] for k in keys]):\n            odd |= set(keys) - set(trio)\n    for rule in RULES.values():\n        ok = [k for k in keys if rule(*options[k])]\n        if len(ok) == 3:\n            odd |= set(keys) - set(ok)\n    assert len(odd) == 1, odd\n    return odd.pop()\n\n# Worked example 2024-09-09_1230_R18: y = 3x + 3\nassert odd_pair({\"A\": (15, 48), \"B\": (12, 39), \"C\": (13, 42), \"D\": (11, 35)}) == \"D\"\n# 2024-09-09_0900_R04: constant difference 216\nassert odd_pair({\"A\": (335, 119), \"B\": (358, 152), \"C\": (317, 101), \"D\": (308, 92)}) == \"B\"\n# 2024-09-09_1600_R04: constant ratio 7/3\nassert odd_pair({\"A\": (36, 84), \"B\": (33, 72), \"C\": (66, 154), \"D\": (72, 168)}) == \"B\"\n# Constructed: squares\nassert odd_pair({\"A\": (7, 49), \"B\": (9, 81), \"C\": (12, 144), \"D\": (13, 196)}) == \"D\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "classification.number-triad-rule",
+  "topic": "Classification",
+  "subtopic": "Number pair/triad odd one out",
+  "name": "Number triad odd-one-out rule",
+  "statement": "\\text{Find } c=p\\,(a\\ \\square\\ b)+q \\text{ with } \\square\\in\\{+,\\times,-\\} \\text{ that 3 triads obey; the triad that fails is odd.}",
+  "conditions": [],
+  "derivation": [
+   "Test the simplest links first: $a + b = c$, $a \\times b = c$.",
+   "If none fits, look at $c$ against $a+b$ and $a \\times b$: a fixed multiple ($c = 11(a+b)$) or a fixed offset ($c = ab + 5$).",
+   "Fix the rule from two triads, then test the remaining two.",
+   "Exactly three triads must fit; the fourth is the answer."
+  ],
+  "visual_proof": null,
+  "shortcut": "Divide $c$ by $a+b$ and by $ab$: a whole-number constant across three triads is the rule.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_R12",
+   "answer": "C",
+   "steps": [
+    "$209 \\div (12+7) = 11$ and $330 \\div (19+11) = 11$: rule $c = 11(a+b)$.",
+    "$(15+9) \\times 11 = 264$ fits.",
+    "$(23+8) \\times 11 = 341 \\ne 343$.",
+    "Odd triad: 23 - 8 - 343 (C)."
+   ]
+  },
+  "common_traps": [
+   "Accepting $a + b = c$ for 3 - 2 - 5 when the other three follow $a \\times b$.",
+   "Computing $(23+8) \\times 11$ as 343 instead of 341 and missing the odd one.",
+   "Using the middle number as the result when the pattern is first-and-second to third.",
+   "Splitting numbers into digits, which the note forbids."
+  ],
+  "related_ids": [
+   "classification.number-pair-rule",
+   "missing-number.set-operation-rule",
+   "analogy.number-set-rule"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from fractions import Fraction as F\nfrom itertools import combinations\n\nOPS = {\"a+b\": lambda a, b: a + b, \"a*b\": lambda a, b: a * b, \"a-b\": lambda a, b: a - b}\n\ndef rule_fits(op, triads):\n    \"\"\"Is there one rule c = p*op(a, b) + q (p, q fixed) through all these triads?\"\"\"\n    pts = [(op(a, b), c) for a, b, c in triads]\n    xs = {x for x, _ in pts}\n    if len(xs) < 2:\n        return False\n    (x1, y1), (x2, y2) = sorted(set(pts))[:2]\n    if x1 == x2:\n        return False\n    p = F(y2 - y1, x2 - x1)\n    q = y1 - p * x1\n    return p != 0 and all(y == p * x + q for x, y in pts) and p.denominator == 1 and q.denominator == 1\n\ndef odd_triad(options):\n    keys = list(options)\n    odd = set()\n    for name, op in OPS.items():\n        if rule_fits(op, [options[k] for k in keys]):\n            continue\n        for trio in combinations(keys, 3):\n            if rule_fits(op, [options[k] for k in trio]):\n                odd |= set(keys) - set(trio)\n    assert len(odd) == 1, odd\n    return odd.pop()\n\n# Worked example 2024-09-12_1230_R12: c = (a+b)*11\nassert odd_triad({\"A\": (12, 7, 209), \"B\": (19, 11, 330), \"C\": (23, 8, 343), \"D\": (15, 9, 264)}) == \"C\"\n# 2024-09-10_0900_R10: c = a*b\nassert odd_triad({\"A\": (2, 2, 4), \"B\": (1, 3, 3), \"C\": (2, 4, 8), \"D\": (3, 2, 5)}) == \"D\"\n# 2024-09-13_0900_R16: c = a*b + 5\nassert odd_triad({\"A\": (31, 5, 160), \"B\": (13, 8, 109), \"C\": (21, 4, 89), \"D\": (27, 9, 243)}) == \"D\"\n# Constructed: c = 2(a+b)\nassert odd_triad({\"A\": (3, 4, 14), \"B\": (5, 6, 22), \"C\": (7, 2, 18), \"D\": (8, 1, 20)}) == \"D\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "classification.number-property",
+  "topic": "Classification",
+  "subtopic": "Number odd one out",
+  "name": "Number property check",
+  "statement": "\\text{Test every number for one property (prime, perfect square/cube, divisible by } k\\text{); the number without it is odd.}",
+  "conditions": [],
+  "derivation": [
+   "List candidate properties: prime, square, cube, even/odd, divisible by 3, 7, 11, 13.",
+   "Test each number against one property at a time.",
+   "A prime test needs divisors only up to $\\sqrt{n}$: for $n < 900$, try 2, 3, 5, 7, 11, 13, 17, 19, 23, 29.",
+   "The property shared by exactly three numbers names the fourth as odd."
+  ],
+  "visual_proof": null,
+  "shortcut": "Digit sum divisible by 3 kills primality at once; check 7, 11 and 13 next.",
+  "worked_example": {
+   "question_key": "2024-09-24_1600_R24",
+   "answer": "B",
+   "steps": [
+    "829, 643, 821: no divisor up to their square roots (about 29, 26, 29), so all prime.",
+    "237: digit sum $2+3+7 = 12$, so $237 = 3 \\times 79$, composite.",
+    "Odd one: 237 (B)."
+   ]
+  },
+  "common_traps": [
+   "Calling 237 prime: its digit sum is 12, so it is divisible by 3 ($237 = 3 \\times 79$).",
+   "Taking 1 as prime, or 91 ($7 \\times 13$) and 221 ($13 \\times 17$) as primes.",
+   "Picking the only even number when all four are not otherwise tested."
+  ],
+  "related_ids": [
+   "number-system.divisibility-rules",
+   "series.prime-pattern",
+   "series.square-cube-pattern"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "from math import isqrt\n\ndef is_prime(n):\n    return n > 1 and all(n % d for d in range(2, isqrt(n) + 1))\n\ndef icbrt(n):\n    r = round(n ** (1 / 3))\n    return next((x for x in (r - 1, r, r + 1) if x ** 3 == n), None)\n\nPROPS = {\"prime\": is_prime, \"square\": lambda n: isqrt(n) ** 2 == n, \"cube\": lambda n: icbrt(n) is not None,\n         \"even\": lambda n: n % 2 == 0}\nfor k in range(3, 14):\n    PROPS[f\"div{k}\"] = lambda n, k=k: n % k == 0\n\ndef odd_number(options):\n    odd = set()\n    for test in PROPS.values():\n        has = [k for k, n in options.items() if test(n)]\n        if len(has) == 3:\n            odd |= set(options) - set(has)\n    assert len(odd) == 1, odd\n    return odd.pop()\n\n# Worked example 2024-09-24_1600_R24: 829, 643, 821 prime; 237 = 3 x 79\nassert 237 == 3 * 79 and all(is_prime(n) for n in (829, 643, 821))\nassert odd_number({\"A\": 829, \"B\": 237, \"C\": 643, \"D\": 821}) == \"B\"\n# Constructed: perfect squares\nassert odd_number({\"A\": 121, \"B\": 169, \"C\": 250, \"D\": 225}) == \"C\"\n# Constructed: perfect cubes\nassert odd_number({\"A\": 343, \"B\": 512, \"C\": 729, \"D\": 900}) == \"D\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "classification.word-category",
+  "topic": "Classification",
+  "subtopic": "Word odd one out",
+  "name": "Word category membership",
+  "statement": "\\text{Name the category or relation of each word (pair) - synonym, antonym, part-whole, item-count - and pick the one that differs.}",
+  "conditions": [],
+  "derivation": [
+   "Read each word pair as a sentence: 'Loud means noisy', 'Close is the opposite of open'.",
+   "Name the relation in one word: synonym, antonym, part-whole, worker-tool, shape-sides.",
+   "For single words, name the class (fruit, metal, planet, instrument).",
+   "Three items share the label; the fourth is the answer."
+  ],
+  "visual_proof": null,
+  "shortcut": null,
+  "worked_example": {
+   "question_key": "2024-09-18_0900_R07",
+   "answer": "D",
+   "steps": [
+    "Loud - noisy, honest - truthful, tired - exhausted: same meaning (synonyms).",
+    "Close - open: opposite meaning (antonyms).",
+    "Odd pair: Close - open (D)."
+   ]
+  },
+  "common_traps": [
+   "Using letter counts or vowels, which the question note forbids.",
+   "Calling a near-synonym (Joy - Peace) an antonym because the words are not identical.",
+   "Accepting a fact pair without checking it: a hexagon has 6 sides, not 8.",
+   "Choosing a narrower category when a broader one already groups three items."
+  ],
+  "related_ids": [
+   "analogy.word-relation",
+   "classification.letter-gap-pattern"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "method",
+   "code": "# Relation of each word pair, from meaning (hand-coded lexicon; this is the knowledge the method needs).\nRELATION = {\n    (\"loud\", \"noisy\"): \"synonym\", (\"honest\", \"truthful\"): \"synonym\", (\"tired\", \"exhausted\"): \"synonym\",\n    (\"close\", \"open\"): \"antonym\",\n    (\"joy\", \"peace\"): \"synonym\", (\"misery\", \"happiness\"): \"antonym\", (\"problem\", \"concern\"): \"synonym\",\n    (\"worry\", \"fear\"): \"synonym\",\n    (\"pentagon\", 5): \"sides\", (\"triangle\", 3): \"sides\", (\"square\", 4): \"sides\", (\"hexagon\", 8): \"wrong-count\",\n}\nSIDES = {\"triangle\": 3, \"square\": 4, \"pentagon\": 5, \"hexagon\": 6}\n\ndef relation(pair):\n    a, b = pair\n    if isinstance(b, int):\n        return \"sides\" if SIDES[a] == b else \"wrong-count\"\n    return RELATION[(a, b)]\n\ndef odd_pair(options):\n    rels = {k: relation(p) for k, p in options.items()}\n    vals = list(rels.values())\n    odd = [k for k, r in rels.items() if vals.count(r) == 1]\n    assert len(odd) == 1 and len(set(vals)) == 2, rels\n    return odd[0]\n\n# Worked example 2024-09-18_0900_R07\nassert odd_pair({\"A\": (\"loud\", \"noisy\"), \"B\": (\"honest\", \"truthful\"), \"C\": (\"tired\", \"exhausted\"),\n                 \"D\": (\"close\", \"open\")}) == \"D\"\n# 2024-09-13_1600_R04\nassert odd_pair({\"A\": (\"joy\", \"peace\"), \"B\": (\"misery\", \"happiness\"), \"C\": (\"problem\", \"concern\"),\n                 \"D\": (\"worry\", \"fear\")}) == \"B\"\n# 2024-09-09_0900_R06: shape - number of sides\nassert odd_pair({\"A\": (\"pentagon\", 5), \"B\": (\"hexagon\", 8), \"C\": (\"triangle\", 3), \"D\": (\"square\", 4)}) == \"B\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

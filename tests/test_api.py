@@ -15,7 +15,7 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import sessionmaker
 
 from api.load import content_hash, load_all, paper_id
-from api.models import AnswerVerification, Base, Mock, Question, QuestionVersion, ReviewItem
+from api.models import AnswerVerification, Base, Mock, Question, QuestionFormula, QuestionTag, QuestionVersion, ReviewItem
 
 URL = os.environ.get("TEST_DATABASE_URL", "postgresql+psycopg://ssc:ssc@localhost:5432/ssc_test")
 PAPER = "2024-09-09_0900"
@@ -71,7 +71,9 @@ def verification(q: dict, status: str = "KEY_CONFIRMED_DUAL") -> dict:
             "verifications": [dict(run, solver_id="a"), dict(run, solver_id="b")]}
 
 
-def write_data(root: Path, questions: list[dict], verifications: list[dict], queue: list[dict] = ()) -> Path:
+def write_data(root: Path, questions: list[dict], verifications: list[dict], queue: list[dict] = (),
+               decisions: list[dict] = (), library: dict[str, list[dict]] | None = None,
+               tags: list[dict] = ()) -> Path:
     manifest = {"sources": [
         {"date": "09.09.2024", "time_slot": "0900", "filename": "sheet.pdf", "stored_path": "data/raw/sheet.pdf",
          "sha256": "0" * 64, "key_status": "unknown", "accepted": True},
@@ -85,6 +87,14 @@ def write_data(root: Path, questions: list[dict], verifications: list[dict], que
     (root / "questions" / "review_queue.json").write_text(json.dumps(list(queue)))
     (root / "solver" / "verifications" / f"{PAPER}.jsonl").write_text(
         "".join(json.dumps(v) + "\n" for v in verifications))
+    (root / "review").mkdir(exist_ok=True)
+    (root / "review" / "decisions.jsonl").write_text("".join(json.dumps(d) + "\n" for d in decisions))
+    for name, entries in (library or {}).items():  # "quant/percentage" -> data/library/quant/percentage.json
+        (root / "library" / name).parent.mkdir(parents=True, exist_ok=True)
+        (root / "library" / f"{name}.json").write_text(json.dumps(entries))
+    if tags:
+        (root / "tags").mkdir(exist_ok=True)
+        (root / "tags" / "questions.jsonl").write_text("".join(json.dumps(t) + "\n" for t in tags))
     return root
 
 
@@ -197,3 +207,154 @@ def test_discarded_solver_verdicts_stop_counting(session, tmp_path, bank):
     session.commit()
     assert report.counts["key statuses withdrawn"] == 1
     assert session.get(Mock, f"{PAPER}_QUANT").status == "DRAFT"
+
+
+def decision(q: dict, action: str, answer: str | None) -> dict:
+    return {"paper_id": q["paper_id"], "section": q["section"], "q_no": q["q_no"],
+            "question_id": q["ssc_question_id"], "question_version": content_hash(q),
+            "official_answer": q["official_answer"], "status_before": "KEY_DISPUTED", "action": action,
+            "answer": answer, "note": "", "decided_at": "2026-10-01T00:00:00Z"}
+
+
+@pytest.mark.parametrize("action,answer", [("approve", "C"), ("edit", "B")])
+def test_review_decision_confirms_key_and_publishes(session, tmp_path, bank, action, answer):
+    quant, reasoning, verifs = bank
+    data = write_data(tmp_path, quant + reasoning, verifs, decisions=[decision(reasoning[24], action, answer)])
+    load_all(session, data)
+    session.commit()
+    assert session.get(Mock, f"{PAPER}_REASONING").status == "PUBLISHED"
+    q = session.scalar(select(Question).where(Question.mock_id == f"{PAPER}_REASONING", Question.q_no == 25))
+    assert (q.current_version.official_answer, q.current_version.key_status) == (answer, "KEY_CONFIRMED_REVIEW")
+    assert len(q.versions) == (2 if action == "edit" else 1)
+    item = session.scalar(select(ReviewItem).where(ReviewItem.question_id == q.id))
+    assert item.status == {"approve": "APPROVED", "edit": "EDITED"}[action]
+    assert load_all(session, data).changed == 0
+
+
+def test_rejected_question_keeps_mock_unpublished(session, tmp_path, bank):
+    quant, reasoning, verifs = bank
+    load_all(session, write_data(tmp_path, quant + reasoning, verifs,
+                                 decisions=[decision(reasoning[24], "reject", None)]))
+    session.commit()
+    assert session.get(Mock, f"{PAPER}_REASONING").status == "DRAFT"
+
+
+def entry(fid: str, topic: str, subtopic: str, status: str = "PASSED") -> dict:
+    return {"id": fid, "topic": topic, "subtopic": subtopic, "name": fid.split(".")[1].replace("-", " "),
+            "statement": "x", "conditions": [], "derivation": ["d"], "visual_proof": None, "shortcut": None,
+            "worked_example": None, "common_traps": ["t"], "related_ids": [], "diagram": None,
+            "verification": {"kind": "identity", "code": "pass", "result": {"status": status}}}
+
+
+LIBRARY = {
+    "quant/profit-loss": [entry("profit-loss.false-weight", "Profit & Loss", "False weight"),
+                          entry("profit-loss.profit-percent", "Profit & Loss", "Profit & loss basics")],
+    "reasoning/series": [entry("series.number-series", "Series", "Number series", status="NEEDS_REVIEW")],
+}
+
+
+def tag(section: str, q_no: int, topic: str, subtopic: str, qtype: str, ids: list[str], difficulty: int = 2,
+        **extra) -> dict:
+    return {"key": f"{PAPER}_{section[0]}{q_no:02d}", "topic": topic, "subtopic": subtopic, "question_type": qtype,
+            "formula_ids": ids, "shortcut_used": "s", "difficulty": difficulty, "expected_time_sec": 40,
+            "has_visual": False, "tagger": "tagger-a", "prompt_version": "tagger_v3", **extra}
+
+
+def bank_tags() -> list[dict]:
+    pl = ("Profit & Loss", "False weight", "false weight profit %", ["profit-loss.false-weight",
+                                                                      "profit-loss.profit-percent"])
+    tags = [tag("QUANT", n, *pl, difficulty=3 if n <= 5 else 2) for n in range(1, 21)]
+    tags += [tag("QUANT", n, "Profit & Loss", "Profit & loss basics", "profit % from CP/SP",
+                 ["profit-loss.profit-percent"]) for n in range(21, 26)]
+    tags[-1]["duplicate_of"] = f"{PAPER}_Q21"  # counted once in the tree
+    tags += [tag("REASONING", n, "Series", "Number series", "missing term", ["series.number-series"])
+             for n in range(1, 26)]
+    return tags
+
+
+@pytest.fixture
+def indexed(engine, session, tmp_path, bank):
+    from fastapi.testclient import TestClient
+
+    from api.db import get_session
+    from api.main import app
+
+    quant, reasoning, verifs = bank
+    quant[6]["stem_text"] = "A train crosses a platform in 20 seconds"
+    verifs = [verification(quant[6]) if (v["section"], v["q_no"]) == ("QUANT", 7) else v for v in verifs]
+    data = write_data(tmp_path, quant + reasoning, verifs, library=LIBRARY, tags=bank_tags())
+    report = load_all(session, data)
+    session.commit()
+    app.dependency_overrides[get_session] = lambda: session
+    yield TestClient(app), report, data
+    app.dependency_overrides.clear()
+
+
+def test_tags_and_formulas_load_idempotently(indexed, session):
+    _, report, data = indexed
+    assert (report.counts["formulas added"], report.counts["question tags added"]) == (3, 50)
+    links = session.scalars(select(QuestionFormula).order_by(QuestionFormula.question_id, QuestionFormula.rank))
+    assert [f.formula_id for f in links][:2] == ["profit-loss.false-weight", "profit-loss.profit-percent"]
+    dup = session.scalar(select(QuestionTag).where(QuestionTag.duplicate_of_id.is_not(None)))
+    assert dup.duplicate_of_id == session.scalar(
+        select(Question.id).where(Question.mock_id == f"{PAPER}_QUANT", Question.q_no == 21))
+    assert load_all(session, data).changed == 0
+
+
+def test_retag_replaces_formula_links(indexed, session):
+    client, _, data = indexed
+    tags = bank_tags()
+    tags[0]["formula_ids"] = ["profit-loss.profit-percent"]
+    (data / "tags" / "questions.jsonl").write_text("".join(json.dumps(t) + "\n" for t in tags))
+    report = load_all(session, data)
+    session.commit()
+    assert report.counts["question formula links set"] == 1
+    assert client.get("/formulas/profit-loss.false-weight").json()["question_count"] == 19
+
+
+def test_index_tree_counts_and_frequency(indexed):
+    client = indexed[0]
+    tree = client.get("/index/tree", params={"section": "quant"}).json()
+    assert [(t["topic"], t["slug"], t["count"], t["per_shift"]) for t in tree] == [
+        ("Profit & Loss", "profit-loss", 24, 24.0)]  # one paper; the repeat is not counted
+    subs = {s["name"]: s for s in tree[0]["subtopics"]}
+    assert subs["False weight"]["count"] == 20
+    assert subs["Profit & loss basics"]["question_types"] == [{"name": "profit % from CP/SP", "count": 4}]
+
+
+def test_index_filters(indexed):
+    client = indexed[0]
+    get = lambda **p: client.get("/index/questions", params=p).json()  # noqa: E731
+    assert get()["total"] == 50
+    assert get(section="reasoning")["total"] == 25
+    assert get(topic="Profit & Loss", subtopic="False weight", difficulty=3)["total"] == 5
+    assert get(formula="profit-loss.profit-percent")["total"] == 25
+    assert get(status="confirmed")["total"] == 49  # Reasoning Q25 is disputed
+    assert get(status="KEY_DISPUTED")["rows"][0]["q_no"] == 25
+    row = get(q="trains")["rows"]  # full-text search matches "train"
+    assert [(r["section"], r["q_no"]) for r in row] == [("QUANT", 7)]
+    assert get(q="20 seconds")["total"] == 1
+    first = get(limit=1)["rows"][0]
+    assert [f["id"] for f in first["formulas"]] == ["profit-loss.false-weight", "profit-loss.profit-percent"]
+    assert first["crop_url"] == f"/assets/{PAPER}/Q01.png"
+    assert "official_answer" not in first and "answer" not in first
+
+
+def test_study_page_shows_only_verified_answers(indexed):
+    client = indexed[0]
+    ids = {(r["section"], r["q_no"]): r["id"] for r in client.get("/index/questions", params={"limit": 50}).json()["rows"]}
+    q = client.get(f"/study/questions/{ids['QUANT', 1]}").json()
+    assert (q["answer"], q["tag"]["subtopic"], q["working"]) == ("A", "False weight", ["step"])
+    assert client.get(f"/study/questions/{ids['REASONING', 25]}").status_code == 409
+    assert client.get("/study/questions/999999").status_code == 404
+
+
+def test_formula_library_routes(indexed):
+    client = indexed[0]
+    rows = client.get("/formulas", params={"topic_slug": "profit-loss"}).json()
+    assert [(f["id"], f["question_count"]) for f in rows] == [("profit-loss.false-weight", 20),
+                                                               ("profit-loss.profit-percent", 25)]
+    series = client.get("/formulas/series.number-series").json()
+    assert (series["verification_status"], series["question_count"], series["section"]) == ("NEEDS_REVIEW", 25,
+                                                                                            "REASONING")
+    assert client.get("/formulas/nope.nope").status_code == 404

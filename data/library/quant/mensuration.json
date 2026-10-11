@@ -1,0 +1,1252 @@
+[
+ {
+  "id": "mensuration.circle-area-circumference",
+  "topic": "Mensuration",
+  "subtopic": "Circle & sector",
+  "name": "Circle area and circumference",
+  "statement": "A=\\pi r^2,\\ C=2\\pi r;\\ \\text{ring}=\\pi(R^2-r^2)",
+  "conditions": [],
+  "derivation": [
+   "Cut the disc into thin rings; the ring at distance $t$ has length $2\\pi t$.",
+   "Adding the rings from $0$ to $r$ gives $A=\\int_0^r 2\\pi t\\,dt=\\pi r^2$.",
+   "$\\pi$ is defined as circumference ÷ diameter, so $C=\\pi d=2\\pi r$.",
+   "A ring (annulus) is the big disc minus the small one: $\\pi R^2-\\pi r^2=\\pi(R^2-r^2)$."
+  ],
+  "visual_proof": "Unroll the thin rings of the disc into strips stacked as a right triangle with base $2\\pi r$ and height $r$; its area is $\\frac12\\cdot 2\\pi r\\cdot r=\\pi r^2$.",
+  "shortcut": "Circumferences add like radii ($R=r_1+r_2$); areas add like squares ($R^2=r_1^2+r_2^2$, e.g. $8,15\\to17$).",
+  "worked_example": {
+   "question_key": "2024-09-25_1230_Q15",
+   "answer": "D",
+   "steps": [
+    "$2\\pi R=2\\pi\\cdot12+2\\pi\\cdot16$.",
+    "Cancel $2\\pi$: $R=12+16=28$ cm.",
+    "Diameter $=2R=56$ cm (D)."
+   ]
+  },
+  "common_traps": [
+   "Answering the radius 28 when the diameter is asked (option A).",
+   "Adding areas instead of circumferences: $\\sqrt{12^2+16^2}=20$, diameter 40 (wrong).",
+   "Using $\\pi r^2$ for the perimeter or $2\\pi r$ for the area.",
+   "Ring area as $\\pi(R-r)^2$ instead of $\\pi(R^2-r^2)$."
+  ],
+  "related_ids": [
+   "mensuration.arc-length",
+   "mensuration.sector-area",
+   "geometry.circle-basics"
+  ],
+  "diagram": {
+   "alt_text": "Two concentric circles with centre O, inner radius r and outer radius R; the band between them is the ring of area π(R² − r²).",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "P": [
+      2,
+      0
+     ],
+     "Q": [
+      0,
+      3
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "P"
+     ],
+     [
+      "O",
+      "Q"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 2
+     },
+     {
+      "center": "O",
+      "radius": 3
+     }
+    ],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       1,
+       -0.3
+      ],
+      "text": "r"
+     },
+     {
+      "at": [
+       -0.3,
+       1.5
+      ],
+      "text": "R"
+     },
+     {
+      "at": [
+       1.7,
+       2.0
+      ],
+      "text": "ring = π(R² − r²)"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nr, R, t = sp.symbols(\"r R t\", positive=True)\n# area: add up thin rings of length 2*pi*t\nassert sp.simplify(sp.integrate(2*sp.pi*t, (t, 0, r)) - sp.pi*r**2) == 0\n# circumference: arc length of x = r cos t, y = r sin t over one turn\nx, y = r*sp.cos(t), r*sp.sin(t)\nspeed = sp.sqrt(sp.trigsimp(sp.diff(x, t)**2 + sp.diff(y, t)**2))\nassert sp.simplify(sp.integrate(speed, (t, 0, 2*sp.pi)) - 2*sp.pi*r) == 0\n# ring between radii r < R\nassert sp.simplify(sp.integrate(2*sp.pi*t, (t, r, R)) - sp.pi*(R**2 - r**2)) == 0\n# worked example: 2*pi*Rn = 2*pi*12 + 2*pi*16\nRn = sp.solve(sp.Eq(2*sp.pi*R, 2*sp.pi*12 + 2*sp.pi*16), R)[0]\nassert Rn == 28 and 2*Rn == 56\n# area-sum version: R^2 = 8^2 + 15^2\nassert sp.sqrt(8**2 + 15**2) == 17\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:25+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.arc-length",
+  "topic": "Mensuration",
+  "subtopic": "Circle & sector",
+  "name": "Arc length and sector perimeter",
+  "statement": "l=\\frac{\\theta}{360^\\circ}2\\pi r;\\ \\text{sector perimeter}=2r+l",
+  "conditions": [
+   "$\\theta$ in degrees, $0^\\circ<\\theta\\le360^\\circ$"
+  ],
+  "derivation": [
+   "A full turn ($360^\\circ$) has arc length $2\\pi r$.",
+   "Arc length is proportional to the angle, so $\\theta$ gets the fraction $\\frac{\\theta}{360^\\circ}$ of it: $l=\\frac{\\theta}{360^\\circ}2\\pi r$.",
+   "The sector's boundary is two radii plus the arc: perimeter $=2r+l$."
+  ],
+  "visual_proof": "The sector is a slice of the circle; the arc is the same fraction $\\theta/360^\\circ$ of the circumference as the slice is of the whole.",
+  "shortcut": "In radians $l=r\\theta$; $30^\\circ$ arc $=\\frac{\\pi r}{6}$, $60^\\circ$ arc $=\\frac{\\pi r}{3}$.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_Q20",
+   "answer": "B",
+   "steps": [
+    "$l=\\frac{30}{360}\\times2\\times3.14\\times12=6.28$ cm.",
+    "Perimeter $=2r+l=24+6.28=30.28$ cm (B)."
+   ]
+  },
+  "common_traps": [
+   "Giving the arc 6.28 alone and forgetting the two radii.",
+   "Adding only one radius: $12+6.28=18.28$.",
+   "Using $\\pi r^2$ in place of $2\\pi r$, which gives the sector area, not the arc."
+  ],
+  "related_ids": [
+   "mensuration.sector-area",
+   "mensuration.circle-area-circumference",
+   "geometry.central-angle-theorem"
+  ],
+  "diagram": {
+   "alt_text": "A circle of radius 12 cm with centre O; radii OA and OB make a 30° angle and cut off an arc of 6.28 cm.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      12,
+      0
+     ],
+     "B": [
+      10.392,
+      6.0
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "A"
+     ],
+     [
+      "O",
+      "B"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 12
+     }
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "A",
+      "to": "B",
+      "label": "30°",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       6,
+       -1
+      ],
+      "text": "r = 12"
+     },
+     {
+      "at": [
+       13,
+       3.5
+      ],
+      "text": "l = 6.28"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nfrom fractions import Fraction as F\nrandom.seed(0)\nn = 0\nfor _ in range(1200):\n    r = random.uniform(0.1, 100)\n    th = random.uniform(0.5, 360)\n    l = th / 360 * 2 * math.pi * r\n    # independent: sum of 600 chords along the arc\n    N = 600\n    d = math.radians(th) / N\n    chords = N * 2 * r * math.sin(d / 2)\n    assert math.isclose(l, chords, rel_tol=1e-5)\n    assert math.isclose(2 * r + l, 2 * r + chords, rel_tol=1e-5)\n    n += 1\n# boundaries of 0 < theta <= 360\nr = 7.0\nassert math.isclose(360 / 360 * 2 * math.pi * r, 2 * math.pi * r)   # full turn = circumference\nassert 0 / 360 * 2 * math.pi * r == 0                               # no arc: perimeter is just 2r\n# worked example: r = 12, 30 deg, pi = 3.14\narc = F(30, 360) * 2 * F(314, 100) * 12\nassert arc == F(628, 100) and 24 + arc == F(3028, 100)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:26+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.sector-area",
+  "topic": "Mensuration",
+  "subtopic": "Circle & sector",
+  "name": "Area of a sector",
+  "statement": "A=\\frac{\\theta}{360^\\circ}\\pi r^2=\\frac12 lr",
+  "conditions": [],
+  "derivation": [
+   "A full circle ($360^\\circ$) has area $\\pi r^2$.",
+   "A sector of angle $\\theta$ takes the fraction $\\frac{\\theta}{360^\\circ}$: $A=\\frac{\\theta}{360^\\circ}\\pi r^2$.",
+   "Write it as $\\frac12 r\\cdot\\left(\\frac{\\theta}{360^\\circ}2\\pi r\\right)=\\frac12 lr$, using $l$ from [[f:mensuration.arc-length]]."
+  ],
+  "visual_proof": "Cut the sector into many thin slices and lay them alternately; they form a near-rectangle (or triangle) with base the arc $l$ and height $r$, so area $=\\frac12 lr$.",
+  "shortcut": "Arc and radius given: $A=\\frac12 lr$ directly, no angle needed.",
+  "worked_example": {
+   "question_key": "2024-09-09_1230_Q19",
+   "answer": "A",
+   "steps": [
+    "Arc $l=11$, radius $r=15.75$.",
+    "$A=\\frac12\\times11\\times15.75=86.625$ cm² (A)."
+   ]
+  },
+  "common_traps": [
+   "Finding the angle first and rounding $\\pi$ loses the exact 86.625 and lands on a nearby option.",
+   "Forgetting the $\\frac12$: $11\\times15.75=173.25$.",
+   "Using $\\frac{\\theta}{360}2\\pi r$ (the arc) when the area is asked."
+  ],
+  "related_ids": [
+   "mensuration.arc-length",
+   "mensuration.circle-area-circumference",
+   "mensuration.equilateral-triangle"
+  ],
+  "diagram": {
+   "alt_text": "A sector with centre O, radius 15.75 cm and arc length 11 cm; its area is half of arc times radius.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "A": [
+      15.75,
+      0
+     ],
+     "B": [
+      12.062,
+      10.127
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "A"
+     ],
+     [
+      "O",
+      "B"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "O",
+      "from": "A",
+      "to": "B",
+      "label": "θ",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       8,
+       -1
+      ],
+      "text": "r = 15.75"
+     },
+     {
+      "at": [
+       16.5,
+       6
+      ],
+      "text": "l = 11"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nr, th, rho, phi = sp.symbols(\"r theta rho phi\", positive=True)\nA = th / 360 * sp.pi * r**2\nl = th / 360 * 2 * sp.pi * r\nassert sp.simplify(A - l * r / 2) == 0\n# independent: polar double integral over the sector (theta in degrees)\npolar = sp.integrate(sp.integrate(rho, (rho, 0, r)), (phi, 0, th * sp.pi / 180))\nassert sp.simplify(polar - A) == 0\n# worked example: l = 11, r = 15.75\nassert sp.Rational(1, 2) * 11 * sp.Rational(1575, 100) == sp.Rational(86625, 1000)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:26+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.clock-hand-angle",
+  "topic": "Mensuration",
+  "subtopic": "Circle & sector",
+  "name": "Clock hand angles",
+  "statement": "\\text{minute hand: } 6^\\circ/\\text{min};\\ \\text{hour hand: } 0.5^\\circ/\\text{min};\\ \\theta=|30H-5.5M|",
+  "conditions": [
+   "$H$ on the 12-hour dial (12 or 0), $0\\le M<60$",
+   "If $\\theta>180^\\circ$, the smaller angle is $360^\\circ-\\theta$"
+  ],
+  "derivation": [
+   "The minute hand turns $360^\\circ$ in 60 min: $6^\\circ$ per minute.",
+   "The hour hand turns $360^\\circ$ in 12 h $=720$ min: $0.5^\\circ$ per minute, i.e. $30^\\circ$ per hour.",
+   "At $H$:$M$ the hour hand is at $30H+0.5M$ and the minute hand at $6M$ (from 12).",
+   "Difference: $\\theta=|30H+0.5M-6M|=|30H-5.5M|$."
+  ],
+  "visual_proof": "A clock face with both hands drawn from 12; each hand's angle is its rate times the elapsed minutes, and the gap between them is the angle.",
+  "shortcut": "The minute hand gains $5.5^\\circ$ per minute on the hour hand; it turns $90^\\circ$ every 15 min.",
+  "worked_example": {
+   "question_key": "2024-09-13_1600_Q07",
+   "answer": "C",
+   "steps": [
+    "Minute hand: $6^\\circ$ per minute.",
+    "In 25 min: $25\\times6=150^\\circ$.",
+    "$150^\\circ=150\\times\\frac{\\pi}{180}=\\frac{5\\pi}{6}$ (C)."
+   ]
+  },
+  "common_traps": [
+   "Using the hour-hand rate $0.5^\\circ$/min: $12.5^\\circ$.",
+   "Forgetting the hour hand also moves: at 3:30 the angle is $75^\\circ$, not $90^\\circ$.",
+   "Leaving $\\theta>180^\\circ$ when the smaller angle is asked (12:30 gives 195°; answer 165°).",
+   "Converting degrees to radians with $\\frac{180}{\\pi}$ instead of $\\frac{\\pi}{180}$."
+  ],
+  "related_ids": [
+   "mensuration.arc-length",
+   "geometry.central-angle-theorem"
+  ],
+  "diagram": {
+   "alt_text": "A clock face with centre O; the minute hand moves from 12 to the 5 mark, turning through 150° in 25 minutes.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "O": [
+      0,
+      0
+     ],
+     "T": [
+      0,
+      5
+     ],
+     "F": [
+      2.5,
+      -4.33
+     ]
+    },
+    "segments": [
+     [
+      "O",
+      "T"
+     ],
+     [
+      "O",
+      "F"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "O",
+      "radius": 5
+     }
+    ],
+    "angles": [
+     {
+      "at": "O",
+      "from": "T",
+      "to": "F",
+      "label": "150°",
+      "right": false
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       0,
+       5.6
+      ],
+      "text": "12"
+     },
+     {
+      "at": [
+       2.9,
+       -5.0
+      ],
+      "text": "5 (25 min)"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef formula(H, M):\n    th = abs(30 * H - F(11, 2) * M)\n    th = th % 360\n    return 360 - th if th > 180 else th\n\ndef simulate(H, M):\n    t = (H % 12) * 60 + M                 # minutes after 12:00\n    hour = t * F(360, 720) % 360          # hour hand: 360 deg in 12 h\n    minute = M * F(360, 60) % 360         # minute hand: 360 deg in 60 min\n    d = abs(hour - minute)\n    return min(d, 360 - d)\n\nn = 0\nfor _ in range(2000):\n    H = random.randint(1, 12)\n    M = F(random.randint(0, 59 * 4), 4)\n    assert formula(H, M) == simulate(H, M)\n    assert 0 <= formula(H, M) <= 180\n    n += 1\n# rates\nassert F(360, 60) == 6 and F(360, 12 * 60) == F(1, 2) and 6 - F(1, 2) == F(11, 2)\n# boundary of 'theta > 180 -> 360 - theta': exactly 180 at 6:00, just past it at 12:30 (195 -> 165)\nassert formula(6, 0) == 180 == simulate(6, 0)\nassert abs(30 * 12 - F(11, 2) * 30) == 195 and formula(12, 30) == 165 == simulate(12, 30)\n# worked example: minute hand in 25 min\nassert 25 * 6 == 150 and F(150, 180) == F(5, 6)   # 150 deg = 5pi/6\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:26+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.triangle-area",
+  "topic": "Mensuration",
+  "subtopic": "Triangles & quadrilaterals",
+  "name": "Area of a triangle",
+  "statement": "A=\\frac12 bh",
+  "conditions": [],
+  "derivation": [
+   "Copy the triangle and rotate it to sit against the original: together they form a parallelogram with base $b$ and height $h$.",
+   "A parallelogram's area is $bh$ (see [[f:mensuration.quadrilateral-areas]]).",
+   "The triangle is half of it: $A=\\frac12 bh$."
+  ],
+  "visual_proof": "Two copies of the triangle make a parallelogram on the same base and height, so one triangle is half of $bh$.",
+  "shortcut": "Right triangle: $\\frac12\\times$ leg $\\times$ leg; with two sides and the included angle, $\\frac12 ab\\sin C$.",
+  "worked_example": {
+   "question_key": "2024-09-26_0900_Q18",
+   "answer": "C",
+   "steps": [
+    "Radius $\\perp$ tangent, so $AB=\\sqrt{17^2-8^2}=15$.",
+    "$ABCD$ = two right triangles $ABC$, $ADC$ with legs 8 and 15.",
+    "Area $=2\\times\\frac12\\times8\\times15=120$ cm² (C)."
+   ]
+  },
+  "common_traps": [
+   "Taking a slant side as the height; $h$ must be perpendicular to the base.",
+   "Counting only one triangle: 60 (option B).",
+   "Forgetting the $\\frac12$ in each triangle: $2\\times8\\times15=240$."
+  ],
+  "related_ids": [
+   "mensuration.heron-formula",
+   "mensuration.equilateral-triangle",
+   "geometry.pythagoras",
+   "geometry.tangent-length"
+  ],
+  "diagram": {
+   "alt_text": "Circle centre C, radius 8; point A is 17 from C, tangents AB and AD are 15 each; kite ABCD is two right triangles of legs 8 and 15.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "C": [
+      0,
+      0
+     ],
+     "A": [
+      17,
+      0
+     ],
+     "B": [
+      3.765,
+      7.059
+     ],
+     "D": [
+      3.765,
+      -7.059
+     ]
+    },
+    "segments": [
+     [
+      "C",
+      "B"
+     ],
+     [
+      "B",
+      "A"
+     ],
+     [
+      "A",
+      "D"
+     ],
+     [
+      "D",
+      "C"
+     ],
+     [
+      "C",
+      "A"
+     ]
+    ],
+    "circles": [
+     {
+      "center": "C",
+      "radius": 8
+     }
+    ],
+    "angles": [
+     {
+      "at": "B",
+      "from": "C",
+      "to": "A",
+      "label": "",
+      "right": true
+     },
+     {
+      "at": "D",
+      "from": "C",
+      "to": "A",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       1.2,
+       4.3
+      ],
+      "text": "8"
+     },
+     {
+      "at": [
+       11,
+       4.6
+      ],
+      "text": "15"
+     },
+     {
+      "at": [
+       9,
+       0.6
+      ],
+      "text": "17"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nrandom.seed(0)\nn = 0\nwhile n < 1500:\n    (x1, y1), (x2, y2), (x3, y3) = [(random.uniform(-50, 50), random.uniform(-50, 50)) for _ in range(3)]\n    shoelace = abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2\n    if shoelace < 1:\n        continue\n    b = math.hypot(x2 - x1, y2 - y1)                     # base AB\n    h = abs((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / b   # distance of C from line AB\n    assert math.isclose(0.5 * b * h, shoelace, rel_tol=1e-9)\n    n += 1\n# worked example: tangent length 15, kite = two right triangles 1/2 * 8 * 15\nt = math.isqrt(17**2 - 8**2)\nassert t * t == 17**2 - 8**2 == 225\nassert 2 * (8 * t) // 2 == 120\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:26+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.heron-formula",
+  "topic": "Mensuration",
+  "subtopic": "Triangles & quadrilaterals",
+  "name": "Heron's formula",
+  "statement": "A=\\sqrt{s(s-a)(s-b)(s-c)},\\ s=\\frac{a+b+c}2",
+  "conditions": [
+   "$a,b,c>0$ and each side less than the sum of the other two"
+  ],
+  "derivation": [
+   "Drop the height $h$ onto side $c$; it splits $c$ into $x$ and $c-x$ with $a^2-(c-x)^2=b^2-x^2$, so $x=\\frac{b^2+c^2-a^2}{2c}$.",
+   "$h^2=b^2-x^2=\\frac{(2bc)^2-(b^2+c^2-a^2)^2}{4c^2}$.",
+   "Factor twice as a difference of squares: $(2bc)^2-(b^2+c^2-a^2)^2=(a+b+c)(-a+b+c)(a-b+c)(a+b-c)=16s(s-a)(s-b)(s-c)$.",
+   "$A=\\frac12 ch=\\sqrt{s(s-a)(s-b)(s-c)}$."
+  ],
+  "visual_proof": "The triangle with its height drawn to one side; the two right triangles share $h$ and Pythagoras in each gives $h$ from the three sides.",
+  "shortcut": "Isosceles (equal sides $a$, base $b$): $A=\\frac b4\\sqrt{4a^2-b^2}$.",
+  "worked_example": {
+   "question_key": "2024-09-17_0900_Q08",
+   "answer": "A",
+   "steps": [
+    "$\\triangle ABC$ (10, 20, 20): $s=25$, $A=\\sqrt{25\\cdot15\\cdot5\\cdot5}=25\\sqrt{15}=25\\times3.87=96.75$.",
+    "$\\triangle PQR$: other leg $=\\sqrt{13^2-12^2}=5$, area $=\\frac12\\times12\\times5=30$.",
+    "Difference $=96.75-30=66.75$ cm² (A)."
+   ]
+  },
+  "common_traps": [
+   "Using the perimeter $a+b+c$ for $s$ instead of half of it.",
+   "Taking 13 as a leg of $\\triangle PQR$: area 78, difference 18.75.",
+   "Applying Heron to three lengths that break the triangle inequality: the product goes negative or zero."
+  ],
+  "related_ids": [
+   "mensuration.triangle-area",
+   "mensuration.equilateral-triangle",
+   "geometry.triangle-inequality",
+   "geometry.isosceles-triangle"
+  ],
+  "diagram": {
+   "alt_text": "Isosceles triangle ABC with base AB = 10 cm and sides 20 cm; semi-perimeter s = 25.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "B": [
+      10,
+      0
+     ],
+     "C": [
+      5,
+      19.365
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "A"
+     ]
+    ],
+    "circles": [],
+    "angles": [],
+    "labels": [
+     {
+      "at": [
+       5,
+       -1.2
+      ],
+      "text": "10"
+     },
+     {
+      "at": [
+       1.2,
+       10
+      ],
+      "text": "20"
+     },
+     {
+      "at": [
+       8.8,
+       10
+      ],
+      "text": "20"
+     },
+     {
+      "at": [
+       12,
+       17
+      ],
+      "text": "s = 25"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import math, random\nrandom.seed(0)\n\ndef heron(a, b, c):\n    s = (a + b + c) / 2\n    return math.sqrt(s * (s - a) * (s - b) * (s - c))\n\nn = 0\nwhile n < 1500:\n    P = [(random.uniform(-50, 50), random.uniform(-50, 50)) for _ in range(3)]\n    (x1, y1), (x2, y2), (x3, y3) = P\n    shoelace = abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2\n    if shoelace < 1:\n        continue\n    a = math.dist(P[1], P[2]); b = math.dist(P[0], P[2]); c = math.dist(P[0], P[1])\n    assert math.isclose(heron(a, b, c), shoelace, rel_tol=1e-7)\n    # isosceles shortcut: equal sides p, base q -> q/4 * sqrt(4p^2 - q^2)\n    p, q = random.uniform(1, 50), None\n    q = random.uniform(0.01, 2 * p - 0.01)\n    assert math.isclose(heron(p, p, q), q / 4 * math.sqrt(4 * p * p - q * q), rel_tol=1e-7)\n    n += 1\n# boundary of the triangle inequality: equality gives a flat triangle (area 0), beyond it no triangle\ns = (3 + 4 + 7) / 2\nassert s * (s - 3) * (s - 4) * (s - 7) == 0\ns = (3 + 4 + 8) / 2\nassert s * (s - 3) * (s - 4) * (s - 8) < 0\n# worked example: 10, 20, 20 with sqrt15 = 3.87, minus right triangle 5-12-13\ns = 25\nassert s * (s - 10) * (s - 20) * (s - 20) == 625 * 15\nassert math.isclose(25 * 3.87 - (12 * 5) / 2, 66.75)\nprint(f\"CASES={n}\")\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:26+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.equilateral-triangle",
+  "topic": "Mensuration",
+  "subtopic": "Triangles & quadrilaterals",
+  "name": "Equilateral triangle area and height",
+  "statement": "A=\\frac{\\sqrt3}4a^2,\\ h=\\frac{\\sqrt3}2a",
+  "conditions": [],
+  "derivation": [
+   "The altitude from a vertex bisects the opposite side, making a right triangle with hypotenuse $a$ and base $\\frac a2$.",
+   "$h=\\sqrt{a^2-\\frac{a^2}4}=\\frac{\\sqrt3}2a$.",
+   "$A=\\frac12\\cdot a\\cdot\\frac{\\sqrt3}2a=\\frac{\\sqrt3}4a^2$."
+  ],
+  "visual_proof": "The altitude splits the triangle into two 30-60-90 right triangles with sides $\\frac a2$, $h$, $a$.",
+  "shortcut": "$h\\approx0.866a$; from the height, $a=\\frac{2h}{\\sqrt3}$ and $A=\\frac{h^2}{\\sqrt3}$.",
+  "worked_example": {
+   "question_key": "2024-09-23_1600_Q04",
+   "answer": "D",
+   "steps": [
+    "$h=\\frac{\\sqrt3}2a$ with $a=37\\sqrt3$.",
+    "$h=\\frac{\\sqrt3\\cdot37\\sqrt3}{2}=\\frac{111}2=55.5$ cm (D)."
+   ]
+  },
+  "common_traps": [
+   "Using $\\frac{\\sqrt3}4$ (area factor) for the height: 27.75.",
+   "Dropping the $\\sqrt3$ inside $a$: $\\frac{\\sqrt3}2\\times37\\approx32.0$.",
+   "Dividing by $\\sqrt3$ instead of multiplying: $\\frac{37\\sqrt3}{2\\sqrt3}=18.5$ (option B)."
+  ],
+  "related_ids": [
+   "mensuration.heron-formula",
+   "mensuration.triangle-area",
+   "geometry.equilateral-triangle"
+  ],
+  "diagram": {
+   "alt_text": "Equilateral triangle ABC with side 37√3 cm; altitude CD to the midpoint D of AB is 55.5 cm.",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "B": [
+      64.086,
+      0
+     ],
+     "C": [
+      32.043,
+      55.5
+     ],
+     "D": [
+      32.043,
+      0
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "A"
+     ],
+     [
+      "C",
+      "D"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "D",
+      "from": "B",
+      "to": "C",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       8,
+       30
+      ],
+      "text": "a = 37√3"
+     },
+     {
+      "at": [
+       36,
+       26
+      ],
+      "text": "h = 55.5"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\na = sp.symbols(\"a\", positive=True)\nA, B, C, D = sp.Point(0, 0), sp.Point(a, 0), sp.Point(a / 2, sp.sqrt(3) * a / 2), sp.Point(a / 2, 0)\nassert sp.simplify(A.distance(C) - a) == 0 and sp.simplify(B.distance(C) - a) == 0\nh = C.distance(D)                         # D is the foot of the altitude (midpoint of AB)\nassert sp.simplify(h - sp.sqrt(3) / 2 * a) == 0\nassert sp.simplify(h**2 + (a / 2)**2 - a**2) == 0     # Pythagoras in half the triangle\narea = abs(sp.Polygon(A, B, C).area)\nassert sp.simplify(area - sp.sqrt(3) / 4 * a**2) == 0\nassert sp.simplify(area - a * h / 2) == 0\n# worked example: a = 37*sqrt(3) -> h = 111/2\nassert sp.simplify(sp.sqrt(3) / 2 * 37 * sp.sqrt(3) - sp.Rational(111, 2)) == 0\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:26+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.quadrilateral-areas",
+  "topic": "Mensuration",
+  "subtopic": "Triangles & quadrilaterals",
+  "name": "Quadrilateral areas",
+  "statement": "\\text{rectangle } lb,\\ P=2(l+b);\\ \\text{parallelogram } bh;\\ \\text{rhombus } \\tfrac12d_1d_2;\\ \\text{trapezium } \\tfrac12(a+b)h",
+  "conditions": [],
+  "derivation": [
+   "Rectangle: $l$ rows of $b$ unit squares, area $lb$; perimeter walks each side twice, $2(l+b)$.",
+   "Parallelogram: slide the triangle from one end to the other; it becomes a rectangle $b\\times h$.",
+   "Rhombus: the diagonals are perpendicular and cut it into four right triangles, together half of the $d_1\\times d_2$ box: $\\frac12d_1d_2$.",
+   "Trapezium: a diagonal splits it into triangles $\\frac12ah$ and $\\frac12bh$; sum $\\frac12(a+b)h$."
+  ],
+  "visual_proof": "Each shape is cut and rearranged into a rectangle (parallelogram), half a rectangle (rhombus inside its diagonal box), or two triangles of equal height (trapezium).",
+  "shortcut": "Rectangle from perimeter and difference: $l=\\frac{P/2+(l-b)}{2}$, $b=\\frac{P/2-(l-b)}{2}$.",
+  "worked_example": {
+   "question_key": "2024-09-18_0900_Q21",
+   "answer": "A",
+   "steps": [
+    "$2(l+b)=48\\Rightarrow l+b=24$; $l-b=6$.",
+    "$l=15$, $b=9$.",
+    "Area $=15\\times9=135$ m² (A)."
+   ]
+  },
+  "common_traps": [
+   "Using $P=48$ as $l+b$: $l=27$, $b=21$ (wrong).",
+   "Parallelogram area as base × slant side instead of base × perpendicular height.",
+   "Rhombus area $d_1d_2$ without the $\\frac12$.",
+   "Trapezium: adding all four sides or forgetting to average the parallel sides."
+  ],
+  "related_ids": [
+   "mensuration.triangle-area",
+   "geometry.quadrilateral-diagonals",
+   "mensuration.cube-cuboid"
+  ],
+  "diagram": {
+   "alt_text": "Rectangle 15 m by 9 m: perimeter 48 m, area 135 m².",
+   "spec": {
+    "type": "geometry",
+    "points": {
+     "A": [
+      0,
+      0
+     ],
+     "B": [
+      15,
+      0
+     ],
+     "C": [
+      15,
+      9
+     ],
+     "D": [
+      0,
+      9
+     ]
+    },
+    "segments": [
+     [
+      "A",
+      "B"
+     ],
+     [
+      "B",
+      "C"
+     ],
+     [
+      "C",
+      "D"
+     ],
+     [
+      "D",
+      "A"
+     ]
+    ],
+    "circles": [],
+    "angles": [
+     {
+      "at": "A",
+      "from": "B",
+      "to": "D",
+      "label": "",
+      "right": true
+     }
+    ],
+    "labels": [
+     {
+      "at": [
+       7.5,
+       -1
+      ],
+      "text": "l = 15"
+     },
+     {
+      "at": [
+       16.2,
+       4.5
+      ],
+      "text": "b = 9"
+     },
+     {
+      "at": [
+       7.5,
+       4.5
+      ],
+      "text": "area 135"
+     }
+    ],
+    "to_scale": true
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom fractions import Fraction as F\nrandom.seed(0)\n\ndef shoelace(P):\n    s = sum(P[i][0] * P[(i + 1) % len(P)][1] - P[(i + 1) % len(P)][0] * P[i][1] for i in range(len(P)))\n    return abs(s) / 2\n\ndef q():\n    return F(random.randint(1, 400), 4)\n\nn = 0\nfor _ in range(1200):\n    l, b, h, s, d1, d2, a2 = q(), q(), q(), q(), q(), q(), q()\n    assert shoelace([(0, 0), (l, 0), (l, b), (0, b)]) == l * b                  # rectangle\n    assert 2 * (l + b) == l + b + l + b                                        # its perimeter\n    assert shoelace([(0, 0), (b, 0), (b + s, h), (s, h)]) == b * h              # parallelogram\n    assert shoelace([(d1 / 2, 0), (0, d2 / 2), (-d1 / 2, 0), (0, -d2 / 2)]) == d1 * d2 / 2   # rhombus\n    assert shoelace([(0, 0), (l, 0), (s + a2, h), (s, h)]) == (l + a2) * h / 2  # trapezium, parallel sides l, a2\n    n += 1\n# worked example: P = 48, l - b = 6\nl, b = (24 + 6) // 2, (24 - 6) // 2\nassert (l, b) == (15, 9) and 2 * (l + b) == 48 and l * b == 135\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:27+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.cylinder",
+  "topic": "Mensuration",
+  "subtopic": "Cylinder & cone",
+  "name": "Cylinder volume and surface area",
+  "statement": "V=\\pi r^2h;\\ CSA=2\\pi rh;\\ TSA=2\\pi r(r+h)",
+  "conditions": [],
+  "derivation": [
+   "Volume = base area × height = $\\pi r^2\\cdot h$.",
+   "Unroll the curved surface: a rectangle with width $2\\pi r$ (the base circumference) and height $h$: $CSA=2\\pi rh$.",
+   "Add the two circular ends: $TSA=2\\pi rh+2\\pi r^2=2\\pi r(r+h)$."
+  ],
+  "visual_proof": "Cut the curved surface along a vertical line and flatten it into a $2\\pi r\\times h$ rectangle.",
+  "shortcut": "For ratios, drop $\\pi$: $V\\propto r^2h$, $CSA\\propto rh$.",
+  "worked_example": {
+   "question_key": "2024-09-12_1230_Q19",
+   "answer": "D",
+   "steps": [
+    "$CSA=2\\pi rh$, so $CSA_1:CSA_2=r_1h_1:r_2h_2$.",
+    "$=4\\cdot5:5\\cdot7=20:35=4:7$ (D)."
+   ]
+  },
+  "common_traps": [
+   "Squaring the radius ratio (volume rule): $16\\cdot5:25\\cdot7=16:35$.",
+   "Using TSA instead of CSA when only 'curved' is asked.",
+   "Counting only one circular end for a closed cylinder."
+  ],
+  "related_ids": [
+   "mensuration.cone",
+   "mensuration.unit-conversion",
+   "mensuration.circle-area-circumference"
+  ],
+  "diagram": {
+   "alt_text": "Right circular cylinder with base radius r and height h; the curved surface unrolls to a 2πr by h rectangle.",
+   "spec": {
+    "type": "solid",
+    "shape": "cylinder",
+    "dims": {
+     "r": "r",
+     "h": "h"
+    },
+    "labels": [
+     "CSA = 2πrh",
+     "V = πr²h"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nr, h, rho, phi, z = sp.symbols(\"r h rho phi z\", positive=True)\nV = sp.integrate(sp.integrate(sp.integrate(rho, (rho, 0, r)), (phi, 0, 2 * sp.pi)), (z, 0, h))\nassert sp.simplify(V - sp.pi * r**2 * h) == 0\n# curved surface: x = r cos phi, y = r sin phi, z; |d/dphi x d/dz| = r\nX = sp.Matrix([r * sp.cos(phi), r * sp.sin(phi), z])\ndA = sp.simplify(sp.trigsimp(X.diff(phi).cross(X.diff(z)).norm()))\nCSA = sp.integrate(sp.integrate(dA, (phi, 0, 2 * sp.pi)), (z, 0, h))\nassert sp.simplify(CSA - 2 * sp.pi * r * h) == 0\nassert sp.simplify(CSA + 2 * sp.pi * r**2 - 2 * sp.pi * r * (r + h)) == 0\n# worked example: r 4:5, h 5:7 -> CSA ratio 4*5 : 5*7 = 4 : 7\nassert sp.simplify((2 * sp.pi * 4 * 5) / (2 * sp.pi * 5 * 7)) == sp.Rational(4, 7)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:27+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.cone",
+  "topic": "Mensuration",
+  "subtopic": "Cylinder & cone",
+  "name": "Cone volume and surface area",
+  "statement": "l=\\sqrt{r^2+h^2};\\ V=\\tfrac13\\pi r^2h;\\ CSA=\\pi rl;\\ TSA=\\pi r(r+l)",
+  "conditions": [],
+  "derivation": [
+   "Slant height: the axis $h$, radius $r$ and slant $l$ form a right triangle, so $l=\\sqrt{r^2+h^2}$.",
+   "A cone holds one third of the cylinder on the same base and height: $V=\\frac13\\pi r^2h$.",
+   "Unroll the curved surface into a sector of radius $l$ and arc $2\\pi r$; its area is $\\frac12\\cdot2\\pi r\\cdot l=\\pi rl$ ([[f:mensuration.sector-area]]).",
+   "Add the base: $TSA=\\pi rl+\\pi r^2=\\pi r(r+l)$."
+  ],
+  "visual_proof": "The curved surface opens into a sector of radius $l$ whose arc is the base circumference $2\\pi r$.",
+  "shortcut": "For ratios: $V\\propto r^2h$, so $h_1:h_2=\\frac{V_1}{r_1^2}:\\frac{V_2}{r_2^2}$. Triples to spot: (7, 24, 25), (5, 12, 13), (8, 15, 17).",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_Q21",
+   "answer": "A",
+   "steps": [
+    "$\\frac13\\cdot\\frac{22}7\\cdot r^2\\cdot24=1232\\Rightarrow r^2=49$, $r=7$.",
+    "$l=\\sqrt{7^2+24^2}=25$.",
+    "$TSA=\\frac{22}7\\cdot7\\cdot(7+25)=704$ cm² (A)."
+   ]
+  },
+  "common_traps": [
+   "Using $h$ in place of $l$: $\\frac{22}7\\cdot7\\cdot(7+24)=682$.",
+   "Forgetting the $\\frac13$ in the volume: $r^2=\\frac{49}3$.",
+   "Giving the CSA $\\pi rl=550$ when the total surface is asked."
+  ],
+  "related_ids": [
+   "mensuration.cylinder",
+   "mensuration.sector-area",
+   "geometry.pythagoras"
+  ],
+  "diagram": {
+   "alt_text": "Right circular cone with radius 7 cm, height 24 cm and slant height 25 cm.",
+   "spec": {
+    "type": "solid",
+    "shape": "cone",
+    "dims": {
+     "r": "7",
+     "h": "24",
+     "l": "25"
+    },
+    "labels": [
+     "r = 7",
+     "h = 24",
+     "l = 25"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nr, h, z, phi = sp.symbols(\"r h z phi\", positive=True)\nl = sp.sqrt(r**2 + h**2)\n# volume: discs of radius r*z/h stacked from apex (z = 0) to base (z = h)\nV = sp.integrate(sp.pi * (r * z / h)**2, (z, 0, h))\nassert sp.simplify(V - sp.pi * r**2 * h / 3) == 0\n# curved surface: x = (r z/h) cos phi, y = (r z/h) sin phi, z\nX = sp.Matrix([r * z / h * sp.cos(phi), r * z / h * sp.sin(phi), z])\ndA = sp.sqrt(sp.simplify(sp.trigsimp(sum(c**2 for c in X.diff(z).cross(X.diff(phi))))))\nCSA = sp.integrate(sp.integrate(sp.simplify(dA), (z, 0, h)), (phi, 0, 2 * sp.pi))\nassert sp.simplify(CSA - sp.pi * r * l) == 0\nassert sp.simplify(CSA + sp.pi * r**2 - sp.pi * r * (r + l)) == 0\n# worked example: h = 24, V = 1232, pi = 22/7\npi = sp.Rational(22, 7)\nrn = sp.solve(sp.Eq(pi * r**2 * 24 / 3, 1232), r)[0]\nln = sp.sqrt(rn**2 + 24**2)\nassert rn == 7 and ln == 25 and pi * rn * (rn + ln) == 704\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:27+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.unit-conversion",
+  "topic": "Mensuration",
+  "subtopic": "Cylinder & cone",
+  "name": "Volume unit conversion",
+  "statement": "1\\ \\text{m}^3=1000\\ \\text{L};\\ 1\\ \\text{L}=1000\\ \\text{cm}^3",
+  "conditions": [],
+  "derivation": [
+   "A litre is a cube of side 10 cm: $1\\text{ L}=10^3\\text{ cm}^3=1000\\text{ cm}^3$.",
+   "$1\\text{ m}=100$ cm, so $1\\text{ m}^3=100^3\\text{ cm}^3=10^6\\text{ cm}^3$.",
+   "Divide by 1000: $1\\text{ m}^3=1000$ L."
+  ],
+  "visual_proof": null,
+  "shortcut": "cm³ → L: ÷1000; m³ → L: ×1000; $1\\text{ m}^3=10^6\\text{ cm}^3$ (cube the length factor).",
+  "worked_example": {
+   "question_key": "2024-09-17_0900_Q07",
+   "answer": "A",
+   "steps": [
+    "$2\\pi r=44\\Rightarrow r=\\frac{44\\times7}{2\\times22}=7$ cm.",
+    "$V=\\frac{22}7\\times7^2\\times25=3850$ cm³ ([[f:mensuration.cylinder]]).",
+    "$3850\\div1000=3.85$ L (A)."
+   ]
+  },
+  "common_traps": [
+   "Dividing by 100 instead of 1000: 38.5 L (option D).",
+   "Using the length factor 100 for m³ → cm³ instead of $100^3$.",
+   "Using the diameter 14 as the radius before converting."
+  ],
+  "related_ids": [
+   "mensuration.cylinder",
+   "mensuration.cube-cuboid"
+  ],
+  "diagram": null,
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\ncm = sp.Symbol(\"cm\", positive=True)\nm = 100 * cm\ndm = 10 * cm\nL = dm**3                       # a litre is one cubic decimetre\nassert sp.simplify(L / cm**3) == 1000\nassert sp.simplify(m**3 / L) == 1000\nassert sp.simplify(m**3 / cm**3) == 10**6\n# worked example: C = 44, h = 25, pi = 22/7\npi = sp.Rational(22, 7)\nr = sp.Rational(44) / (2 * pi)\nV = pi * r**2 * 25\nassert r == 7 and V == 3850 and V / 1000 == sp.Rational(385, 100)\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:28+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.cube-cuboid",
+  "topic": "Mensuration",
+  "subtopic": "Cube & cuboid",
+  "name": "Cube and cuboid volume and surface area",
+  "statement": "\\text{cuboid } V=lbh,\\ TSA=2(lb+bh+hl),\\ LSA=2h(l+b);\\ \\text{cube } V=a^3,\\ TSA=6a^2",
+  "conditions": [],
+  "derivation": [
+   "Volume: $l\\times b$ unit cubes per layer, $h$ layers: $V=lbh$.",
+   "Six faces in three equal pairs: $lb$, $bh$, $hl$, so $TSA=2(lb+bh+hl)$.",
+   "The four walls only (no top, bottom): $2lh+2bh=2h(l+b)$.",
+   "Cube ($l=b=h=a$): $V=a^3$, $TSA=6a^2$."
+  ],
+  "visual_proof": "A box of unit cubes: count the cubes for volume and the exposed unit squares on the six faces for surface area.",
+  "shortcut": "$n$ equal cubes of side $a$ in a row: $TSA=(4n+2)a^2$.",
+  "worked_example": {
+   "question_key": "2024-09-18_0900_Q05",
+   "answer": "D",
+   "steps": [
+    "$a^3=512\\Rightarrow a=8$; the cuboid is $24\\times8\\times8$.",
+    "$TSA=2(24\\cdot8+8\\cdot8+8\\cdot24)=2(192+64+192)=896$ cm² (D).",
+    "Check: $(4\\cdot3+2)\\times64=896$."
+   ]
+  },
+  "common_traps": [
+   "Adding the three cubes' areas: $3\\times384=1152$; the 4 joined faces are hidden.",
+   "Writing the cuboid as $8\\times8\\times8\\times3$ and using $6a^2$ on side 24.",
+   "Using LSA $2h(l+b)$ when the total surface is asked."
+  ],
+  "related_ids": [
+   "mensuration.cuboid-diagonal",
+   "mensuration.unit-conversion",
+   "mensuration.quadrilateral-areas"
+  ],
+  "diagram": {
+   "alt_text": "Cuboid 24 cm long, 8 cm wide and 8 cm high formed by three 8 cm cubes in a row.",
+   "spec": {
+    "type": "solid",
+    "shape": "cuboid",
+    "dims": {
+     "l": "24",
+     "b": "8",
+     "h": "8"
+    },
+    "labels": [
+     "l = 24",
+     "b = 8",
+     "h = 8"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nrandom.seed(0)\n\ndef brute(l, b, h):\n    cubes = {(x, y, z) for x in range(l) for y in range(b) for z in range(h)}\n    faces = side = 0\n    for (x, y, z) in cubes:\n        for d in ((1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)):\n            if (x + d[0], y + d[1], z + d[2]) not in cubes:\n                faces += 1\n                side += d[2] == 0\n    return len(cubes), faces, side\n\nn = 0\nfor _ in range(1000):\n    l, b, h = (random.randint(1, 6) for _ in range(3))\n    vol, tsa, lsa = brute(l, b, h)\n    assert vol == l * b * h\n    assert tsa == 2 * (l * b + b * h + h * l)\n    assert lsa == 2 * h * (l + b)\n    a = random.randint(1, 6)\n    assert brute(a, a, a)[:2] == (a**3, 6 * a * a)\n    k = random.randint(1, 8)                         # k cubes of side a in a row\n    assert 2 * (k * a * a + a * a + a * k * a) == (4 * k + 2) * a * a\n    n += 1\n# worked example: 512 = 8^3, three cubes in a row -> 24 x 8 x 8\na = round(512 ** (1 / 3))\nassert a**3 == 512\nassert 2 * (24 * 8 + 8 * 8 + 8 * 24) == 896 == (4 * 3 + 2) * 64\nprint(f\"CASES={n}\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:28+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.cuboid-diagonal",
+  "topic": "Mensuration",
+  "subtopic": "Cube & cuboid",
+  "name": "Diagonal of a cuboid / cube",
+  "statement": "d=\\sqrt{l^2+b^2+h^2};\\ \\text{cube: } a\\sqrt3",
+  "conditions": [],
+  "derivation": [
+   "The floor diagonal is $\\sqrt{l^2+b^2}$ ([[f:geometry.pythagoras]]).",
+   "The space diagonal, the floor diagonal and the height $h$ form a right triangle.",
+   "$d=\\sqrt{(l^2+b^2)+h^2}=\\sqrt{l^2+b^2+h^2}$.",
+   "Cube: $d=\\sqrt{3a^2}=a\\sqrt3$."
+  ],
+  "visual_proof": "Draw the floor diagonal, then stand the height up at its end; the space diagonal is the hypotenuse of that vertical right triangle.",
+  "shortcut": "Longest stick in a box = space diagonal; cube: $a\\sqrt3$, face diagonal $a\\sqrt2$.",
+  "worked_example": {
+   "question_key": "2024-09-17_1600_Q06",
+   "answer": "D",
+   "steps": [
+    "$d=\\sqrt{1.2^2+1.3^2+1.5^2}=\\sqrt{1.44+1.69+2.25}$.",
+    "$=\\sqrt{5.38}\\approx2.3195$.",
+    "To two decimals: 2.32 cm (D)."
+   ]
+  },
+  "common_traps": [
+   "Taking a face diagonal: $\\sqrt{1.3^2+1.5^2}\\approx1.98$.",
+   "Rounding 2.3195 down to 2.31 or misreading it as 2.23.",
+   "Cube: answering $a\\sqrt2$ (face) instead of $a\\sqrt3$ (space)."
+  ],
+  "related_ids": [
+   "mensuration.cube-cuboid",
+   "geometry.pythagoras"
+  ],
+  "diagram": {
+   "alt_text": "Cuboid 1.5 cm by 1.3 cm by 1.2 cm with the space diagonal d ≈ 2.32 cm drawn corner to opposite corner.",
+   "spec": {
+    "type": "solid",
+    "shape": "cuboid",
+    "dims": {
+     "l": "1.5",
+     "b": "1.3",
+     "h": "1.2"
+    },
+    "labels": [
+     "d ≈ 2.32"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import math\nimport sympy as sp\nl, b, h, a = sp.symbols(\"l b h a\", positive=True)\nd = sp.Point3D(0, 0, 0).distance(sp.Point3D(l, b, h))\nassert sp.simplify(d - sp.sqrt(l**2 + b**2 + h**2)) == 0\nface = sp.sqrt(l**2 + b**2)                      # floor diagonal\nassert sp.simplify(sp.sqrt(face**2 + h**2) - d) == 0\nassert sp.simplify(d.subs({l: a, b: a, h: a}) - a * sp.sqrt(3)) == 0\n# worked example: 1.2 x 1.3 x 1.5\nsq = sp.Rational(12, 10)**2 + sp.Rational(13, 10)**2 + sp.Rational(15, 10)**2\nassert sq == sp.Rational(538, 100)\nassert round(math.sqrt(5.38), 2) == 2.32\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:29+00:00"
+   }
+  }
+ },
+ {
+  "id": "mensuration.sphere-hemisphere",
+  "topic": "Mensuration",
+  "subtopic": "Sphere & hemisphere",
+  "name": "Sphere and hemisphere",
+  "statement": "\\text{sphere } V=\\tfrac43\\pi r^3,\\ S=4\\pi r^2;\\ \\text{hemisphere } V=\\tfrac23\\pi r^3,\\ TSA=3\\pi r^2",
+  "conditions": [],
+  "derivation": [
+   "Volume: a sphere is $\\frac23$ of its circumscribing cylinder (radius $r$, height $2r$): $\\frac23\\cdot\\pi r^2\\cdot2r=\\frac43\\pi r^3$.",
+   "Surface: equal to that cylinder's curved surface (Archimedes): $2\\pi r\\cdot2r=4\\pi r^2$.",
+   "Hemisphere: half the volume, $\\frac23\\pi r^3$; curved surface $2\\pi r^2$.",
+   "Solid hemisphere adds the flat disc: $TSA=2\\pi r^2+\\pi r^2=3\\pi r^2$."
+  ],
+  "visual_proof": "The sphere fits exactly in a cylinder of radius $r$ and height $2r$; its surface equals the cylinder's curved surface and its volume is two thirds of the cylinder's.",
+  "shortcut": "Radii ratio $k$: surface ratio $k^2$, volume ratio $k^3$.",
+  "worked_example": null,
+  "common_traps": [
+   "Using $4\\pi r^2$ for a hemisphere's total surface (it is $3\\pi r^2$; curved alone is $2\\pi r^2$).",
+   "Using the diameter for $r$: volume 8 times too large.",
+   "Writing $\\frac43\\pi r^2$ (mixing the volume and area formulas)."
+  ],
+  "related_ids": [
+   "mensuration.cylinder",
+   "mensuration.cone",
+   "mensuration.circle-area-circumference"
+  ],
+  "diagram": {
+   "alt_text": "Sphere of radius r inside a cylinder of radius r and height 2r; a hemisphere is half of the sphere with a flat circular base.",
+   "spec": {
+    "type": "solid",
+    "shape": "sphere",
+    "dims": {
+     "r": "r"
+    },
+    "labels": [
+     "V = 4/3 πr³",
+     "S = 4πr²"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "identity",
+   "code": "import sympy as sp\nr, rho, th, ph = sp.symbols(\"r rho theta phi\", positive=True)\n# sphere volume in spherical coordinates (jacobian rho^2 sin(theta))\nV = sp.integrate(rho**2 * sp.sin(th), (rho, 0, r), (th, 0, sp.pi), (ph, 0, 2 * sp.pi))\nassert sp.simplify(V - sp.Rational(4, 3) * sp.pi * r**3) == 0\nS = sp.integrate(r**2 * sp.sin(th), (th, 0, sp.pi), (ph, 0, 2 * sp.pi))\nassert sp.simplify(S - 4 * sp.pi * r**2) == 0\n# hemisphere: theta from 0 to pi/2, plus the flat base pi r^2\nVh = sp.integrate(rho**2 * sp.sin(th), (rho, 0, r), (th, 0, sp.pi / 2), (ph, 0, 2 * sp.pi))\nCh = sp.integrate(r**2 * sp.sin(th), (th, 0, sp.pi / 2), (ph, 0, 2 * sp.pi))\nassert sp.simplify(Vh - sp.Rational(2, 3) * sp.pi * r**3) == 0\nassert sp.simplify(Ch - 2 * sp.pi * r**2) == 0\nassert sp.simplify(Ch + sp.pi * r**2 - 3 * sp.pi * r**2) == 0\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:29+00:00"
+   }
+  }
+ }
+]

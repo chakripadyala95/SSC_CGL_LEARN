@@ -1,0 +1,384 @@
+[
+ {
+  "id": "dice.common-face-opposite",
+  "topic": "Dice/Cube",
+  "subtopic": "Dice positions",
+  "name": "Common face rule",
+  "statement": "\\text{If a face appears in the same position in two views, the faces in matching positions are opposite each other.}",
+  "conditions": [
+   "The common face must be in the same position (top, left or right) in both views."
+  ],
+  "derivation": [
+   "Each view shows three faces meeting at a corner, in a fixed clockwise order.",
+   "Turn view 2 about the axis through the common face until it sits like view 1; the common face stays in place.",
+   "If the common face is already in the same position, the views differ only by that turn, so the face in each other position is replaced by its partner.",
+   "A face that leaves a position goes round the side ring; the face that took its place is not adjacent to it in either view, so they are opposite."
+  ],
+  "visual_proof": "Two dice drawn side by side with the shared face in the same slot; arrows link the top faces and the other side faces as opposite pairs.",
+  "shortcut": "Same face, same position → the other two pairs of positions give opposite faces directly.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R03",
+   "answer": "B",
+   "steps": [
+    "View 1: top Q, left Z, right V. View 2: top T, left L, right V.",
+    "V is common and on the right in both.",
+    "Top ↔ top: Q opposite T; left ↔ left: Z opposite L (so V opposite A).",
+    "Answer T (B)."
+   ]
+  },
+  "common_traps": [
+   "Using the rule when the common face is in different positions: gives wrong pairs (use [[f:dice.cyclic-order]] then).",
+   "Pairing top with left: gives Q opposite L, not an option, or Z.",
+   "Picking the common face itself (V) as the opposite."
+  ],
+  "related_ids": [
+   "dice.cyclic-order",
+   "dice.adjacency-elimination",
+   "dice.cube-net-opposites"
+  ],
+  "diagram": {
+   "alt_text": "Table of the two dice views with V on the right in both; tops Q and T are opposite, lefts Z and L are opposite.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "View",
+     "Top",
+     "Left",
+     "Right"
+    ],
+    "rows": [
+     [
+      "1",
+      "Q",
+      "Z",
+      "V"
+     ],
+     [
+      "2",
+      "T",
+      "L",
+      "V"
+     ],
+     [
+      "Opposite pairs",
+      "Q-T",
+      "Z-L",
+      "V-A"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import permutations\n\nNORMALS = [(0, 0, 1), (0, 0, -1), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)]\n\ndef det(a, b, c):\n    return (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0])\n            + a[2] * (b[0] * c[1] - b[1] * c[0]))\n\ndef shows(cube, view):\n    # view = (top, left, right) as drawn: three mutually adjacent faces, clockwise order top -> right -> left\n    t, l, r = (cube[f] for f in view)\n    return det(t, l, r) == 1\n\ndef opposite_by_enumeration(labels, views, target):\n    found = set()\n    for perm in permutations(NORMALS):\n        cube = dict(zip(labels, perm))\n        if all(shows(cube, v) for v in views):\n            opp = [f for f in labels if cube[f] == tuple(-x for x in cube[target])][0]\n            found.add(opp)\n    return found\n\ndef common_face_rule(v1, v2):\n    \"\"\"Views are (top, left, right). A face in the same slot of both views: the other slots pair as opposites.\"\"\"\n    pairs = {}\n    for i in range(3):\n        if v1[i] == v2[i]:\n            for j in range(3):\n                if j != i:\n                    pairs[v1[j]] = v2[j]\n                    pairs[v2[j]] = v1[j]\n            return pairs\n    return None\n\ndef check(labels, v1, v2, target, options, answer):\n    pairs = common_face_rule(v1, v2)\n    got = pairs[target]\n    assert got == options[answer], (got, options[answer])\n    assert [k for k, val in options.items() if val == got] == [answer]\n    # independent check: every cube consistent with both views has the same opposite face\n    assert opposite_by_enumeration(labels, [v1, v2], target) == {got}\n\n# 2024-09-09_0900_R03: (top Q, left Z, right V) and (top T, left L, right V); opposite of Q\ncheck(\"QZVTLA\", (\"Q\", \"Z\", \"V\"), (\"T\", \"L\", \"V\"), \"Q\", {\"A\": \"Z\", \"B\": \"T\", \"C\": \"V\", \"D\": \"A\"}, \"B\")\n# constructed: common face on top: (1, 2, 3) and (1, 4, 5) -> 2-4 and 3-5 opposite\nassert common_face_rule((1, 2, 3), (1, 4, 5))[2] == 4\nassert opposite_by_enumeration([1, 2, 3, 4, 5, 6], [(1, 2, 3), (1, 4, 5)], 2) == {4}\nassert opposite_by_enumeration([1, 2, 3, 4, 5, 6], [(1, 2, 3), (1, 4, 5)], 1) == {6}\n\n# boundary: the common face must sit in the same position. Build a real cube, take views where the\n# common face is in different positions, and show position-pairing then gives false opposites.\ncube = dict(zip([1, 2, 3, 4, 5, 6], NORMALS))      # 1-2, 3-4, 5-6 opposite\nviews = [v for v in permutations(cube, 3) if shows(cube, v)]\nsame = [(a, b) for a in views for b in views if a != b and any(a[i] == b[i] for i in range(3))]\nmoved = [(a, b) for a in views for b in views\n         if len(set(a) & set(b)) == 1 and not any(a[i] == b[i] for i in range(3))]\ntrue_opp = lambda x, y: cube[x] == tuple(-t for t in cube[y])\nfor a, b in same:     # rule holds whenever exactly one face is shared in the same slot\n    if len(set(a) & set(b)) == 1:\n        assert all(true_opp(x, y) for x, y in common_face_rule(a, b).items())\nnaive_wrong = 0\nfor a, b in moved:\n    pairs = [(a[i], b[i]) for i in range(3) if a[i] not in b]\n    if not all(true_opp(x, y) for x, y in pairs):\n        naive_wrong += 1\nassert moved and naive_wrong > 0\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "dice.adjacency-elimination",
+  "topic": "Dice/Cube",
+  "subtopic": "Dice positions",
+  "name": "Adjacent-face elimination",
+  "statement": "\\text{Every face shown together with face } X \\text{ is adjacent to it; the one face never seen with } X \\text{ is opposite } X.",
+  "conditions": [],
+  "derivation": [
+   "A cube face has 4 adjacent faces and 1 opposite face.",
+   "Two faces visible in the same view share an edge, so they are adjacent.",
+   "Once 4 different faces are seen with X, the sixth face is its opposite.",
+   "Remove that pair and repeat: a face already paired cannot be anyone else's opposite."
+  ],
+  "visual_proof": "A table lists each face with the faces seen beside it; a row with four neighbours leaves exactly one face out, its opposite.",
+  "shortcut": "Start with the face that appears in the most views; it usually has 4 neighbours shown.",
+  "worked_example": {
+   "question_key": "2024-09-09_0900_R18",
+   "answer": "D",
+   "steps": [
+    "25 is seen with 21, 23, 22, 24, so 25 is opposite 26.",
+    "21 is seen with 23, 25, 22; its opposite is 24 or 26, and 26 is taken.",
+    "So 21 is opposite 24 (and 22 opposite 23).",
+    "Answer 21 (D)."
+   ]
+  },
+  "common_traps": [
+   "Answering 26 because it never appears: it is opposite 25, not 24 (A).",
+   "Treating faces in different views as adjacent just because they share a slot.",
+   "Stopping when a face has only 3 neighbours shown: two candidates remain until another pair is fixed."
+  ],
+  "related_ids": [
+   "dice.common-face-opposite",
+   "dice.cyclic-order"
+  ],
+  "diagram": {
+   "alt_text": "Table of faces 21 to 26, the faces seen next to each, and the opposite face that is left.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "Face",
+     "Seen with",
+     "Opposite"
+    ],
+    "rows": [
+     [
+      "25",
+      "21, 22, 23, 24",
+      "26"
+     ],
+     [
+      "21",
+      "22, 23, 25",
+      "24 (26 taken)"
+     ],
+     [
+      "22",
+      "21, 24, 25",
+      "23"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import permutations\n\nNORMALS = [(0, 0, 1), (0, 0, -1), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)]\n\ndef det(a, b, c):\n    return (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0])\n            + a[2] * (b[0] * c[1] - b[1] * c[0]))\n\ndef shows(cube, view):\n    # view = (top, left, right) as drawn: three mutually adjacent faces, clockwise order top -> right -> left\n    t, l, r = (cube[f] for f in view)\n    return det(t, l, r) == 1\n\ndef opposite_by_enumeration(labels, views, target):\n    found = set()\n    for perm in permutations(NORMALS):\n        cube = dict(zip(labels, perm))\n        if all(shows(cube, v) for v in views):\n            opp = [f for f in labels if cube[f] == tuple(-x for x in cube[target])][0]\n            found.add(opp)\n    return found\n\ndef adjacency_elimination(labels, views):\n    adj = {f: set() for f in labels}\n    for v in views:\n        for a in v:\n            adj[a] |= set(v) - {a}\n    opp = {}\n    changed = True\n    while changed:\n        changed = False\n        for f in labels:\n            if f in opp:\n                continue\n            cand = set(labels) - {f} - adj[f] - set(opp)\n            if len(cand) == 1:\n                g = cand.pop()\n                opp[f], opp[g] = g, f\n                changed = True\n    return opp\n\ndef check(labels, views, target, options, answer):\n    opp = adjacency_elimination(labels, views)\n    got = opp[target]\n    assert got == options[answer], (got, options[answer])\n    assert [k for k, val in options.items() if val == got] == [answer]\n    assert opposite_by_enumeration(labels, views, target) == {got}\n\n# 2024-09-09_0900_R18: views (21 top, 23 left, 25 right), (21, 25, 22), (25, 24, 22); opposite of 24\ncheck([21, 22, 23, 24, 25, 26], [(21, 23, 25), (21, 25, 22), (25, 24, 22)], 24,\n      {\"A\": 26, \"B\": 25, \"C\": 22, \"D\": 21}, \"D\")\n# 2024-09-13_0900_R13 pattern: A seen with C, B and with G, F -> E opposite A\nopp = adjacency_elimination(\"ABCEFG\", [(\"A\", \"C\", \"B\"), (\"A\", \"G\", \"F\")])\nassert opp[\"A\"] == \"E\"\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "dice.cyclic-order",
+  "topic": "Dice/Cube",
+  "subtopic": "Dice positions",
+  "name": "Cyclic order of faces",
+  "statement": "\\text{Read the visible faces of each view in clockwise order, line the views up on a shared face, and fill the ring round it.}",
+  "conditions": [],
+  "derivation": [
+   "The four faces adjacent to a face X form a ring round it; opposite faces sit two apart in that ring.",
+   "Each view shows X with two neighbours that are next to each other in the ring, in a fixed direction.",
+   "Write each view's pair in the same direction (e.g. left then right) as a step of the ring.",
+   "Join the steps into one ring of four; faces two apart are opposite, and the face never seen with X is opposite X."
+  ],
+  "visual_proof": "A ring of four faces drawn round the common top face: each view adds one arrow (left → right), and the arrows close into S → M → P → R.",
+  "shortcut": "With the common face in the same slot, ring order is view 1 (left, right) then view 2 (left, right); 1st and 3rd are opposite, 2nd and 4th are opposite.",
+  "worked_example": {
+   "question_key": "2024-09-10_0900_R12",
+   "answer": "B",
+   "steps": [
+    "T is on top in both views, so S, M, P, R surround T and C is opposite T.",
+    "Clockwise steps: S → M and P → R, so the ring is S, M, P, R.",
+    "Two apart: S-P and M-R.",
+    "Opposite M is R (B)."
+   ]
+  },
+  "common_traps": [
+   "Answering C because it is never seen: C is opposite T, the common face (A).",
+   "Reading one view left → right and the other right → left: gives M opposite P (D).",
+   "Pairing faces in the same position (S with P) and stopping there without checking which pair includes M."
+  ],
+  "related_ids": [
+   "dice.common-face-opposite",
+   "dice.adjacency-elimination",
+   "dice.cube-net-opposites"
+  ],
+  "diagram": {
+   "alt_text": "Table of the ring round T: views give S then M and P then R; opposite pairs S-P, M-R, T-C.",
+   "spec": {
+    "type": "table",
+    "header": [
+     "View",
+     "Top",
+     "Left",
+     "Right"
+    ],
+    "rows": [
+     [
+      "1",
+      "T",
+      "S",
+      "M"
+     ],
+     [
+      "2",
+      "T",
+      "P",
+      "R"
+     ],
+     [
+      "Ring round T",
+      "",
+      "S → M → P → R",
+      ""
+     ],
+     [
+      "Opposite",
+      "T-C",
+      "S-P",
+      "M-R"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "from itertools import permutations\n\nNORMALS = [(0, 0, 1), (0, 0, -1), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)]\n\ndef det(a, b, c):\n    return (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0])\n            + a[2] * (b[0] * c[1] - b[1] * c[0]))\n\ndef shows(cube, view):\n    # view = (top, left, right) as drawn: three mutually adjacent faces, clockwise order top -> right -> left\n    t, l, r = (cube[f] for f in view)\n    return det(t, l, r) == 1\n\ndef opposite_by_enumeration(labels, views, target):\n    found = set()\n    for perm in permutations(NORMALS):\n        cube = dict(zip(labels, perm))\n        if all(shows(cube, v) for v in views):\n            opp = [f for f in labels if cube[f] == tuple(-x for x in cube[target])][0]\n            found.add(opp)\n    return found\n\ndef ring_around(common, views):\n    \"\"\"Views share `common` on top. Each view gives (left, right) = two consecutive ring faces in clockwise order.\n    Return the 4-face ring (as a cyclic list) consistent with every view.\"\"\"\n    sides = sorted({f for v in views for f in v if f != common})\n    rings = []\n    for p in permutations(sides):\n        if p[0] != sides[0]:\n            continue\n        nxt = {p[i]: p[(i + 1) % 4] for i in range(4)}\n        if all(nxt[v[1]] == v[2] for v in views):\n            rings.append(p)\n    return rings\n\ndef check(labels, views, target, options, answer):\n    rings = ring_around(views[0][0], views)\n    assert len(rings) == 1, rings\n    ring = rings[0]\n    got = ring[(ring.index(target) + 2) % 4]\n    assert got == options[answer], (got, options[answer])\n    assert [k for k, val in options.items() if val == got] == [answer]\n    assert opposite_by_enumeration(labels, views, target) == {got}\n\n# 2024-09-10_0900_R12: (top T, left S, right M) and (top T, left P, right R); opposite of M\ncheck(\"STMPRC\", [(\"T\", \"S\", \"M\"), (\"T\", \"P\", \"R\")], \"M\", {\"A\": \"C\", \"B\": \"R\", \"C\": \"S\", \"D\": \"P\"}, \"B\")\n# constructed: (1, 2, 3) and (1, 5, 4): ring 2 -> 3 and 5 -> 4 gives 2,3,5,4 so 2-5 and 3-4 opposite\nassert ring_around(1, [(1, 2, 3), (1, 5, 4)]) == [(2, 3, 5, 4)]\nassert opposite_by_enumeration([1, 2, 3, 4, 5, 6], [(1, 2, 3), (1, 5, 4)], 3) == {4}\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "dice.cube-net-opposites",
+  "topic": "Dice/Cube",
+  "subtopic": "Cube net",
+  "name": "Cube net opposite faces",
+  "statement": "\\text{In a net, two squares in one straight row or column with exactly one square between them are opposite; touching squares are never opposite.}",
+  "conditions": [
+   "The net must fold into a cube (6 squares, no overlap)."
+  ],
+  "derivation": [
+   "Folding along the edge between two touching squares makes them meet at that edge, so they are adjacent.",
+   "In a straight line of three squares, the middle one becomes a side and the outer two fold up on either side of it.",
+   "Those two outer squares end up parallel, facing each other: opposite.",
+   "For a square sticking out of a column, slide it along the fold to the end square it would cover, then use the same rule."
+  ],
+  "visual_proof": "A column of four with one square on each side: # and €, % and ∞ are one apart in the column, and the two side squares @ and * fold to face each other.",
+  "shortcut": "Alternate squares in a straight line are opposite; the two squares left after that are each other's opposite.",
+  "worked_example": {
+   "question_key": "2024-09-12_1600_R17",
+   "answer": "C",
+   "steps": [
+    "Column: #, %, €, ∞; @ left of #, * right of ∞.",
+    "# and € have one square between them in the column: opposite.",
+    "Also % opposite ∞, so @ opposite *.",
+    "Opposite # is € (C)."
+   ]
+  },
+  "common_traps": [
+   "Taking a touching square as opposite: @ (A) or % (D) share an edge with #.",
+   "Taking the far end of a column of four (∞): squares two apart in a line are adjacent (B).",
+   "Applying the rule along a bent path instead of a straight line."
+  ],
+  "related_ids": [
+   "dice.common-face-opposite",
+   "dice.cyclic-order"
+  ],
+  "diagram": {
+   "alt_text": "Cube net: a column #, %, €, ∞ with @ to the left of # and * to the right of ∞; opposite pairs #-€, %-∞, @-*.",
+   "spec": {
+    "type": "dice-net",
+    "net": [
+     [
+      "@",
+      "#",
+      ""
+     ],
+     [
+      "",
+      "%",
+      ""
+     ],
+     [
+      "",
+      "€",
+      ""
+     ],
+     [
+      "",
+      "∞",
+      "*"
+     ]
+    ],
+    "opposite": [
+     [
+      "#",
+      "€"
+     ],
+     [
+      "%",
+      "∞"
+     ],
+     [
+      "@",
+      "*"
+     ]
+    ]
+   }
+  },
+  "verification": {
+   "kind": "method",
+   "code": "def fold(net):\n    \"\"\"net: {(row, col): label}. Roll a cube across the net; return label -> outward normal.\"\"\"\n    start = next(iter(sorted(net)))\n    frame = {start: ((0, 0, -1), (1, 0, 0), (0, 1, 0))}   # (normal, right, down)\n    stack = [start]\n    neg = lambda v: tuple(-x for x in v)\n    while stack:\n        cell = stack.pop()\n        n, r, d = frame[cell]\n        for (dr, dc), new in (((0, 1), (r, neg(n), d)), ((0, -1), (neg(r), n, d)),\n                              ((1, 0), (d, r, neg(n))), ((-1, 0), (neg(d), r, n))):\n            nb = (cell[0] + dr, cell[1] + dc)\n            if nb in net and nb not in frame:\n                frame[nb] = new\n                stack.append(nb)\n    normals = {net[c]: frame[c][0] for c in net}\n    assert len(set(normals.values())) == 6, \"not a valid cube net\"\n    return normals\n\ndef opposite(net, target):\n    nm = fold(net)\n    return [f for f in nm if nm[f] == tuple(-x for x in nm[target])][0]\n\ndef straight_line_rule(net, target):\n    \"\"\"Two faces in the same row or column with exactly one face between them (all three present) are opposite.\"\"\"\n    pos = {v: k for k, v in net.items()}\n    r, c = pos[target]\n    for dr, dc in ((0, 2), (0, -2), (2, 0), (-2, 0)):\n        mid, far = (r + dr // 2, c + dc // 2), (r + dr, c + dc)\n        if mid in net and far in net:\n            return net[far]\n    return None\n\n# 2024-09-12_1600_R17: column #, %, EUR, inf with @ left of # and * right of inf\nnet = {(0, 0): \"@\", (0, 1): \"#\", (1, 1): \"%\", (2, 1): \"€\", (3, 1): \"∞\", (3, 2): \"*\"}\noptions = {\"A\": \"@\", \"B\": \"∞\", \"C\": \"€\", \"D\": \"%\"}\ngot = opposite(net, \"#\")\nassert got == straight_line_rule(net, \"#\") == options[\"C\"]\nassert [k for k, v in options.items() if v == got] == [\"C\"]\nassert opposite(net, \"%\") == \"∞\" and opposite(net, \"@\") == \"*\"\n# adjacent squares in the net are never opposite\nfor (a, b) in [((0, 0), (0, 1)), ((0, 1), (1, 1)), ((3, 1), (3, 2))]:\n    assert opposite(net, net[a]) != net[b]\n# constructed: the plus-shaped cross net 1..6\ncross = {(0, 1): 1, (1, 0): 2, (1, 1): 3, (1, 2): 4, (2, 1): 5, (3, 1): 6}\nassert opposite(cross, 1) == 5 and opposite(cross, 2) == 4 and opposite(cross, 3) == 6\n\n# boundary: the net must fold into a cube\ndef folds(net):\n    try:\n        fold(net)\n        return True\n    except AssertionError:\n        return False\nassert not folds({(0, c): c for c in range(6)})                       # straight strip of 6\nassert not folds({(r, c): 3 * r + c for r in range(2) for c in range(3)})   # 2 x 3 block\nassert folds(net) and folds(cross)\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ },
+ {
+  "id": "dice.painted-cube-count",
+  "topic": "Dice/Cube",
+  "subtopic": "Cube cutting",
+  "name": "Painted cube counting",
+  "statement": "n\\times n\\times n \\text{ painted cube cut into } n^3 \\text{ unit cubes: 3 faces} = 8,\\ \\text{2 faces} = 12(n-2),\\ \\text{1 face} = 6(n-2)^2,\\ \\text{0 faces} = (n-2)^3",
+  "conditions": [
+   "$n \\ge 2$"
+  ],
+  "derivation": [
+   "A unit cube has one painted face for each of its coordinates that lies on an outer layer (first or last of $n$).",
+   "Along one axis there are 2 outer layers and $n-2$ inner ones.",
+   "3 painted faces: all three coordinates outer, $2^3 = 8$ corners.",
+   "2 painted faces: choose the inner axis (3 ways), $3 \\cdot 2^2 (n-2) = 12(n-2)$, the edge cubes.",
+   "1 painted face: $3 \\cdot 2 (n-2)^2 = 6(n-2)^2$; none: $(n-2)^3$, the hidden inner cube.",
+   "Check: $8 + 12(n-2) + 6(n-2)^2 + (n-2)^3 = n^3$."
+  ],
+  "visual_proof": "A cube with its 8 corners, 12 edges (n - 2 cubes each) and 6 faces ((n - 2)^2 each) marked; the inner (n - 2)^3 block stays unpainted.",
+  "shortcut": "Corners 8, edges $12(n-2)$, faces $6(n-2)^2$, core $(n-2)^3$: one number per part of the cube.",
+  "worked_example": null,
+  "common_traps": [
+   "Using $n$ instead of $n-2$ on each edge: counts the corners twice, e.g. 48 instead of 24 two-face cubes for $n = 4$.",
+   "Using $(n-1)^3$ for the unpainted core: for $n = 4$ gives 27 instead of 8.",
+   "Applying the formula at $n = 1$: the single cube has 6 painted faces, not 8 corners."
+  ],
+  "related_ids": [
+   "mensuration.cube-cuboid",
+   "dice.cube-net-opposites"
+  ],
+  "diagram": {
+   "alt_text": "A cube of side n split into unit cubes, with labels for corners (3 faces), edges (2 faces), face centres (1 face) and the hidden core (0 faces).",
+   "spec": {
+    "type": "solid",
+    "shape": "cube",
+    "dims": {
+     "a": "n"
+    },
+    "labels": [
+     "corner: 8 (3 faces)",
+     "edge: 12(n-2) (2 faces)",
+     "face: 6(n-2)^2 (1 face)",
+     "core: (n-2)^3 (0 faces)"
+    ]
+   }
+  },
+  "verification": {
+   "kind": "shortcut",
+   "code": "import random\nfrom collections import Counter\nfrom itertools import product\n\ndef formula(n):\n    return {3: 8, 2: 12 * (n - 2), 1: 6 * (n - 2) ** 2, 0: (n - 2) ** 3}\n\ndef brute(n):\n    c = Counter(sum(x in (0, n - 1) for x in p) for p in product(range(n), repeat=3))\n    return {k: c.get(k, 0) for k in range(4)}\n\ndef by_axes(n):\n    # each coordinate is a painted layer (2 choices) or an inner layer (n - 2 choices)\n    one = {1: 2, 0: n - 2}\n    out = Counter()\n    for a, b, c in product(one, repeat=3):\n        out[a + b + c] += one[a] * one[b] * one[c]\n    return {k: out.get(k, 0) for k in range(4)}\n\nfor n in range(2, 13):\n    assert brute(n) == formula(n), n\nrandom.seed(0)\ncases = 0\nfor _ in range(1000):\n    n = random.randint(2, 500)\n    f = formula(n)\n    assert f == by_axes(n)\n    assert sum(f.values()) == n ** 3\n    cases += 1\nprint(f\"CASES={cases}\")\n# boundary n >= 2: at n = 2 every small cube is a corner; at n = 1 the formula breaks (one cube, 6 faces painted)\nassert formula(2) == brute(2) == {3: 8, 2: 0, 1: 0, 0: 0}\nassert formula(1)[2] == -12 and formula(1)[3] == 8   # negative count, 8 corners from 1 cube: formula invalid\nprint(\"BOUNDARY_OK\")\n",
+   "reason": null,
+   "result": {
+    "status": "PASSED",
+    "note": "",
+    "checked_at": "2026-10-02T07:18:46+00:00"
+   }
+  }
+ }
+]

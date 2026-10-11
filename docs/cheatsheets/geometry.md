@@ -1,0 +1,51 @@
+# Geometry: cheat sheet
+
+- [Angle sums (lines, triangle, polygon)](/formulas/geometry#triangle-angle-sum): $\text{angles on a line}=180^\circ;\ \triangle: A+B+C=180^\circ;\ n\text{-gon}: (n-2)180^\circ$
+  - Shortcut: Each interior angle of a regular $n$-gon $=\frac{(n-2)180^\circ}{n}$; each exterior angle $=\frac{360^\circ}{n}$.
+- [Exterior angle theorem](/formulas/geometry#exterior-angle): $\text{exterior angle}=\text{sum of the two interior opposite angles}$
+- [Isosceles triangle properties](/formulas/geometry#isosceles-triangle): $AB=AC \Rightarrow \angle B=\angle C;\ \text{altitude from } A \text{ bisects } BC \text{ and } \angle A$
+  - Shortcut: Apex angle $=180^\circ-2\times$base angle; base angle $=\frac{180^\circ-\text{apex}}{2}$.
+- [Equilateral triangle properties](/formulas/geometry#equilateral-triangle): $h=\frac{\sqrt3}2a;\ R=\frac a{\sqrt3},\ r=\frac a{2\sqrt3};\ \text{a chord equal to the radius subtends } 60^\circ$
+  - Shortcut: $h:R:r=3:2:1$; chord of central angle $\theta$ in a circle of radius $R$ is $2R\sin\frac\theta2$.
+- [Pythagoras theorem](/formulas/geometry#pythagoras): $c^2=a^2+b^2;\ 45\text{-}45\text{-}90 \text{ sides } 1:1:\sqrt2$
+  - Shortcut: Triplets: $3,4,5$; $5,12,13$; $8,15,17$; $7,24,25$; $9,40,41$ and their multiples.
+- [Triangle inequality](/formulas/geometry#triangle-inequality): $|b-c|<a<b+c$
+  - Shortcut: Integer third side with sides $p<q$: values $q-p+1,\dots,p+q-1$, count $=2p-1$. Each side $<$ half the perimeter.
+- [Altitude on the hypotenuse](/formulas/geometry#altitude-on-hypotenuse): $h=\frac{ab}{c};\ h^2=pq \text{ (segments of the hypotenuse)}$
+  - Shortcut: Altitude $=$ geometric mean of the two hypotenuse pieces: $h=\sqrt{pq}$.
+- [Angle bisector theorem](/formulas/geometry#angle-bisector-theorem): $\frac{BD}{DC}=\frac{AB}{AC}$
+  - Shortcut: $BD=\frac{AB}{AB+AC}\cdot BC$, $DC=\frac{AC}{AB+AC}\cdot BC$.
+- [Angle at the incentre](/formulas/geometry#incentre-angle): $\angle BIC=90^\circ+\frac{\angle A}2$
+  - Shortcut: Incentre $90^\circ+\frac A2$; excentre $90^\circ-\frac A2$; orthocentre $180^\circ-A$; circumcentre $2A$.
+- [Medians and Apollonius theorem](/formulas/geometry#median-apollonius): $AB^2+AC^2=2(AD^2+BD^2);\ \text{centroid divides each median } 2:1$
+  - Shortcut: Equal medians $\Leftrightarrow$ equal opposite sides; three equal medians $\Rightarrow$ equilateral.
+- [Midpoint theorem and BPT](/formulas/geometry#midpoint-bpt): $DE\parallel BC \Rightarrow \frac{AD}{DB}=\frac{AE}{EC};\ \text{midpoint join}\parallel\text{third side}=\tfrac12\text{ of it}$
+  - Shortcut: The three midpoint joins split the triangle into 4 congruent triangles, each $\frac14$ of the area; the medial triangle has half the perimeter.
+- [Similar triangles: ratios](/formulas/geometry#similar-triangles): $\triangle\sim\triangle' \Rightarrow \frac{\text{sides}}{\text{sides}'}=\frac{\text{perimeters}}{\text{perimeters}'}=\frac{\text{altitudes}}{\text{altitudes}'}=k,\ \frac{\text{areas}}{\text{areas}'}=k^2$
+  - Shortcut: Area ratio $\to$ side ratio: take the square root ($\frac{A_1}{A_2}=\frac{49}{64}\Rightarrow k=\frac78$).
+- [Congruence criteria and CPCT](/formulas/geometry#congruence-criteria): $SSS,\ SAS,\ ASA,\ AAS,\ RHS \Rightarrow \text{corresponding parts are equal (CPCT)};\ SSA, AAA \text{ are not criteria}$
+  - Shortcut: Congruent $\Rightarrow$ equal area and perimeter; the converse is false.
+- [Circle basics](/formulas/geometry#circle-basics): $\text{one circle through 3 non-collinear points; diameter is the longest chord; equal chords} \iff \text{equal arcs}$
+  - Shortcut: Longest chord = diameter $2r$, at distance $0$ from the centre; congruent arcs $\Rightarrow$ chords in ratio $1:1$.
+- [Perpendicular from centre bisects a chord](/formulas/geometry#chord-perpendicular-from-centre): $\left(\frac{\text{chord}}2\right)^2+d^2=r^2;\ \text{common chord} \perp \text{line of centres and bisected by it}$
+  - Shortcut: Half-chord $=\sqrt{r^2-d^2}$; two parallel chords: distances from $O$ subtract when on the same side, add when on opposite sides.
+- [Angle at centre = twice angle at circumference](/formulas/geometry#central-angle-theorem): $\angle AOB=2\angle ACB;\ \text{arc length}\propto\text{central angle}$
+  - Shortcut: Inscribed angle $= \frac12$ central angle on the same arc; angles in the same segment are equal; arcs split $360^\circ$ in the ratio of their lengths.
+- [Angle in a semicircle](/formulas/geometry#angle-in-semicircle): $\text{angle in a semicircle}=90^\circ;\ \text{so a right triangle's circumradius}=\frac{\text{hypotenuse}}2$
+  - Shortcut: Diameter as a side of an inscribed triangle $\Rightarrow$ $90^\circ$ opposite it; right triangle $\Rightarrow R = \frac{\text{hyp}}2$.
+- [Cyclic quadrilateral](/formulas/geometry#cyclic-quadrilateral): $\angle A+\angle C=\angle B+\angle D=180^\circ;\ \text{exterior angle}=\text{interior opposite angle}$
+  - Shortcut: Opposite angles add to $180^\circ$; exterior angle = interior opposite angle; the only cyclic parallelogram is a rectangle.
+- [Tangent perpendicular to radius](/formulas/geometry#tangent-radius): $OT\perp PT;\ \text{angle between two tangents from } P=180^\circ-\angle AOB$
+  - Shortcut: $\angle APB = 180^\circ - \angle AOB$; $\angle POA = 90^\circ - \frac12\angle APB$; chord of the outer circle touching the inner concentric circle $= 2\sqrt{R^2 - r^2}$.
+- [Length of tangent from an external point](/formulas/geometry#tangent-length): $PT=\sqrt{d^2-r^2};\ \text{the two tangents from } P \text{ are equal}$
+  - Shortcut: Spot triples in $(r, PT, d)$: $(8, 15, 17)$, $(24, 32, 40)$, $(5, 12, 13)$; annulus with a tangent half-chord $t$: area $= \pi(R^2-r^2) = \pi t^2$.
+- [Alternate segment theorem](/formulas/geometry#alternate-segment): $\text{angle between tangent and chord}=\text{inscribed angle in the alternate segment}$
+  - Shortcut: Tangent–chord angle = angle at the third vertex of the inscribed triangle on that chord = half the arc it cuts off.
+- [Common tangents and touching circles](/formulas/geometry#common-tangent-length): $\text{direct}=\sqrt{d^2-(r_1-r_2)^2};\ \text{transverse}=\sqrt{d^2-(r_1+r_2)^2};\ \text{touching externally } d=r_1+r_2,\ \text{direct}=2\sqrt{r_1r_2}$
+  - Shortcut: Touching circles: direct tangent $= 2\sqrt{r_1r_2}$; circles touching each other externally: centre distance $= r_1 + r_2$.
+- [Power of a point (tangent-secant, chords)](/formulas/geometry#power-of-point): $PA\cdot PB=PC\cdot PD=PT^2$
+  - Shortcut: Outside: near $\times$ far (whole) $= PT^2 = OP^2 - r^2$; inside: piece $\times$ piece $= r^2 - OP^2$.
+- [Angle between secants / tangent and secant](/formulas/geometry#tangent-secant-angle): $\angle P=\frac12(\text{far arc}-\text{near arc})$
+  - Shortcut: Far arc $=$ near arc $+ 2\angle P$; two tangents: $\angle P = 180^\circ - $ minor arc.
+- [Diagonals of special quadrilaterals](/formulas/geometry#quadrilateral-diagonals): $\text{parallelogram: bisect each other; rhombus/kite: perpendicular; rhombus } d_1^2+d_2^2=4a^2$
+  - Shortcut: Rhombus side $a = \frac12\sqrt{d_1^2 + d_2^2}$; a point equidistant from two opposite vertices of a rhombus lies on the other diagonal.

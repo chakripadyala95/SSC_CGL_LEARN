@@ -1,0 +1,350 @@
+{
+ "Algebra": {
+  "sampled": 9,
+  "checked": 9,
+  "agree": 9,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Alphabet/Word order": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Analogy": {
+  "sampled": 14,
+  "checked": 14,
+  "agree": 14,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Average": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Blood Relations": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Classification": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 6,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Coding-Decoding": {
+  "sampled": 7,
+  "checked": 7,
+  "agree": 7,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Counting Figures": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Data Interpretation": {
+  "sampled": 12,
+  "checked": 12,
+  "agree": 10,
+  "rate": 0.833,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-12_1600_Q15",
+    "agree": false,
+    "first": {
+     "topic": "Data Interpretation",
+     "subtopic": "Bar graph",
+     "formula_ids": [
+      "data-interpretation.percentage-from-chart"
+     ]
+    },
+    "second": {
+     "topic": "Data Interpretation",
+     "subtopic": "Bar graph",
+     "formula_ids": [
+      "data-interpretation.ratio-from-chart",
+      "data-interpretation.read-and-total"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-13_1600_Q25",
+    "agree": false,
+    "first": {
+     "topic": "Data Interpretation",
+     "subtopic": "Table",
+     "formula_ids": [
+      "percentage.reverse-percentage",
+      "ratio-proportion.ratio-to-parts"
+     ]
+    },
+    "second": {
+     "topic": "Data Interpretation",
+     "subtopic": "Table",
+     "formula_ids": [
+      "data-interpretation.derived-quantity",
+      "ratio-proportion.ratio-to-parts",
+      "percentage.percent-of-quantity"
+     ]
+    }
+   }
+  ]
+ },
+ "Dice/Cube": {
+  "sampled": 4,
+  "checked": 4,
+  "agree": 4,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Figure-based": {
+  "sampled": 14,
+  "checked": 14,
+  "agree": 14,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Geometry": {
+  "sampled": 9,
+  "checked": 9,
+  "agree": 9,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Mathematical Operations": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 6,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Mensuration": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 6,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Mixture & Alligation": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Number System": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Percentage": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 2,
+  "rate": 0.667,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-24_1230_Q15",
+    "agree": false,
+    "first": {
+     "topic": "Percentage",
+     "subtopic": "Basic percentage",
+     "formula_ids": [
+      "percentage.percent-of-quantity",
+      "percentage.reverse-percentage"
+     ]
+    },
+    "second": {
+     "topic": "Percentage",
+     "subtopic": "Income, expenditure & savings",
+     "formula_ids": [
+      "percentage.income-expenditure-savings",
+      "percentage.successive-change"
+     ]
+    }
+   }
+  ]
+ },
+ "Profit & Loss": {
+  "sampled": 6,
+  "checked": 6,
+  "agree": 5,
+  "rate": 0.833,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-09_1230_Q05",
+    "agree": false,
+    "first": {
+     "topic": "Profit & Loss",
+     "subtopic": "Profit & loss basics",
+     "formula_ids": [
+      "profit-loss.successive-discount",
+      "profit-loss.profit-percent"
+     ]
+    },
+    "second": {
+     "topic": "Profit & Loss",
+     "subtopic": "Successive discount",
+     "formula_ids": [
+      "profit-loss.successive-discount",
+      "profit-loss.profit-percent"
+     ]
+    }
+   }
+  ]
+ },
+ "Ratio & Proportion": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "SI/CI": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Series": {
+  "sampled": 10,
+  "checked": 10,
+  "agree": 10,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Simplification": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Statistics": {
+  "sampled": 1,
+  "checked": 1,
+  "agree": 1,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Syllogism": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Time & Work": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Time-Speed-Distance": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ },
+ "Trigonometry": {
+  "sampled": 9,
+  "checked": 9,
+  "agree": 7,
+  "rate": 0.778,
+  "passes": false,
+  "disagreements": [
+   {
+    "key": "2024-09-19_1230_Q03",
+    "agree": false,
+    "first": {
+     "topic": "Trigonometry",
+     "subtopic": "Complementary angles",
+     "formula_ids": [
+      "trigonometry.complementary-angles",
+      "trigonometry.pythagorean-identities"
+     ]
+    },
+    "second": {
+     "topic": "Trigonometry",
+     "subtopic": "Identities",
+     "formula_ids": [
+      "trigonometry.complementary-angles",
+      "trigonometry.pythagorean-identities"
+     ]
+    }
+   },
+   {
+    "key": "2024-09-26_0900_Q14",
+    "agree": false,
+    "first": {
+     "topic": "Trigonometry",
+     "subtopic": "Identities",
+     "formula_ids": [
+      "trigonometry.reciprocal-sum-two",
+      "trigonometry.standard-values"
+     ]
+    },
+    "second": {
+     "topic": "Trigonometry",
+     "subtopic": "Trig equations",
+     "formula_ids": [
+      "trigonometry.reciprocal-sum-two",
+      "trigonometry.pythagorean-identities"
+     ]
+    }
+   }
+  ]
+ },
+ "Venn": {
+  "sampled": 3,
+  "checked": 3,
+  "agree": 3,
+  "rate": 1.0,
+  "passes": true,
+  "disagreements": []
+ }
+}
